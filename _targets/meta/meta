@@ -1,0 +1,21 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+.Random.seed|object|ddef9ab7a0e82097|||||||||||||||
+choropleth_map|stem|9b84aec4eadfc2bd|fe11cc27bc3bd543|4c7280062d5d9efc|33728421||t19972.3987688884s|df06c0b676e51d12|33103789|rds|local|vector|||0.2||
+clean_data_epc|function|574800bcf34723ed|||||||||||||||
+data_epc|stem||f1f429588d000705|2c530c1562a7fbd1|1258954618|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Data/raw/data_epc.duckdb|t19971.695438906s||0|file|local|vector|||||_paths_ file not found or no read permission at CUsersuctpckeOneDrive  University College LondonEPC_project_codeDatarawepc_datadata_epc.duckdb
+data_epc_cleaned|stem|a8f3742062aa6ad2|f046987e57aafec0|f52d9bdbb6501337|-502665896||t19972.3976279576s|5570035006b5745f|9902286|rds|local|vector|||52.82||
+data_epc_cleaned_covars|stem|92599028953b2b1e|b67cdf3f404e340a|9a9835fc49660e6b|-977625867||t19972.3987155316s|14a1f45292833079|35686546|rds|local|vector|||88.16||
+data_epc_lsoa_cross_section|stem|410207e9f63749ca|b6415e646180ee5c|2f4f1fe9f057d9cf|1067368091||t19972.3987413402s|266710044a1db5bb|884426|rds|local|vector|||1.97|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+f|object|697a17e4a5a1d1a0|||||||||||||||
+get_data_parquet|function|5a6fac66da79741c|||||||||||||||
+get_mapping_boundaries|function|0f837ed5a5c5e027|||||||||||||||
+get_percentile|function|05053628aaada4e5|||||||||||||||
+la_boundaries|stem|a156bb7759352b71|a68fbb3cc8260f0c|6dd3fe1e420536c3|1975968175||t19971.7136452537s|26ff259f6fb30324|6965525|rds|local|vector|||11.59||
+lsoa_boundaries|stem|b5659220997a257e|28fa8e22d47218e4|6dd3fe1e420536c3|1619345||t19971.6954381142s|89e89fcae9b4847c|25318796|rds|local|vector|||21.45||
+make_choropleth_map|function|0e5ba877a49af4ab|||||||||||||||
+make_lsoa_lookup_data|function|b7a0fe6583e5205a|||||||||||||||
+make_summary_data_by_geography|function|8fcd979c6f380db9|||||||||||||||
+merge_data_epc_cleaned_covars|function|8a4964f2c522508d|||||||||||||||
+merge_statistical_geographies|function|cf9e90129eeca890|||||||||||||||
+scatter_plot_opts|object|8e084046c2fddc3c|||||||||||||||
+write_data_parquet|function|d3015fb097e6285d|||||||||||||||
