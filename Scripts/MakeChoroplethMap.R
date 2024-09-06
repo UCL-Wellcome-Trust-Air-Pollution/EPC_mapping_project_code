@@ -40,7 +40,7 @@ make_choropleth_map <- function(fill_data,
   if(london_only) data_to_map <- filter(data_to_map, str_sub(lad22cd, 1, 3) == "E09")
     
     # Generate main shape object
-    tm_shape(data_to_map) +
+    choropleth_map <- tm_shape(data_to_map) +
 
     # Remove title for now - see if can specify dynamically outside of function
     tm_fill(deparse(substitute(fill_var)),
@@ -69,5 +69,8 @@ make_choropleth_map <- function(fill_data,
     tm_layout(frame = FALSE) +
       
     scatter_plot_opts 
+    
+    # Return plot
+    return(choropleth_map)
   
 }

@@ -4,8 +4,8 @@
 library(targets)
 library(here)
 library(tidylog)
-library(ggthemes)
 library(ggplot2)
+library(tmap)
 
 # Set target options:
 tar_option_set(
@@ -58,7 +58,7 @@ list(
   
   tar_target(lsoa_boundaries, get_mapping_boundaries("lsoa21cd")),
   
-  tar_target(la_boundaries, get_mapping_boundaries("lad22cd")), # These two targets can probably be skipped as they are not very arduous
+  tar_target(la_boundaries, get_mapping_boundaries("lad22cd")),
   
   tar_target(choropleth_map, make_choropleth_map(data_epc_lsoa_cross_section, 
                                                  wood_conc, 
