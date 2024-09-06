@@ -12,15 +12,10 @@
 # Loads necessary packages
 # Defines global options for output plots and figures
 
-# Set options to prefer tidylog if conflicts 
-
-for (f in getNamespaceExports("tidylog")) {
-  conflicted::conflict_prefer(f, "tidylog", quiet = TRUE)
-}
-
 # Set global plot options ------------------------------------------------------
 
-scatter_plot_opts <- list(scale_size(range = c(2, 10)),
+scatter_plot_opts <- list(theme_fivethirtyeight(),
+                          scale_size(range = c(2, 10)),
                           scale_color_brewer(palette = "Paired", direction = -1),
                           theme(legend.position = "bottom",
                                 legend.box = "vertical"))

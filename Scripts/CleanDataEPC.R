@@ -135,7 +135,10 @@ clean_data_epc <- function(file){
     ) %>%
     
     # Convert uprn to numeric variable
-    mutate(uprn = as.numeric(uprn))
+    mutate(uprn = as.numeric(uprn)) %>%
+    
+    # Clean postcode variable to remove whitespace and set to lowercase
+    mutate(postcode = tolower(str_replace_all(postcode, fixed(" "), "")))
   
   # Close connection
   dbDisconnect(con)

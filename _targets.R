@@ -5,7 +5,13 @@ library(targets)
 library(here)
 library(tidylog)
 library(ggplot2)
-library(tmap)
+library(ggthemes)
+
+# Set options to prefer tidylog if conflicts 
+
+for (f in getNamespaceExports("tidylog")) {
+  conflicted::conflict_prefer(f, "tidylog", quiet = TRUE)
+}
 
 # Set target options:
 tar_option_set(
@@ -59,6 +65,14 @@ list(
   tar_target(lsoa_boundaries, get_mapping_boundaries("lsoa21cd")),
   
   tar_target(la_boundaries, get_mapping_boundaries("lad22cd")),
+  
+  tar_target(scatter_plot_pc_wood_imd, make_grouped_scatter_plot(data = data_epc_lsoa_cross_section,
+                                                                 x_var = imd_score,
+                                                                 y_var_numerator = any_wood_h,
+                                                                 y_var_denominator = epc_house_total,
+                                                                 group_var = imd_decile,
+                                                                 colour_var = rgn22nm,
+                                                                 size_var = num_people)),
   
   tar_target(choropleth_map, make_choropleth_map(data_epc_lsoa_cross_section, 
                                                  wood_conc, 

@@ -29,7 +29,16 @@ merge_data_epc_cleaned_covars <- function(data,
 
   # Merge statistical geographies ----------------------------------------------
   
-  data_geo <- merge_statistical_geographies(path_stat_geo_files)
+  data_geo_uprn <- merge_statistical_geographies(path_stat_geo_files)
+  
+  # Generate postcode-level lookup data
+  data_geo_pcds <- data_geo_uprn %>%
+    
+    # Drop UPRN column
+    select(-uprn) %>%
+    
+    # Remove duplicate rows
+    distinct()
   
   # Make LSOA-level lookup data ------------------------------------------------
   
@@ -42,10 +51,14 @@ merge_data_epc_cleaned_covars <- function(data,
   
   # Merge statistical geographies and secondary data onto main EPC data --------
   
-  data_epc_cleaned_covars <- data %>%
+  # Merge data with UPRNs
+  data_epc_cleaned_covars_with_uprn <- data %>%
+    
+    # Filter non-missing UPRNs
+    filter(!is.na(uprn)) %>%
     
     # Left join to statistical geographies by UPRN
-    left_join(data_geo, by = "uprn") %>%
+    left_join(data_geo_uprn, by = "uprn") %>%
     
     # Remove Scottish LSOAs
     filter(rgn22cd != "S99999999") %>%
@@ -58,6 +71,30 @@ merge_data_epc_cleaned_covars <- function(data,
     
     rename_with(~str_replace(., ".x", ""), ends_with(".x"))
   
+  # Merge data without UPRNs using postcode
+  data_epc_cleaned_covars_without_uprn <- data %>%
+    
+    # Filter only missing UPRNs
+    filter(is.na(uprn)) %>%
+    
+    # Left join to statistical geographies by PCDS
+    left_join(data_geo_pcds, by = c("postcode" = "pcds")) %>%
+    
+    # Remove Scottish LSOAs
+    filter(rgn22cd != "S99999999") %>%
+    
+    # Full join to merged data on IMD, ethnicity, etc
+    full_join(data_lsoa_lookup, by = "lsoa21cd") %>%
+    
+    # Remove duplicate cols
+    select(!ends_with(".y")) %>%
+    
+    rename_with(~str_replace(., ".x", ""), ends_with(".x"))
+  
+  # Bind merged data with UPRN and without UPRN together
+  data_epc_cleaned_covars <- bind_rows(data_epc_cleaned_covars_with_uprn,
+                                       data_epc_cleaned_covars_without_uprn)
+  
   # Set to data.table (faster for operations below)
   setDT(data_epc_cleaned_covars)
   
@@ -65,7 +102,14 @@ merge_data_epc_cleaned_covars <- function(data,
   data_epc_cleaned_covars[, inspection_date := as.IDate(inspection_date, format = "%Y-%m-%d")]
   
   # Calculate the most recent date per UPRN and flag the most recent entry
-  data_epc_cleaned_covars[, most_recent := as.integer(inspection_date == max(inspection_date)), by = uprn]
+  # Here I assume all properties with missing UPRNs are the most recent EPC
+  # for that property
+  data_epc_cleaned_covars[, most_recent := fifelse(!is.na(uprn) & inspection_date == max(inspection_date), 
+                                                   1,
+                                                   fifelse(is.na(uprn), 
+                                                           1, 
+                                                           0)), 
+                          by = uprn]
   
   # Return 'data_epc_cleaned_covars'
   return(data_epc_cleaned_covars)

@@ -123,8 +123,8 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     mutate(rgn22nm = ifelse(ctry22nm == "Wales", ctry22nm, rgn22nm)) %>%
     
     # Mutate IMD and white ethnicity percentage deciles by region
-    mutate(imd_decile = factor(ntile(desc(imd_score), n = 10)),
-           white_dec = factor(ntile(desc(white_pct), n = 10)),
+    mutate(imd_decile = ntile(desc(imd_score), n = 10),
+           white_dec = ntile(desc(white_pct), n = 10),
            .by = "rgn22nm")
   
   return(data_lsoa_lookup)

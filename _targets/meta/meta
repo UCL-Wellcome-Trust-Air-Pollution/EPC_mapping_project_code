@@ -1,21 +1,23 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|4ae43767b5a320b8|||||||||||||||
-choropleth_map|stem|42563c9e2963442a|fe11cc27bc3bd543|b1187fa34218cb40|33728421||t19972.5654644571s|fd858fabc89eafd1|34183161|rds|local|vector|||0.46||
-clean_data_epc|function|574800bcf34723ed|||||||||||||||
+.Random.seed|object|d56cf3a3d8bfb3c2|||||||||||||||
+choropleth_map|stem|3abafe662da3fe1d|fe11cc27bc3bd543|4be6096794c9868b|33728421||t19972.7380377922s|933affa10bf63c41|34411678|rds|local|vector|||0.33||
+clean_data_epc|function|50f87977d5f16c81|||||||||||||||
 data_epc|stem||f1f429588d000705|2c530c1562a7fbd1|1258954618|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Data/raw/data_epc.duckdb|t19971.695438906s||0|file|local|vector|||||_paths_ file not found or no read permission at CUsersuctpckeOneDrive  University College LondonEPC_project_codeDatarawepc_datadata_epc.duckdb
-data_epc_cleaned|stem|3b8cb334bc22a3e3|f046987e57aafec0|fc25cb9297c6702c|-502665896||t19972.4854979065s|faffb91310bd92e9|395106067|rds|local|vector|||156.29||
-data_epc_cleaned_covars|stem|7a42b10a9e1d16ae|b67cdf3f404e340a|21be2dfa5db0be19|-977625867||t19972.4954174068s|5610fad1f589cc1b|1436566501|rds|local|vector|||631.99||
-data_epc_lsoa_cross_section|stem|4793b92eef6cd19f|b6415e646180ee5c|dfd2028e407c666f|1067368091||t19972.4956830936s|2f3df4fd24436c0a|1986210|rds|local|vector|||21.62|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_epc_cleaned|stem|40c1db5eab5e7d42|f046987e57aafec0|7661be8d6ac88971|-502665896||t19972.7172527937s|f16de60c78214801|390870794|rds|local|vector|||215.39||
+data_epc_cleaned_covars|stem|64ae1c83e8788f6b|b67cdf3f404e340a|aecd65f309040ade|-977625867||t19972.737421933s||1567352841|rds|local|vector|||356.29||cannot allocate vector of size 95.5 Mb
+data_epc_lsoa_cross_section|stem|6d136d58b5d6ff49|b6415e646180ee5c|7adf0e5417c10228|1067368091||t19972.7379944388s|8426aaae91b1ed49|2260262|rds|local|vector|||47.89|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
 f|object|697a17e4a5a1d1a0|||||||||||||||
 get_data_parquet|function|5a6fac66da79741c|||||||||||||||
 get_mapping_boundaries|function|0f837ed5a5c5e027|||||||||||||||
 get_percentile|function|05053628aaada4e5|||||||||||||||
 la_boundaries|stem|a156bb7759352b71|a68fbb3cc8260f0c|6dd3fe1e420536c3|1975968175||t19971.7136452537s|26ff259f6fb30324|6965525|rds|local|vector|||11.59||
 lsoa_boundaries|stem|b5659220997a257e|28fa8e22d47218e4|6dd3fe1e420536c3|1619345||t19971.6954381142s|89e89fcae9b4847c|25318796|rds|local|vector|||21.45||
-make_choropleth_map|function|3c5a9e8657eb2ef5|||||||||||||||
-make_lsoa_lookup_data|function|b7a0fe6583e5205a|||||||||||||||
-make_summary_data_by_geography|function|8fcd979c6f380db9|||||||||||||||
-merge_data_epc_cleaned_covars|function|8a4964f2c522508d|||||||||||||||
-merge_statistical_geographies|function|cf9e90129eeca890|||||||||||||||
-scatter_plot_opts|object|76d84880e8d000aa|||||||||||||||
+make_choropleth_map|function|80d949deba7bff9f|||||||||||||||
+make_grouped_scatter_plot|function|2a485f33d01af3e1|||||||||||||||
+make_lsoa_lookup_data|function|3c133798d2ee5aa6|||||||||||||||
+make_summary_data_by_geography|function|e6259507c10745cc|||||||||||||||
+merge_data_epc_cleaned_covars|function|4dbcb7c657541e0d|||||||||||||||
+merge_statistical_geographies|function|9e216e65bc82e93e|||||||||||||||
+scatter_plot_opts|object|230b3142fd15e27a|||||||||||||||
+scatter_plot_pc_wood_imd|stem|c9dca25850938d4c|74604b84ed1be1a5|7a230cc917c0e4cb|-1856023104||t19972.73804955s|3d26dee51ea27715|4696986|rds|local|vector|||0.19||
 write_data_parquet|function|d3015fb097e6285d|||||||||||||||

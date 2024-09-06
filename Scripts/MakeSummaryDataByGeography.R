@@ -23,7 +23,7 @@ make_summary_data_by_geography <- function(data,
   if(most_recent_only == TRUE) data <- data %>% filter(most_recent == 1)
   
   # Set geography var to group var
-  group_vars <- c(geography_var)
+  group_vars <- c(geography_var, "rgn22nm")
   
   # If 'by_year' is TRUE, append 'year' as a grouping variable
   if(by_year == TRUE) group_vars <- append(group_vars, "year")
@@ -55,6 +55,9 @@ make_summary_data_by_geography <- function(data,
                        detached, semidetached, terrace,
                        house_form_missing),
               area_in_km2 = mean(area_in_km2, na.rm = TRUE),
+              num_people = mean(num_people, na.rm = TRUE),
+              imd_score = mean(imd_score, na.rm = TRUE),
+              imd_decile = mean(imd_decile, na.rm = TRUE),
               .by = group_vars) %>%
     
     # Create new variables for concentration of SFAs per km2 and proportion of EPC
