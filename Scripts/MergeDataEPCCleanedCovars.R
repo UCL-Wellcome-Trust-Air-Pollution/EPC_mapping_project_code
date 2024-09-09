@@ -91,25 +91,35 @@ merge_data_epc_cleaned_covars <- function(data,
     
     rename_with(~str_replace(., ".x", ""), ends_with(".x"))
   
-  # Bind merged data with UPRN and without UPRN together
-  data_epc_cleaned_covars <- bind_rows(data_epc_cleaned_covars_with_uprn,
-                                       data_epc_cleaned_covars_without_uprn)
-  
   # Set to data.table (faster for operations below)
-  setDT(data_epc_cleaned_covars)
+  setDT(data_epc_cleaned_covars_with_uprn)
+  setDT(data_epc_cleaned_covars_without_uprn)
   
   # Ensure inspection_date is in Date format
-  data_epc_cleaned_covars[, inspection_date := as.IDate(inspection_date, format = "%Y-%m-%d")]
-  
+  data_epc_cleaned_covars_with_uprn[, inspection_date := as.Date(fast_strptime(inspection_date, format = "%Y-%m-%d"))]
+  data_epc_cleaned_covars_without_uprn[, inspection_date := as.Date(fast_strptime(inspection_date, format = "%Y-%m-%d"))]
   # Calculate the most recent date per UPRN and flag the most recent entry
   # Here I assume all properties with missing UPRNs are the most recent EPC
   # for that property
-  data_epc_cleaned_covars[, most_recent := fifelse(!is.na(uprn) & inspection_date == max(inspection_date), 
-                                                   1,
-                                                   fifelse(is.na(uprn), 
-                                                           1, 
-                                                           0)), 
-                          by = uprn]
+  # data_epc_cleaned_covars[, most_recent := fifelse(!is.na(uprn) & inspection_date == max(inspection_date), 
+  #                                                  1,
+  #                                                  fifelse(is.na(uprn), 
+  #                                                          1, 
+  #                                                          0)), 
+  #                         by = uprn]
+  
+  # Order data by descending inspection date
+  setorder(data_epc_cleaned_covars_with_uprn, -inspection_date)
+  
+  # Filter only most recent EPC 
+  data_epc_cleaned_covars_with_uprn <- unique(data_epc_cleaned_covars_with_uprn, by = "uprn")
+  
+  # Merge two data.tables to create main data.table
+  data_epc_cleaned_covars <- bind_rows(data_epc_cleaned_covars_with_uprn,
+                                       data_epc_cleaned_covars_without_uprn)
+  
+  # Retain only unique values in final data
+  data_epc_cleaned_covars <- unique(data_epc_cleaned_covars)
   
   # Return 'data_epc_cleaned_covars'
   return(data_epc_cleaned_covars)

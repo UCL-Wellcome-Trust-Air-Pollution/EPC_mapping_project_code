@@ -1,4 +1,4 @@
-# Name of script: 7_MakeGroupedScatterPlot
+# Name of script: MakeGroupedScatterPlot
 # Description:  Defines function to produce scatter plot of key variables by grouping variables
 # Created by: Calum Kennedy (calum.kennedy.20@ucl.ac.uk)
 # Created on: 02-09-2024
