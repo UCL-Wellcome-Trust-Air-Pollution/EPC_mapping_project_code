@@ -16,7 +16,8 @@
 
 make_cross_tab <- function(data, 
                            row_var,
-                           col_var){
+                           col_var,
+                           name){
   
   # Generate cross tab
   cross_tab <- tbl_cross(data,
@@ -26,8 +27,12 @@ make_cross_tab <- function(data,
                          missing_text = "Missing") %>%
     
     # Format bold labels
-    bold_labels()
-  
-  return(cross_tab)
+    bold_labels() %>%
+    
+    # Set as 'gt' object to export to HTML
+    as_gt()
+    
+    # Save file to specified path
+    gtsave(cross_tab, here(paste0("Output/Tables/", name, ".html")))
   
 }

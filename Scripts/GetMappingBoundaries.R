@@ -17,7 +17,7 @@ get_mapping_boundaries <- function(geography_var){
   
   if(geography_var == "lsoa21cd") GeoJSON_url <- "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Lower_layer_Super_Output_Areas_2021_EW_BGC_V3/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
       
-  if(geography_var == "wd22cd") GeoJOSN_url <- "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2022_Boundaries_GB_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
+  if(geography_var == "wd22cd") GeoJSON_url <- "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Wards_December_2022_Boundaries_GB_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
           
   if(geography_var == "lad22cd") GeoJSON_url <- "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2022_UK_BGC_V2/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson"
   

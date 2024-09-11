@@ -25,7 +25,8 @@ tar_option_set(
                "janitor",
                "lubridate",
                "papeR",
-               "arsenal",
+               "gtsummary",
+               "gt",
                "vroom",
                "readxl",
                "readODS",
@@ -65,6 +66,21 @@ list(
   tar_target(lsoa_boundaries, get_mapping_boundaries("lsoa21cd")),
   
   tar_target(la_boundaries, get_mapping_boundaries("lad22cd")),
+  
+  tar_target(tab_housing_chars_by_any_wood, make_summary_table(data = data_epc_cleaned_covars,
+                                                               vars_to_summarise = c("property_type",
+                                                                                     "built_form",
+                                                                                     "tenure"),
+                                                               group_var = "any_wood",
+                                                               report_missing = TRUE,
+                                                               name = "tab_housing_chars_by_any_wood"),
+             format = "file"),
+  
+  tar_target(cross_tab_imd_decile_any_wood, make_cross_tab(data_epc_cleaned_covars,
+                                                           "imd_decile",
+                                                           "any_wood",
+                                                           "cross_tab_imd_decile_any_wood"),
+             format = "file"),
   
   tar_target(scatter_plot_pc_wood_imd, make_grouped_scatter_plot(data = data_epc_lsoa_cross_section,
                                                                  x_var = imd_score,

@@ -98,16 +98,7 @@ merge_data_epc_cleaned_covars <- function(data,
   # Ensure inspection_date is in Date format
   data_epc_cleaned_covars_with_uprn[, inspection_date := as.Date(fast_strptime(inspection_date, format = "%Y-%m-%d"))]
   data_epc_cleaned_covars_without_uprn[, inspection_date := as.Date(fast_strptime(inspection_date, format = "%Y-%m-%d"))]
-  # Calculate the most recent date per UPRN and flag the most recent entry
-  # Here I assume all properties with missing UPRNs are the most recent EPC
-  # for that property
-  # data_epc_cleaned_covars[, most_recent := fifelse(!is.na(uprn) & inspection_date == max(inspection_date), 
-  #                                                  1,
-  #                                                  fifelse(is.na(uprn), 
-  #                                                          1, 
-  #                                                          0)), 
-  #                         by = uprn]
-  
+
   # Order data by descending inspection date
   setorder(data_epc_cleaned_covars_with_uprn, -inspection_date)
   

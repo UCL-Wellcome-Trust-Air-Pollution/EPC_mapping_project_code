@@ -15,7 +15,8 @@
 make_summary_table <- function(data, 
                                vars_to_summarise, 
                                group_var = NULL,
-                               report_missing = NULL){
+                               report_missing = NULL,
+                               name){
   
   # Error to catch incorrect specification of behaviour for missing variables
   if(!report_missing %in% c(TRUE,
@@ -44,7 +45,12 @@ make_summary_table <- function(data,
   # If specify a grouping variable, add the aggregate totals as well
   if(!is.null(group_var)) summary_table <- summary_table %>% add_overall()
   
-  # Return the summary table
-  return(summary_table)
+  # Set summary table as 'gt' object and export
+  summary_table %>%
+    
+  as_gt() %>%
+  
+  # Export to specified file path + name
+  gtsave(here(paste0("Output/Tables/", name, ".html")))
   
 }

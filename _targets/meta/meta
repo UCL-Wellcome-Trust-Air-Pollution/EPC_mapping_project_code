@@ -1,11 +1,12 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 .Random.seed|object|d56cf3a3d8bfb3c2|||||||||||||||
-choropleth_map|stem|3abafe662da3fe1d|fe11cc27bc3bd543|4be6096794c9868b|33728421||t19972.7380377922s|933affa10bf63c41|34411678|rds|local|vector|||0.33||
+choropleth_map|stem|13f71a83e4dd489b|fe11cc27bc3bd543|8b6fd236bb657f9e|33728421||t19975.772337426s|83010372209b6d27|34325000|rds|local|vector|||0.3||
 clean_data_epc|function|50f87977d5f16c81|||||||||||||||
+cross_tab_imd_decile_any_wood|stem|4836fdf19d85e418|82da5ce9c43626ee|a5fbc9638b8facff|1784087488|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Output/Tables/cross_tab_imd_decile_any_wood.html|t19976.6016074564s|6a867a7548b16ef1|15388|file|local|vector|||156.14|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectcol_var   Now  data  selectall_ofcol_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectrow_var   Now  data  selectall_ofrow_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
 data_epc|stem||f1f429588d000705|2c530c1562a7fbd1|1258954618|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Data/raw/data_epc.duckdb|t19971.695438906s||0|file|local|vector|||||_paths_ file not found or no read permission at CUsersuctpckeOneDrive  University College LondonEPC_project_codeDatarawepc_datadata_epc.duckdb
 data_epc_cleaned|stem|40c1db5eab5e7d42|f046987e57aafec0|7661be8d6ac88971|-502665896||t19972.7172527937s|f16de60c78214801|390870794|rds|local|vector|||215.39||
-data_epc_cleaned_covars|stem|64ae1c83e8788f6b|b67cdf3f404e340a|aecd65f309040ade|-977625867||t19972.737421933s||1567352841|rds|local|vector|||356.29||cannot allocate vector of size 95.5 Mb
-data_epc_lsoa_cross_section|stem|6d136d58b5d6ff49|b6415e646180ee5c|7adf0e5417c10228|1067368091||t19972.7379944388s|8426aaae91b1ed49|2260262|rds|local|vector|||47.89|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_epc_cleaned_covars|stem|c822c095f47c654a|b67cdf3f404e340a|a9d0e20154d2e86d|-977625867||t19975.7363068242s|3aeecebd5bfebf3d|1126524750|rds|local|vector|||451.92||
+data_epc_lsoa_cross_section|stem|d23877248654aa95|b6415e646180ee5c|1424b9f3cc692034|1067368091||t19975.7557288246s|9bab377d63a50892|2172949|rds|local|vector|||24.03|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
 f|object|697a17e4a5a1d1a0|||||||||||||||
 get_data_parquet|function|5a6fac66da79741c|||||||||||||||
 get_mapping_boundaries|function|0f837ed5a5c5e027|||||||||||||||
@@ -13,11 +14,14 @@ get_percentile|function|05053628aaada4e5|||||||||||||||
 la_boundaries|stem|a156bb7759352b71|a68fbb3cc8260f0c|6dd3fe1e420536c3|1975968175||t19971.7136452537s|26ff259f6fb30324|6965525|rds|local|vector|||11.59||
 lsoa_boundaries|stem|b5659220997a257e|28fa8e22d47218e4|6dd3fe1e420536c3|1619345||t19971.6954381142s|89e89fcae9b4847c|25318796|rds|local|vector|||21.45||
 make_choropleth_map|function|80d949deba7bff9f|||||||||||||||
+make_cross_tab|function|6b2ad365fc587a0a|||||||||||||||
 make_grouped_scatter_plot|function|2a485f33d01af3e1|||||||||||||||
 make_lsoa_lookup_data|function|3c133798d2ee5aa6|||||||||||||||
 make_summary_data_by_geography|function|e6259507c10745cc|||||||||||||||
-merge_data_epc_cleaned_covars|function|4dbcb7c657541e0d|||||||||||||||
+make_summary_table|function|f599994c8d08677f|||||||||||||||
+merge_data_epc_cleaned_covars|function|8c41407475dd572b|||||||||||||||
 merge_statistical_geographies|function|9e216e65bc82e93e|||||||||||||||
 scatter_plot_opts|object|230b3142fd15e27a|||||||||||||||
-scatter_plot_pc_wood_imd|stem|c9dca25850938d4c|74604b84ed1be1a5|7a230cc917c0e4cb|-1856023104||t19972.73804955s|3d26dee51ea27715|4696986|rds|local|vector|||0.19||
+scatter_plot_pc_wood_imd|stem|ffe1ce9666696036|74604b84ed1be1a5|aa22e24595c937c5|-1856023104||t19975.7723460522s|d709de4c6e6fef72|4527333|rds|local|vector|||0.11||
+tab_housing_chars_by_any_wood|stem|d980c3f76d64c820|3e828b22d186956d|bdba857485ad1374|-179754714|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Output/Tables/tab_housing_chars_by_any_wood.html|t19976.3373490641s|cc3901f4e0aa33eb|19262|file|local|vector|||133.31|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_var   Now  data  selectall_ofgroup_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectvars_to_summarise   Now  data  selectall_ofvars_to_summariseSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
 write_data_parquet|function|d3015fb097e6285d|||||||||||||||
