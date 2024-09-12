@@ -60,12 +60,56 @@ list(
   
   tar_target(data_epc_lsoa_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
                                                                    geography_var = "lsoa21cd", 
-                                                                   by_year = FALSE, 
-                                                                   most_recent_only = FALSE)),
+                                                                   by_year = FALSE)),
+  
+  tar_target(data_epc_lsoa_by_year, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
+                                                                         geography_var = "lsoa21cd", 
+                                                                         by_year = TRUE)),
+  
+  tar_target(data_epc_la_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
+                                                                         geography_var = "lad22cd", 
+                                                                         by_year = FALSE)),
+  
+  tar_target(data_epc_la_by_year, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
+                                                                   geography_var = "lad22cd", 
+                                                                   by_year = TRUE)),
+  
+  tar_target(data_epc_ward_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
+                                                                         geography_var = "wd22cd", 
+                                                                         by_year = FALSE)),
+  
+  tar_target(data_epc_ward_by_year, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
+                                                                         geography_var = "wd22cd", 
+                                                                         by_year = TRUE)),
+  
+  tar_target(data_epc_lsoa_cross_section_to_map, prepare_data_to_map(data_epc_lsoa_cross_section,
+                                                               "lsoa21cd")),
+  
+  tar_target(data_epc_lsoa_by_year_to_map, prepare_data_to_map(data_epc_lsoa_by_year,
+                                                               "lsoa21cd")),
+  
+  tar_target(data_epc_la_cross_section_to_map, prepare_data_to_map(data_epc_la_cross_section,
+                                                                     "lad22cd")),
+  
+  tar_target(data_epc_la_by_year_to_map, prepare_data_to_map(data_epc_la_by_year,
+                                                               "lad22cd")),
+  
+  tar_target(data_epc_ward_cross_section_to_map, prepare_data_to_map(data_epc_ward_cross_section,
+                                                                     "wd22cd")),
+  
+  tar_target(data_epc_ward_by_year_to_map, prepare_data_to_map(data_epc_ward_by_year,
+                                                               "wd22cd")),
   
   tar_target(lsoa_boundaries, get_mapping_boundaries("lsoa21cd")),
   
   tar_target(la_boundaries, get_mapping_boundaries("lad22cd")),
+  
+  tar_target(ward_boundaries, get_mapping_boundaries("wd22cd")),
+  
+  tar_target(data_epc_lsoa_by_year_for_shiny, write_data_to_file(data_epc_lsoa_by_year,
+                                                                 here("Data/Cleaned/"),
+                                                                 ".csv"),
+             format = "file"),
   
   tar_target(tab_housing_chars_by_any_wood, make_summary_table(data = data_epc_cleaned_covars,
                                                                vars_to_summarise = c("property_type",
@@ -90,15 +134,33 @@ list(
                                                                  colour_var = rgn22nm,
                                                                  size_var = num_people)),
   
-  tar_target(choropleth_map, make_choropleth_map(data_epc_lsoa_cross_section, 
-                                                 wood_conc, 
-                                                 lsoa_boundaries, 
-                                                 "lsoa21cd", 
+  tar_target(choropleth_map_lsoa, make_choropleth_map(data_epc_lsoa_cross_section_to_map, 
+                                                 wood_conc,
                                                  la_boundaries, 
                                                  "lad22nm", 
                                                  london_only = FALSE,
-                                                 legend_title = "test", 
+                                                 legend_title = "By LSOA", 
                                                  winsorise = TRUE, 
                                                  lower_perc = 0.05, 
-                                                 upper_perc = 0.95))  
+                                                 upper_perc = 0.95)),
+  
+  tar_target(choropleth_map_ward, make_choropleth_map(data_epc_ward_cross_section_to_map, 
+                                                 wood_conc,
+                                                 la_boundaries, 
+                                                 "lad22nm", 
+                                                 london_only = FALSE,
+                                                 legend_title = "By ward", 
+                                                 winsorise = TRUE, 
+                                                 lower_perc = 0.05, 
+                                                 upper_perc = 0.95)),
+  
+  tar_target(choropleth_map_la, make_choropleth_map(data_epc_la_cross_section_to_map, 
+                                                      wood_conc,
+                                                      la_boundaries, 
+                                                      "lad22nm", 
+                                                      london_only = FALSE,
+                                                      legend_title = "By LA", 
+                                                      winsorise = TRUE, 
+                                                      lower_perc = 0.05, 
+                                                      upper_perc = 0.95))
 )

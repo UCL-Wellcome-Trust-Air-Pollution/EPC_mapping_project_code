@@ -30,6 +30,11 @@ get_mapping_boundaries <- function(geography_var){
     # Make geometry valid
     st_make_valid()
   
-  return(json)
+  # Filter out Scottish regions by geography variable
+  if(geography_var == "lsoa21cd") json_filtered <- json %>% filter(!str_sub(lsoa21cd, 1, 1) %in% c("S", "N"))
+  if(geography_var == "wd22cd") json_filtered <- json %>% filter(!str_sub(wd22cd, 1, 1) %in% c("S", "N"))
+  if(geography_var == "lad22cd") json_filtered <- json %>% filter(!str_sub(lad22cd, 1, 1) %in% c("S", "N"))
+  
+  return(json_filtered)
   
 }

@@ -101,7 +101,7 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     clean_names() %>%
     
     # Select relevant columns
-    select(lsoa21cd, lsoa21nm, wd22cd, wd22nm, ltla22nm) %>%
+    select(lsoa21cd, lsoa21nm, wd22cd, wd22nm) %>%
     
     left_join(data_region, by = "wd22cd")
   

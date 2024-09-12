@@ -16,8 +16,6 @@
 
 make_choropleth_map <- function(fill_data, 
                                 fill_var, 
-                                fill_boundary_data, 
-                                join_var, 
                                 map_boundary_data, 
                                 boundary_id_var, 
                                 london_only,
@@ -31,16 +29,11 @@ make_choropleth_map <- function(fill_data,
                                                                        {{fill_var}} < get_percentile({{fill_var}}, lower_perc) ~ get_percentile({{fill_var}}, lower_perc),
                                                                        .default = {{fill_var}}))
   
-  # Join boundary data to fill data
-  data_to_map <- fill_boundary_data %>%
-    
-    left_join(fill_data, by = join_var)
-  
   # If 'london_only' == TRUE, filter fill data to only London polygons (else nothing)
-  if(london_only) data_to_map <- filter(data_to_map, str_sub(lad22cd, 1, 3) == "E09")
+  if(london_only) fill_data <- filter(fill_data, str_sub(lad22cd, 1, 3) == "E09")
     
     # Generate main shape object
-    choropleth_map <- tm_shape(data_to_map) +
+    choropleth_map <- tm_shape(fill_data) +
 
     # Remove title for now - see if can specify dynamically outside of function
     tm_fill(deparse(substitute(fill_var)),
