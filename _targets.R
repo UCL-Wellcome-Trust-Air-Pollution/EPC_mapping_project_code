@@ -101,6 +101,11 @@ list(
   tar_target(data_epc_ward_by_year_to_map, prepare_data_to_map(data_epc_ward_by_year,
                                                                "wd22cd")),
   
+  tar_target(data_epc_coverage_lsoa_to_map, prepare_data_to_map(make_data_epc_coverage(data_epc_cleaned_covars,
+                                                       path_stat_geo_files = here("Data/raw/geo_files"),
+                                                       geography = lsoa21cd),
+                                                       "lsoa21cd")),
+  
   tar_target(lsoa_boundaries, get_mapping_boundaries("lsoa21cd")),
   
   tar_target(la_boundaries, get_mapping_boundaries("lad22cd")),
@@ -163,5 +168,15 @@ list(
                                                       legend_title = "By LA", 
                                                       winsorise = TRUE, 
                                                       lower_perc = 0.05, 
-                                                      upper_perc = 0.95))
+                                                      upper_perc = 0.95)),
+  
+  tar_target(choropleth_map_epc_coverage_lsoa, make_choropleth_map(data_epc_coverage_lsoa_to_map, 
+                                                    coverage_perc,
+                                                    la_boundaries, 
+                                                    "lad22nm", 
+                                                    london_only = FALSE,
+                                                    legend_title = "Coverage by LSOA", 
+                                                    winsorise = FALSE, 
+                                                    lower_perc = NULL, 
+                                                    upper_perc = NULL))
 )
