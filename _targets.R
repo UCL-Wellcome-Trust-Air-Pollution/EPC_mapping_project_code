@@ -106,7 +106,7 @@ list(
   
   tar_target(ward_boundaries, get_mapping_boundaries("wd22cd")),
   
-  tar_target(data_epc_lsoa_by_year_for_shiny, write_data_to_file(data_epc_lsoa_by_year,
+  tar_target(data_epc_ward_by_year_for_shiny, write_data_to_file(data_epc_ward_by_year,
                                                                  here("Data/Cleaned/"),
                                                                  ".csv"),
              format = "file"),
