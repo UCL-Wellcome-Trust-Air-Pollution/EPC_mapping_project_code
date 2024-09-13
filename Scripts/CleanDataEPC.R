@@ -43,8 +43,8 @@ clean_data_epc <- function(file){
     # Clean names using Janitor
     clean_names() %>%
     
-    # Filter years in 2009-2023 (full years of available data)
-    filter(year > 2008 & year < 2024) %>%
+    # Filter years in 2009-2024
+    filter(year > 2008) %>%
     
     # Recode construction age to pre Clean Air Act 1956
     mutate(pre_1950 = if_else(construction_age_band %in% pre_1950_bands, 1, 0)) %>%

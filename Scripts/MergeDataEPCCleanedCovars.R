@@ -25,7 +25,8 @@ merge_data_epc_cleaned_covars <- function(data,
                                           path_imd_wales,
                                           path_ethnicity,
                                           path_region,
-                                          path_ward){
+                                          path_ward,
+                                          path_sca_data){
 
   # Merge statistical geographies ----------------------------------------------
   
@@ -48,6 +49,13 @@ merge_data_epc_cleaned_covars <- function(data,
                                             path_ethnicity,
                                             path_region,
                                             path_ward)
+  
+  # Load smoke control data ----------------------------------------------------
+  
+  sca_data <- vroom(path_sca_data) %>%
+    
+    # Mutate NA to 0 (i.e. UPRN is not in a smoke control area)
+    mutate(smoke_ctrl = if_else(is.na(smoke_ctrl), 0, smoke_ctrl))
   
   # Merge statistical geographies and secondary data onto main EPC data --------
   
@@ -111,6 +119,12 @@ merge_data_epc_cleaned_covars <- function(data,
   
   # Retain only unique values in final data
   data_epc_cleaned_covars <- unique(data_epc_cleaned_covars)
+  
+  # Merge final data to smoke control areas using UPRN
+  data_epc_cleaned_covars <- data_epc_cleaned_covars %>%
+    
+    # Retain all rows in main data (left join)
+    left_join(sca_data, by = "uprn")
   
   # Return 'data_epc_cleaned_covars'
   return(data_epc_cleaned_covars)

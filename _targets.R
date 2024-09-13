@@ -56,7 +56,8 @@ list(
                                                                     path_imd_wales = "Data/raw/lsoa_data/wimd-2019-index-and-domain-scores-by-small-area.ods",
                                                                     path_ethnicity = "Data/raw/lsoa_data/TS021-2021-3-filtered-2023-10-02T10_09_04Z.csv",
                                                                     path_region = "Data/raw/lsoa_data/Ward_to_Local_Authority_District_to_County_to_Region_to_Country_dec22.csv",
-                                                                    path_ward = "Data/raw/lsoa_data/LSOA_(2021)_to_Ward_to_Lower_Tier_Local_Authority_(May_2022)_Lookup_for_England_and_Wales.csv")),
+                                                                    path_ward = "Data/raw/lsoa_data/LSOA_(2021)_to_Ward_to_Lower_Tier_Local_Authority_(May_2022)_Lookup_for_England_and_Wales.csv",
+                                                                    path_sca_data = here("Data/raw/sca_data/epc_uprn_smkctrl.csv"))),
   
   tar_target(data_epc_lsoa_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars, 
                                                                    geography_var = "lsoa21cd", 
