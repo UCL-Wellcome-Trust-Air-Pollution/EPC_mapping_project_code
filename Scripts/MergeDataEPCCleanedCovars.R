@@ -26,7 +26,8 @@ merge_data_epc_cleaned_covars <- function(data,
                                           path_ethnicity,
                                           path_region,
                                           path_ward,
-                                          path_sca_data){
+                                          path_sca_data,
+                                          filter_most_recent_epc){
 
   # Merge statistical geographies ----------------------------------------------
   
@@ -55,7 +56,11 @@ merge_data_epc_cleaned_covars <- function(data,
   sca_data <- vroom(path_sca_data) %>%
     
     # Mutate NA to 0 (i.e. UPRN is not in a smoke control area)
-    mutate(smoke_ctrl = if_else(is.na(smoke_ctrl), 0, smoke_ctrl))
+    mutate(smoke_ctrl = case_when(is.na(smoke_ctrl) ~ 0,
+                                  .default = smoke_ctrl)) %>%
+    
+    # Keep only relevant variables
+    select(uprn, smoke_ctrl)
   
   # Merge statistical geographies and secondary data onto main EPC data --------
   
@@ -111,7 +116,7 @@ merge_data_epc_cleaned_covars <- function(data,
   setorder(data_epc_cleaned_covars_with_uprn, -inspection_date)
   
   # Filter only most recent EPC 
-  data_epc_cleaned_covars_with_uprn <- unique(data_epc_cleaned_covars_with_uprn, by = "uprn")
+  if(filter_most_recent_epc == TRUE) data_epc_cleaned_covars_with_uprn <- unique(data_epc_cleaned_covars_with_uprn, by = "uprn")
   
   # Merge two data.tables to create main data.table
   data_epc_cleaned_covars <- bind_rows(data_epc_cleaned_covars_with_uprn,

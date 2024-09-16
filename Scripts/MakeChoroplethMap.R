@@ -22,7 +22,8 @@ make_choropleth_map <- function(fill_data,
                                 legend_title, 
                                 winsorise, 
                                 lower_perc = 0.05, 
-                                upper_perc = 0.95){
+                                upper_perc = 0.95,
+                                gradient_style){
   
   # If 'winsorise' is TRUE, winsorise upper and lower percentiles of fill variable (default is 5th and 95th percentile)
   if(winsorise) fill_data <- mutate(fill_data, "{{fill_var}}" := case_when({{fill_var}} > get_percentile({{fill_var}}, upper_perc) ~ get_percentile({{fill_var}}, upper_perc),
@@ -37,7 +38,7 @@ make_choropleth_map <- function(fill_data,
 
     # Remove title for now - see if can specify dynamically outside of function
     tm_fill(deparse(substitute(fill_var)),
-            style = "order",
+            style = gradient_style,
             palette = "-inferno",
             legend.format = list(digits = 0),
             title = legend_title) +
@@ -46,7 +47,6 @@ make_choropleth_map <- function(fill_data,
     tm_legend(position = c("left", "top"),
             bg.color = "white",
             bg.alpha = 0,
-            width = 2, height = 10, title.size = 1.2,
             text.size = 1) +
 
     # Add in additional shape object for map boundaries  
