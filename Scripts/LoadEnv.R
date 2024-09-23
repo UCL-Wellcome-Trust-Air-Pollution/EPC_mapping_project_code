@@ -14,8 +14,7 @@
 
 # Set global plot options ------------------------------------------------------
 
-scatter_plot_opts <- list(theme_fivethirtyeight(),
-                          scale_size(range = c(2, 10)),
-                          scale_color_brewer(palette = "Paired", direction = -1),
-                          theme(legend.position = "bottom",
+scatter_plot_opts <- list(ggthemes::theme_tufte(base_family = "arial"),
+                          ggplot2::scale_size(range = c(2, 10)),
+                          ggplot2::theme(legend.position = "bottom",
                                 legend.box = "vertical"))

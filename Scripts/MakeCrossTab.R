@@ -15,9 +15,13 @@
 # from arbitrary dataframe -----------------------------------------------------
 
 make_cross_tab <- function(data, 
+                           most_recent_only,
                            row_var,
                            col_var,
                            name){
+  
+  # If most_recent_only is TRUE, subset data to most recent EPC
+  if(most_recent_only == TRUE) data <- data %>% filter(most_recent == TRUE)
   
   # Generate cross tab
   cross_tab <- tbl_cross(data,

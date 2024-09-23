@@ -3,11 +3,8 @@
 # Load packages required to define the pipeline
 library(targets)
 library(tarchetypes)
-library(quarto)
-library(here)
 library(tidylog)
-library(ggplot2)
-library(ggthemes)
+library(here)
 
 # Set options to prefer tidylog if conflicts 
 
@@ -39,64 +36,81 @@ tar_option_set(
                "tmap",
                "tidylog",
                "conflicted",
-               "quarto")
+               "quarto",
+               "qs",
+               "extrafont",
+               "viridis"),
+  format = "qs"
 )
 
 # Run the R scripts with custom functions:
-tar_source(here("Scripts/functions.R"))
-tar_source(here("Scripts/LoadEnv.R"))
+tar_source(here::here("Scripts/functions.R"))
+tar_source(here::here("Scripts/LoadEnv.R"))
 
 # Set list of targets
 list(
   
   tar_target(data_epc_cleaned, 
-             clean_data_epc("data_epc.duckdb")),
+             clean_data_epc("data_epc.duckdb"),
+             format = "parquet"),
   
-  tar_target(data_epc_cleaned_covars_all_epc, merge_data_epc_cleaned_covars(data = data_epc_cleaned,
+  tar_target(data_epc_cleaned_covars, merge_data_epc_cleaned_covars(data = data_epc_cleaned,
                                                                     path_stat_geo_files = "Data/raw/geo_files",
                                                                     path_lsoa_size = "Data/raw/lsoa_data/SAM_LSOA_DEC_2021_EW_in_KM.csv",
                                                                     path_imd_eng = "Data/raw/lsoa_data/File_5_-_IoD2019_Scores.xlsx",
                                                                     path_imd_wales = "Data/raw/lsoa_data/wimd-2019-index-and-domain-scores-by-small-area.ods",
+                                                                    path_lsoa11_lsoa21_lookup = "Data/raw/lsoa_data/LSOA_(2011)_to_LSOA_(2021)_to_Local_Authority_District_(2022)_Best_Fit_Lookup_for_EW_(V2).csv",
                                                                     path_ethnicity = "Data/raw/lsoa_data/TS021-2021-3-filtered-2023-10-02T10_09_04Z.csv",
                                                                     path_region = "Data/raw/lsoa_data/Ward_to_Local_Authority_District_to_County_to_Region_to_Country_dec22.csv",
                                                                     path_ward = "Data/raw/lsoa_data/LSOA_(2021)_to_Ward_to_Lower_Tier_Local_Authority_(May_2022)_Lookup_for_England_and_Wales.csv",
-                                                                    path_sca_data = here("Data/raw/sca_data/epc_uprn_smkctrl.csv"),
-                                                                    filter_most_recent_epc = FALSE)),
+                                                                    path_sca_data = here("Data/raw/sca_data/epc_uprn_smkctrl.csv")),
+             format = "parquet"),
   
-  tar_target(data_epc_cleaned_covars_most_recent, merge_data_epc_cleaned_covars(data = data_epc_cleaned,
-                                                                            path_stat_geo_files = "Data/raw/geo_files",
-                                                                            path_lsoa_size = "Data/raw/lsoa_data/SAM_LSOA_DEC_2021_EW_in_KM.csv",
-                                                                            path_imd_eng = "Data/raw/lsoa_data/File_5_-_IoD2019_Scores.xlsx",
-                                                                            path_imd_wales = "Data/raw/lsoa_data/wimd-2019-index-and-domain-scores-by-small-area.ods",
-                                                                            path_ethnicity = "Data/raw/lsoa_data/TS021-2021-3-filtered-2023-10-02T10_09_04Z.csv",
-                                                                            path_region = "Data/raw/lsoa_data/Ward_to_Local_Authority_District_to_County_to_Region_to_Country_dec22.csv",
-                                                                            path_ward = "Data/raw/lsoa_data/LSOA_(2021)_to_Ward_to_Lower_Tier_Local_Authority_(May_2022)_Lookup_for_England_and_Wales.csv",
-                                                                            path_sca_data = here("Data/raw/sca_data/epc_uprn_smkctrl.csv"),
-                                                                            filter_most_recent_epc = TRUE)),
+  tar_target(data_epc_lsoa_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars, 
+                                                                   lsoa_var = lsoa21cd, 
+                                                                   group_vars = c("lsoa21cd",
+                                                                                  "rgn22nm"),
+                                                                   most_recent_only = TRUE),
+             format = "parquet"),
   
-  tar_target(data_epc_lsoa_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars_most_recent, 
-                                                                   geography_var = "lsoa21cd", 
-                                                                   by_year = FALSE)),
+  tar_target(data_epc_lsoa_by_year, make_summary_data_by_group(data = data_epc_cleaned_covars, 
+                                                               lsoa_var = lsoa21cd, 
+                                                               group_vars = c("lsoa21cd",
+                                                                              "rgn22nm",
+                                                                              "year"),
+                                                               most_recent_only = FALSE),
+             format = "parquet"),
   
-  tar_target(data_epc_lsoa_by_year, make_summary_data_by_geography(data = data_epc_cleaned_covars_all_epc, 
-                                                                         geography_var = "lsoa21cd", 
-                                                                         by_year = TRUE)),
+  tar_target(data_epc_la_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars, 
+                                                                   lsoa_var = lsoa21cd, 
+                                                                   group_vars = c("lad22cd",
+                                                                                  "rgn22nm"),
+                                                                   most_recent_only = TRUE),
+             format = "parquet"),
   
-  tar_target(data_epc_la_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars_most_recent, 
-                                                                         geography_var = "lad22cd", 
-                                                                         by_year = FALSE)),
+  tar_target(data_epc_la_by_year, make_summary_data_by_group(data = data_epc_cleaned_covars, 
+                                                             lsoa_var = lsoa21cd, 
+                                                             group_vars = c("lad22cd",
+                                                                            "rgn22nm",
+                                                                            "year"),
+                                                             most_recent_only = FALSE),
+             format = "parquet"),
   
-  tar_target(data_epc_la_by_year, make_summary_data_by_geography(data = data_epc_cleaned_covars_all_epc, 
-                                                                   geography_var = "lad22cd", 
-                                                                   by_year = TRUE)),
+  tar_target(data_epc_ward_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars, 
+                                                                     lsoa_var = lsoa21cd, 
+                                                                     group_vars = c("wd22cd",
+                                                                                    "rgn22nm"),
+                                                                     most_recent_only = TRUE),
+             format = "parquet"),
   
-  tar_target(data_epc_ward_cross_section, make_summary_data_by_geography(data = data_epc_cleaned_covars_most_recent, 
-                                                                         geography_var = "wd22cd", 
-                                                                         by_year = FALSE)),
-  
-  tar_target(data_epc_ward_by_year, make_summary_data_by_geography(data = data_epc_cleaned_covars_all_epc, 
-                                                                         geography_var = "wd22cd", 
-                                                                         by_year = TRUE)),
+  tar_target(data_epc_ward_by_year, make_summary_data_by_group(data = data_epc_cleaned_covars, 
+                                                               lsoa_var = lsoa21cd, 
+                                                               group_vars = c("wd22cd",
+                                                                              "wd22nm",
+                                                                              "rgn22nm",
+                                                                              "year"),
+                                                               most_recent_only = FALSE),
+             format = "parquet"),
   
   tar_target(data_epc_lsoa_cross_section_to_map, prepare_data_to_map(data_epc_lsoa_cross_section,
                                                                "lsoa21cd")),
@@ -116,7 +130,7 @@ list(
   tar_target(data_epc_ward_by_year_to_map, prepare_data_to_map(data_epc_ward_by_year,
                                                                "wd22cd")),
   
-  tar_target(data_epc_coverage_lsoa_to_map, prepare_data_to_map(make_data_epc_coverage(data_epc_cleaned_covars_most_recent,
+  tar_target(data_epc_coverage_lsoa_to_map, prepare_data_to_map(make_data_epc_coverage(data_epc_cleaned_covars,
                                                        path_stat_geo_files = here("Data/raw/geo_files"),
                                                        geography = lsoa21cd),
                                                        "lsoa21cd")),
@@ -127,12 +141,8 @@ list(
   
   tar_target(ward_boundaries, get_mapping_boundaries("wd22cd")),
   
-  tar_target(data_epc_ward_by_year_for_shiny, write_data_to_file(data_epc_ward_by_year,
-                                                                 here("Data/Cleaned/"),
-                                                                 ".csv"),
-             format = "file"),
-  
-  tar_target(tab_housing_chars_by_any_wood, make_summary_table(data = data_epc_cleaned_covars_most_recent,
+  tar_target(tab_housing_chars_by_any_wood, make_summary_table(data = data_epc_cleaned_covars,
+                                                               most_recent_only = TRUE,
                                                                vars_to_summarise = c("property_type",
                                                                                      "built_form",
                                                                                      "tenure"),
@@ -141,7 +151,8 @@ list(
                                                                name = "tab_housing_chars_by_any_wood"),
              format = "file"),
   
-  tar_target(cross_tab_imd_decile_any_wood, make_cross_tab(data_epc_cleaned_covars_most_recent,
+  tar_target(cross_tab_imd_decile_any_wood, make_cross_tab(data_epc_cleaned_covars,
+                                                           most_recent_only = TRUE,
                                                            "imd_decile",
                                                            "any_wood",
                                                            "cross_tab_imd_decile_any_wood"),
@@ -155,49 +166,53 @@ list(
                                                                  colour_var = rgn22nm,
                                                                  size_var = num_people)),
   
-  tar_target(choropleth_map_lsoa, make_choropleth_map(data_epc_lsoa_cross_section_to_map, 
-                                                 wood_conc,
-                                                 la_boundaries, 
-                                                 "lad22nm", 
-                                                 london_only = FALSE,
-                                                 legend_title = "By LSOA", 
-                                                 winsorise = TRUE, 
-                                                 lower_perc = 0.05, 
-                                                 upper_perc = 0.95,
-                                                 gradient_style = "order")),
+  tar_target(choropleth_map_wood_pc_lsoa, make_choropleth_map_2(fill_data = data_epc_lsoa_cross_section_to_map, 
+                                                 fill_var = wood_epc,
+                                                 boundary_data = la_boundaries, 
+                                                 fill_palette = "inferno",
+                                                 scale_lower_lim = 0,
+                                                 scale_upper_lim = 100,
+                                                 london_only = FALSE, 
+                                                 winsorise = FALSE, 
+                                                 lower_perc = NULL, 
+                                                 upper_perc = NULL,
+                                                 legend_title = "Percentage of EPCs")),
   
-  tar_target(choropleth_map_ward, make_choropleth_map(data_epc_ward_cross_section_to_map, 
-                                                 wood_conc,
-                                                 la_boundaries, 
-                                                 "lad22nm", 
-                                                 london_only = FALSE,
-                                                 legend_title = "By ward", 
-                                                 winsorise = TRUE, 
-                                                 lower_perc = 0.05, 
-                                                 upper_perc = 0.95,
-                                                 gradient_style = "order")),
+  tar_target(choropleth_map_wood_pc_ward, make_choropleth_map_2(fill_data = data_epc_ward_cross_section_to_map, 
+                                                                fill_var = wood_epc,
+                                                                boundary_data = la_boundaries, 
+                                                                fill_palette = "inferno",
+                                                                scale_lower_lim = 0,
+                                                                scale_upper_lim = 100,
+                                                                london_only = FALSE, 
+                                                                winsorise = FALSE, 
+                                                                lower_perc = NULL, 
+                                                                upper_perc = NULL,
+                                                                legend_title = "Percentage of EPCs")),
   
-  tar_target(choropleth_map_la, make_choropleth_map(data_epc_la_cross_section_to_map, 
-                                                      wood_conc,
-                                                      la_boundaries, 
-                                                      "lad22nm", 
-                                                      london_only = FALSE,
-                                                      legend_title = "By LA", 
-                                                      winsorise = TRUE, 
-                                                      lower_perc = 0.05, 
-                                                      upper_perc = 0.95,
-                                                    gradient_style = "order")),
+  tar_target(choropleth_map_wood_pc_la, make_choropleth_map_2(fill_data = data_epc_la_cross_section_to_map, 
+                                                              fill_var = wood_epc,
+                                                              boundary_data = la_boundaries, 
+                                                              fill_palette = "inferno",
+                                                              scale_lower_lim = 0,
+                                                              scale_upper_lim = 100,
+                                                              london_only = FALSE, 
+                                                              winsorise = FALSE, 
+                                                              lower_perc = NULL, 
+                                                              upper_perc = NULL,
+                                                              legend_title = "Percentage of EPCs")),
   
-  tar_target(choropleth_map_epc_coverage_lsoa, make_choropleth_map(data_epc_coverage_lsoa_to_map, 
-                                                    coverage_perc,
-                                                    la_boundaries, 
-                                                    "lad22nm", 
-                                                    london_only = FALSE,
-                                                    legend_title = "Coverage by LSOA (%)", 
-                                                    winsorise = FALSE, 
-                                                    lower_perc = NULL, 
-                                                    upper_perc = NULL,
-                                                    gradient_style = "cont")),
+  tar_target(choropleth_map_epc_coverage_lsoa, make_choropleth_map_2(fill_data = data_epc_coverage_lsoa_to_map, 
+                                                                     fill_var = coverage_perc,
+                                                                     boundary_data = la_boundaries, 
+                                                                     fill_palette = "inferno",
+                                                                     scale_lower_lim = 0,
+                                                                     scale_upper_lim = 100,
+                                                                     london_only = FALSE, 
+                                                                     winsorise = FALSE, 
+                                                                     lower_perc = NULL, 
+                                                                     upper_perc = NULL,
+                                                                     legend_title = "Percentage coverage")),
   
   tar_target(scatter_plot_epc_coverage_pc_wood_lsoa, data_epc_coverage_lsoa_to_map %>%
                
@@ -213,5 +228,7 @@ list(
                labs(x = "Percentage of UPRNs present in EPC data by LSOA",
                     y = "Percentage of homes with wood burning heat sources")),
   
-  tar_quarto(quarto_summary_epc_coverage, here("Output/Quarto/quarto_summary_epc_coverage.qmd"))
+  tar_quarto(quarto_summary_epc_project, 
+             "quarto_summary_epc_project.qmd",
+             quiet = FALSE)
 )

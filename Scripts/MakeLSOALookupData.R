@@ -13,10 +13,10 @@
 
 # Define function to make LSOA-level lookup data -------------------------------
 
-
 make_lsoa_lookup_data <- function(path_lsoa_size,
                                   path_imd_eng,
                                   path_imd_wales,
+                                  path_lsoa11_lsoa21_lookup,
                                   path_ethnicity,
                                   path_region,
                                   path_ward){
@@ -52,12 +52,35 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     select(lsoa_code, wimd_2019) %>%
     
     # Rename columns
-    rename(lsoa11cd = "lsoa_code",
-           imd_score = "wimd_2019")
+    rename("lsoa11cd" = "lsoa_code",
+           "imd_score" = "wimd_2019")
   
   # Bind England and Wales IMD datasets together
   data_imd <- bind_rows(data_imd_eng,
                         data_imd_wales)
+  
+  # Load LSOA11 code to LSOA21 code lookup data
+  data_lsoa11cd_lsoa21cd_lookup <- vroom(here(path_lsoa11_lsoa21_lookup),
+                                         col_select = c("LSOA11CD",
+                                                        "LSOA21CD")) %>%
+    
+    # Clean names
+    clean_names()
+  
+  # Left join LSOA21 codes with IMD data using the 2011 codes - this will generate
+  # a dataset of IMD scores using the 2021 LSOA codes, with IMD score defined on the
+  # 2011 LSOA codes
+  data_imd <- data_lsoa11cd_lsoa21cd_lookup %>%
+    
+    # Left join to retain all LSOA21 codes
+    left_join(data_imd, by = "lsoa11cd") %>%
+    
+    # Where multiple 2011 LSOAs correspond to one 2021 LSOA, I take the 
+    # average IMD score across all corresponding 2011 LSOAs (this should give a 
+    # reasonable approximation since all LSOAs are similar sized populations by 
+    # definition)
+    summarise(imd_score = mean(imd_score, na.rm = TRUE),
+              .by = lsoa21cd)
   
   # Load ethnicity dataset
   data_ethnicity <- vroom(here(path_ethnicity)) %>%
@@ -91,9 +114,15 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
   # Load ward-level data and merge with region-country lookup
   data_region <- vroom(here(path_region)) %>% 
     
+    # Clean names
     clean_names() %>%
     
-    select(-object_id, -wd22nm)
+    # Select relevant columns
+    select(wd22cd,
+           lad22cd,
+           lad22nm,
+           rgn22nm,
+           ctry22nm)
   
   data_ward <- vroom(here(path_ward)) %>%
     
@@ -103,7 +132,26 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     # Select relevant columns
     select(lsoa21cd, lsoa21nm, wd22cd, wd22nm) %>%
     
+    # Left join to region data
     left_join(data_region, by = "wd22cd")
+  
+  # There are four duplicated LSOAs - this is because the electoral ward of
+  # Hunmanby and Sherburn is shared between the LAs of Ryedale and Scarborough.
+  # Here, I filter the duplicated LSOAs by retaining the row where the LSOA21 name
+  # Matches the LAD22 name - e.g. 'Ryedale 004C' would be assigned to 'Ryedale'
+  data_ward_dupes <- get_dupes(data_ward, lsoa21cd) %>%
+    
+    select(!dupe_count) %>%
+    
+    # Detect string for Local Authority not within the LSOA name (then use 
+    # to filter full list of LSOAs above)
+    filter(!str_detect(lsoa21nm, lad22nm))
+  
+  # Filter rows from 'data_ward' based on the dataframe of duplicated values
+  # using anti join
+  data_ward <- data_ward %>%
+    
+    anti_join(data_ward_dupes)
   
   # Create LSOA-level lookup dataset
   
@@ -111,7 +159,7 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     
     # Left join to IMD data (we only want to keep LSOA codes from the 'LSOA_size' 
     # dataset as these are the more recent 2021 codes)
-    left_join(data_imd, by = c("lsoa21cd" = "lsoa11cd")) %>%
+    left_join(data_imd, by = "lsoa21cd") %>%
     
     # Full join to ethnicity data
     full_join(data_ethnicity, by = "lsoa21cd") %>%
@@ -122,7 +170,10 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     # Mutate region variable to treat Wales as a region (since IMD calculated differently)
     mutate(rgn22nm = ifelse(ctry22nm == "Wales", ctry22nm, rgn22nm)) %>%
     
-    # Mutate IMD and white ethnicity percentage deciles by region
+    # Remove 'ctry22nm' column
+    select(-ctry22nm) %>%
+    
+    # Mutate IMD and white ethnicity percentage deciles (as factors) by region
     mutate(imd_decile = ntile(desc(imd_score), n = 10),
            white_dec = ntile(desc(white_pct), n = 10),
            .by = "rgn22nm")

@@ -21,9 +21,11 @@ make_data_epc_coverage <- function(data_epc,
   # Load UPRN dataset from specified path
   data_geo <- merge_statistical_geographies(path_stat_geo_files)
   
-  # Generate an ID column in the EPC data (to ensure replicability in case
+  # FIlter most recent EPCs and generate an ID column in the EPC data (to ensure replicability in case
   # of changes to variable names, etc)
   data_epc <- data_epc %>%
+    
+    filter(most_recent == TRUE) %>%
     
     mutate(id = 1)
   
@@ -38,6 +40,7 @@ make_data_epc_coverage <- function(data_epc,
     
     rename_with(~str_replace(., ".x", ""), ends_with(".x")) %>%
     
+    # Make variable for the percentage coverage of UPRNs by geography variable
     summarise(coverage_perc = sum(!is.na(id))/n()*100,
               .by = {{geography}})
   

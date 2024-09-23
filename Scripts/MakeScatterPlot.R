@@ -31,7 +31,9 @@ make_scatter_plot <- function(data,
     
     # Add geom point
     geom_point(size = size,
-               alpha = alpha)
+               alpha = alpha) +
+    
+    scatter_plot_opts
   
   # In future, can add custom colour palettes, etc
 

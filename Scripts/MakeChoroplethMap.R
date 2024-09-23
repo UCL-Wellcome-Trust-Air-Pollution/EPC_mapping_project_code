@@ -55,7 +55,7 @@ make_choropleth_map <- function(fill_data,
     # Specify polygon object with dynamic ID variable (for interactive maps)  
     tm_polygons(alpha = 0, 
               border.col = "white",
-              lwd = 0.2, 
+              lwd = 0.05, 
               id = boundary_id_var) +
     
     # Remove frame from final plot

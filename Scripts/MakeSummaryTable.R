@@ -13,10 +13,14 @@
 # Define function to produce summary table from arbitrary dataframe ------------
 
 make_summary_table <- function(data, 
+                               most_recent_only,
                                vars_to_summarise, 
                                group_var = NULL,
                                report_missing = NULL,
                                name){
+  
+  # If most_recent_only is TRUE, subset data to most recent EPC
+  if(most_recent_only == TRUE) data <- data %>% filter(most_recent == TRUE)
   
   # Error to catch incorrect specification of behaviour for missing variables
   if(!report_missing %in% c(TRUE,
