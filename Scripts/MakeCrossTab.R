@@ -36,7 +36,6 @@ make_cross_tab <- function(data,
     # Set as 'gt' object to export to HTML
     as_gt()
     
-    # Save file to specified path
-    gtsave(cross_tab, here(paste0("Output/Tables/", name, ".html")))
+  return(cross_tab)
   
 }

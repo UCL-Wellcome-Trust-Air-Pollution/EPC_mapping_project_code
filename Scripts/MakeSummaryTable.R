@@ -52,9 +52,8 @@ make_summary_table <- function(data,
   # Set summary table as 'gt' object and export
   summary_table %>%
     
-  as_gt() %>%
+  as_gt()
   
-  # Export to specified file path + name
-  gtsave(here(paste0("Output/Tables/", name, ".html")))
+  return(summary_table)
   
 }
