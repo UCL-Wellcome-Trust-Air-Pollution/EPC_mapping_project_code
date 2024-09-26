@@ -20,7 +20,6 @@ make_choropleth_map <- function(fill_data,
                                   fill_palette = "inferno",
                                   scale_lower_lim = NULL,
                                   scale_upper_lim = NULL,
-                                  london_only = FALSE,
                                   winsorise = FALSE,
                                   lower_perc = 0.05,
                                   upper_perc = 0.95,
@@ -30,14 +29,6 @@ make_choropleth_map <- function(fill_data,
   if(winsorise) fill_data <- mutate(fill_data, "{{fill_var}}" := case_when({{fill_var}} > get_percentile({{fill_var}}, upper_perc) ~ get_percentile({{fill_var}}, upper_perc),
                                                                            {{fill_var}} < get_percentile({{fill_var}}, lower_perc) ~ get_percentile({{fill_var}}, lower_perc),
                                                                            .default = {{fill_var}}))
-  
-  # If 'london_only' == TRUE, filter fill data to only London polygons (else nothing)
-  if(london_only) {
-    
-    fill_data <- filter(fill_data, rgn22nm == "London")
-    boundary_data <- filter(boundary_data, str_sub(lad22cd, 1, 3) == "E09")
-    
-  }
   
   
   choropleth_map <- ggplot(fill_data

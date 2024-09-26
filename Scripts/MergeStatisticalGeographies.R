@@ -25,6 +25,7 @@ merge_statistical_geographies <- function(path_stat_geo_files){
   data_geo_list <- lapply(data_geo_files, vroom, col_select = c("UPRN",
                                                                 "PCDS",
                                                                 "lsoa21cd",
+                                                                "wd22cd",
                                                                 "rgn22cd"))
   
   # Bind list of dataframes together

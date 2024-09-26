@@ -16,10 +16,13 @@
 
 make_data_epc_coverage <- function(data_epc,
                                    path_stat_geo_files,
-                                   geography){
+                                   geography_var){
   
   # Load UPRN dataset from specified path
-  data_geo <- merge_statistical_geographies(path_stat_geo_files)
+  data_geo <- merge_statistical_geographies(path_stat_geo_files) %>%
+    
+    summarise(n_uprn = n(),
+              .by = geography_var)
   
   # FIlter most recent EPCs and generate an ID column in the EPC data (to ensure replicability in case
   # of changes to variable names, etc)
@@ -27,22 +30,18 @@ make_data_epc_coverage <- function(data_epc,
     
     filter(most_recent == TRUE) %>%
     
-    mutate(id = 1)
+    summarise(n_epc = n(),
+              .by = c(geography_var, "rgn22nm"))
   
   # Left join UPRN data to EPC data, group by specified geography, and summarise
   # dataset with percentage of UPRNs in the lookup which exist in the EPC data
-  data_coverage <- data_geo %>% 
+  data_coverage <- data_epc %>% 
     
-    left_join(data_epc, by = "uprn") %>%
-    
-    # Remove duplicate cols
-    select(!ends_with(".y")) %>%
-    
-    rename_with(~str_replace(., ".x", ""), ends_with(".x")) %>%
+    left_join(data_geo, by = geography_var) %>%
     
     # Make variable for the percentage coverage of UPRNs by geography variable
-    summarise(coverage_perc = sum(!is.na(id))/n()*100,
-              .by = {{geography}})
+    summarise(coverage_perc = n_epc/n_uprn*100,
+              .by = c(geography_var, "rgn22nm"))
   
   # Return dataframe of coverage
   return(data_coverage)

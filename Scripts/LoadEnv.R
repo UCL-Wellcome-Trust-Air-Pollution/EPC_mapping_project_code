@@ -18,3 +18,10 @@ scatter_plot_opts <- list(ggthemes::theme_tufte(base_family = "arial"),
                           ggplot2::scale_size(range = c(2, 10)),
                           ggplot2::theme(legend.position = "bottom",
                                 legend.box = "vertical"))
+
+line_plot_opts <- list(ggthemes::theme_tufte(base_family = "arial"),
+                       ggplot2::scale_size(range = c(2, 10)),
+                       ggplot2::theme(legend.position = "bottom",
+                                      legend.box = "vertical"),
+                       ggplot2::scale_colour_viridis_d(),
+                       ggplot2::geom_line(size = 1))

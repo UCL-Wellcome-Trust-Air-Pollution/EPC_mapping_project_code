@@ -127,7 +127,13 @@ merge_data_epc_cleaned_covars <- function(data,
   data_epc_cleaned_covars <- data_epc_cleaned_covars %>%
     
     # Retain all rows in main data (left join)
-    left_join(sca_data, by = "uprn")
+    left_join(sca_data, by = "uprn") %>%
+    
+    # Clean duplicated columns
+    select(!ends_with(".y")) %>%
+    
+    # Rename duplicated columns
+    rename_with(~ str_replace(., ".x", ""))
   
   # Return 'data_epc_cleaned_covars'
   return(data_epc_cleaned_covars)

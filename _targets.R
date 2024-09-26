@@ -40,7 +40,9 @@ tar_option_set(
                "qs",
                "extrafont",
                "viridis"),
-  format = "qs"
+  format = "qs",
+  memory = "transient", 
+  garbage_collection = TRUE
 )
 
 # Run the R scripts with custom functions:
@@ -133,32 +135,20 @@ list(
                                                                "wd22cd")),
   
   tar_target(data_epc_coverage_lsoa_to_map, prepare_data_to_map(make_data_epc_coverage(data_epc_cleaned_covars,
+                                                                                       path_stat_geo_files = here("Data/raw/geo_files"),
+                                                                                       geography = "lsoa21cd"),
+                                                                "lsoa21cd")),
+  
+  tar_target(data_epc_coverage_ward_to_map, prepare_data_to_map(make_data_epc_coverage(data_epc_cleaned_covars,
                                                        path_stat_geo_files = here("Data/raw/geo_files"),
-                                                       geography = lsoa21cd),
-                                                       "lsoa21cd")),
+                                                       geography = "wd22cd"),
+                                                       "wd22cd")),
   
   tar_target(lsoa_boundaries, get_mapping_boundaries("lsoa21cd")),
   
   tar_target(la_boundaries, get_mapping_boundaries("lad22cd")),
   
   tar_target(ward_boundaries, get_mapping_boundaries("wd22cd")),
-  
-  tar_target(tab_housing_chars_by_any_wood, make_summary_table(data = data_epc_cleaned_covars,
-                                                               most_recent_only = TRUE,
-                                                               vars_to_summarise = c("property_type",
-                                                                                     "built_form",
-                                                                                     "tenure"),
-                                                               group_var = "any_wood",
-                                                               report_missing = TRUE,
-                                                               name = "tab_housing_chars_by_any_wood"),
-             format = "rds"),
-  
-  tar_target(cross_tab_imd_decile_any_wood, make_cross_tab(data_epc_cleaned_covars,
-                                                           most_recent_only = TRUE,
-                                                           "imd_decile",
-                                                           "any_wood",
-                                                           "cross_tab_imd_decile_any_wood"),
-             format = "rds"),
   
   tar_target(scatter_plot_pc_wood_imd, make_grouped_scatter_plot(data = data_epc_lsoa_cross_section,
                                                                  x_var = imd_score,
@@ -173,8 +163,7 @@ list(
                                                  boundary_data = la_boundaries, 
                                                  fill_palette = "inferno",
                                                  scale_lower_lim = 0,
-                                                 scale_upper_lim = 100,
-                                                 london_only = FALSE, 
+                                                 scale_upper_lim = 100, 
                                                  winsorise = FALSE, 
                                                  lower_perc = NULL, 
                                                  upper_perc = NULL,
@@ -185,8 +174,7 @@ list(
                                                                 boundary_data = la_boundaries, 
                                                                 fill_palette = "inferno",
                                                                 scale_lower_lim = 0,
-                                                                scale_upper_lim = 100,
-                                                                london_only = FALSE, 
+                                                                scale_upper_lim = 100, 
                                                                 winsorise = FALSE, 
                                                                 lower_perc = NULL, 
                                                                 upper_perc = NULL,
@@ -198,19 +186,6 @@ list(
                                                               fill_palette = "inferno",
                                                               scale_lower_lim = 0,
                                                               scale_upper_lim = 100,
-                                                              london_only = FALSE, 
-                                                              winsorise = FALSE, 
-                                                              lower_perc = NULL, 
-                                                              upper_perc = NULL,
-                                                              legend_title = "Percentage of EPCs")),
-  
-  tar_target(choropleth_map_wood_pc_lsoa_london, make_choropleth_map(fill_data = data_epc_lsoa_cross_section_to_map, 
-                                                              fill_var = wood_epc,
-                                                              boundary_data = la_boundaries, 
-                                                              fill_palette = "inferno",
-                                                              scale_lower_lim = 0,
-                                                              scale_upper_lim = 100,
-                                                              london_only = TRUE, 
                                                               winsorise = FALSE, 
                                                               lower_perc = NULL, 
                                                               upper_perc = NULL,
@@ -221,12 +196,22 @@ list(
                                                                      boundary_data = la_boundaries, 
                                                                      fill_palette = "inferno",
                                                                      scale_lower_lim = 0,
-                                                                     scale_upper_lim = 100,
-                                                                     london_only = FALSE, 
+                                                                     scale_upper_lim = 100, 
                                                                      winsorise = FALSE, 
                                                                      lower_perc = NULL, 
                                                                      upper_perc = NULL,
                                                                      legend_title = "Percentage coverage")),
+  
+  tar_target(choropleth_map_epc_coverage_ward_london, make_choropleth_map(fill_data = data_epc_coverage_ward_to_map[data_epc_coverage_ward_to_map$rgn22nm == "London",],
+                                                                          fill_var = coverage_perc,
+                                                                          boundary_data = la_boundaries[str_sub(la_boundaries$lad22cd, 1, 3) == "E09",], 
+                                                                          fill_palette = "inferno",
+                                                                          scale_lower_lim = 0,
+                                                                          scale_upper_lim = 100, 
+                                                                          winsorise = FALSE, 
+                                                                          lower_perc = NULL, 
+                                                                          upper_perc = NULL,
+                                                                          legend_title = "Percentage coverage")),
   
   tar_target(scatter_plot_epc_coverage_pc_wood_lsoa, data_epc_coverage_lsoa_to_map %>%
                
@@ -242,7 +227,25 @@ list(
                labs(x = "Percentage of UPRNs present in EPC data by LSOA",
                     y = "Percentage of homes with wood burning heat sources")),
   
-  tar_quarto(quarto_summary_epc_project, 
-             "quarto_summary_epc_project.qmd",
+  tar_target(line_plot_pm25_emissions_absolute, make_line_plot(get_air_pollution_data(
+    data_path = "Data/raw/air_pollution_data/tables_for_emissions_by_source_1990_to_2022_rev.ods", 
+    sheet = "Table_2a_&_2b", 
+    data_range = "A3:AH20", 
+    colnames = TRUE), 
+    year, 
+    emissions, 
+    source)),
+  
+  tar_target(line_plot_pm25_emissions_perc, make_line_plot(get_air_pollution_data(
+    data_path = "Data/raw/air_pollution_data/tables_for_emissions_by_source_1990_to_2022_rev.ods", 
+    sheet = "Table_2a_&_2b", 
+    data_range = "A26:AH41", 
+    colnames = TRUE), 
+    year, 
+    emissions, 
+    source)),
+  
+  tar_quarto(EPC_project_manuscript,
+             "EPC_project_manuscript.qmd",
              quiet = FALSE)
 )
