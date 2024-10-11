@@ -15,15 +15,21 @@
 # Define map function ----------------------------------------------------------
 
 make_choropleth_map <- function(fill_data,
-                                  fill_var,
-                                  boundary_data,
-                                  fill_palette = "inferno",
-                                  scale_lower_lim = NULL,
-                                  scale_upper_lim = NULL,
-                                  winsorise = FALSE,
-                                  lower_perc = 0.05,
-                                  upper_perc = 0.95,
-                                  legend_title){
+                                fill_var,
+                                filter_low_n = FALSE,
+                                n_var = NULL,
+                                n_threshold = NULL,
+                                boundary_data,
+                                fill_palette = "inferno",
+                                scale_lower_lim = NULL,
+                                scale_upper_lim = NULL,
+                                winsorise = FALSE,
+                                lower_perc = NULL,
+                                upper_perc = NULL,
+                                legend_title){
+  
+  # If 'n_var' is specified, filter data to plot based on number of obs higher than 'n_threshold'
+  if(filter_low_n) fill_data <- fill_data %>% filter({{n_var}} > n_threshold)
   
   # If 'winsorise' is TRUE, winsorise upper and lower percentiles of fill variable (default is 5th and 95th percentile)
   if(winsorise) fill_data <- mutate(fill_data, "{{fill_var}}" := case_when({{fill_var}} > get_percentile({{fill_var}}, upper_perc) ~ get_percentile({{fill_var}}, upper_perc),

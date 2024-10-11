@@ -24,6 +24,8 @@ merge_statistical_geographies <- function(path_stat_geo_files){
   # Sequentially load csv files using vroom
   data_geo_list <- lapply(data_geo_files, vroom, col_select = c("UPRN",
                                                                 "PCDS",
+                                                                "GRIDGB1E",
+                                                                "GRIDGB1N",
                                                                 "lsoa21cd",
                                                                 "wd22cd",
                                                                 "rgn22cd"))
@@ -35,7 +37,10 @@ merge_statistical_geographies <- function(path_stat_geo_files){
     clean_names() %>%
     
     # Clean postcode variable to remove whitespace and set to lowercase
-    mutate(pcds = tolower(str_replace_all(pcds, fixed(" "), "")))
+    mutate(pcds = tolower(str_replace_all(pcds, fixed(" "), ""))) %>%
+    
+    # Mutate characters to factors
+    mutate(across(where(is.character), as.factor))
   
   return(data_geo)
   

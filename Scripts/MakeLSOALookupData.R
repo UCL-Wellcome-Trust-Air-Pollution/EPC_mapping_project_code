@@ -19,7 +19,8 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
                                   path_lsoa11_lsoa21_lookup,
                                   path_ethnicity,
                                   path_region,
-                                  path_ward){
+                                  path_ward,
+                                  path_urban_rural){
 
   # Load LSOA size dataset
   data_lsoa_size <- vroom(here(path_lsoa_size), col_select = c("LSOA21CD",
@@ -153,6 +154,30 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     
     anti_join(data_ward_dupes)
   
+  # Load urban/rural classifier
+  data_urban_rural <- vroom(here(path_urban_rural), col_select = c("LSOA11CD",
+                                                                        "RUC11")) %>%
+    
+    clean_names()
+  
+  # Merge with 2021 LSOA lookup dataset and remove NA values
+  data_urban_rural <- data_lsoa11cd_lsoa21cd_lookup %>%
+    
+    # Left join to urban/rural data to preserve 2021 LSOA codes
+    left_join(data_urban_rural, by = "lsoa11cd") %>%
+    
+    # Remove lsoa11 col
+    select(!lsoa11cd) %>%
+    
+    # Remove LSOAs where more than one entry (duplicated when merging
+    # 2011 LSOA codes with 2021 LSOA codes - unclear how to categorise them)
+    mutate(n = n(),
+           .by = lsoa21cd) %>%
+    
+    filter(n == 1) %>%
+    
+    select(!n)
+  
   # Create LSOA-level lookup dataset
   
   data_lsoa_lookup <- data_lsoa_size %>%
@@ -160,6 +185,9 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     # Left join to IMD data (we only want to keep LSOA codes from the 'LSOA_size' 
     # dataset as these are the more recent 2021 codes)
     left_join(data_imd, by = "lsoa21cd") %>%
+    
+    # Left join to urban/rural classification
+    left_join(data_urban_rural, by = "lsoa21cd") %>%
     
     # Full join to ethnicity data
     full_join(data_ethnicity, by = "lsoa21cd") %>%
@@ -176,7 +204,10 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     # Mutate IMD and white ethnicity percentage deciles (as factors) by region
     mutate(imd_decile = ntile(desc(imd_score), n = 10),
            white_dec = ntile(desc(white_pct), n = 10),
-           .by = "rgn22nm")
+           .by = "rgn22nm") %>%
+    
+    # Mutate characters to factors
+    mutate(across(where(is.character), as.factor))
   
   return(data_lsoa_lookup)
 

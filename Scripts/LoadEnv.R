@@ -14,14 +14,47 @@
 
 # Set global plot options ------------------------------------------------------
 
-scatter_plot_opts <- list(ggthemes::theme_tufte(base_family = "arial"),
-                          ggplot2::scale_size(range = c(2, 10)),
-                          ggplot2::theme(legend.position = "bottom",
-                                legend.box = "vertical"))
+# Scatter plot options
+scatter_plot_opts <- list(
+  
+  # Main theme
+  theme_bw(base_size = 12),
+  
+  # Theme customisation
+  theme(plot.title = element_text(face = "bold"),
+        legend.position = "bottom",
+        legend.box = "vertical",
+        legend.title = element_text(face = "bold")))
 
-line_plot_opts <- list(ggthemes::theme_tufte(base_family = "arial"),
-                       ggplot2::scale_size(range = c(2, 10)),
-                       ggplot2::theme(legend.position = "bottom",
-                                      legend.box = "vertical"),
-                       ggplot2::scale_colour_viridis_d(),
-                       ggplot2::geom_line(size = 1))
+# Line plot options
+line_plot_opts <- list(
+  
+  # Main theme
+  theme_bw(base_size = 12),
+  
+  # Theme customisation
+  theme(
+    # Title options
+    plot.title = element_text(face = "bold"),
+                         
+    # Panel options
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+     
+    # Legend options
+    legend.box = "vertical",
+    legend.title = element_text(face = "bold"),
+     
+    # Facet options
+    strip.background = element_blank(),
+     
+    # Axis options
+    axis.line = element_line()),
+  
+  # Colour options
+  scale_colour_viridis(option = "inferno",
+                       discrete = TRUE),
+                       geom_line(size = 1))

@@ -19,6 +19,7 @@
 # Define function to merge covars with cleaned main EPC data -------------------
 
 merge_data_epc_cleaned_covars <- function(data,
+                                          data_uprn_sca_lookup,
                                           path_stat_geo_files,
                                           path_lsoa_size,
                                           path_imd_eng,
@@ -27,14 +28,12 @@ merge_data_epc_cleaned_covars <- function(data,
                                           path_ethnicity,
                                           path_region,
                                           path_ward,
-                                          path_sca_data){
+                                          path_urban_rural){
 
-  # Merge statistical geographies ----------------------------------------------
-
-  data_geo_uprn <- merge_statistical_geographies(path_stat_geo_files)
+  # Merge statistical geographies and SCA areas --------------------------------
   
   # Generate postcode-level lookup data
-  data_geo_pcds <- data_geo_uprn %>%
+  data_geo_pcds <- data_uprn_sca_lookup %>%
     
     # Remove missing postcodes
     filter(!is.na(pcds)) %>%
@@ -64,15 +63,8 @@ merge_data_epc_cleaned_covars <- function(data,
                                             path_lsoa11_lsoa21_lookup,
                                             path_ethnicity,
                                             path_region,
-                                            path_ward)
-  
-  # Load smoke control data ----------------------------------------------------
-  
-  sca_data <- vroom(path_sca_data, col_select = c("uprn",
-                                                  "smoke_ctrl")) %>%
-    
-    # Mutate NA to 0 (i.e. UPRN is not in a smoke control area)
-    mutate(smoke_ctrl = if_else(is.na(smoke_ctrl), 0, smoke_ctrl))
+                                            path_ward,
+                                            path_urban_rural)
   
   # Merge statistical geographies and secondary data onto main EPC data --------
   
@@ -83,7 +75,7 @@ merge_data_epc_cleaned_covars <- function(data,
     filter(!is.na(uprn)) %>%
     
     # Left join to statistical geographies by UPRN
-    left_join(data_geo_uprn, by = "uprn") %>%
+    left_join(data_uprn_sca_lookup, by = "uprn") %>%
     
     # Remove Scottish LSOAs
     filter(rgn22cd != "S99999999") %>%
@@ -104,8 +96,11 @@ merge_data_epc_cleaned_covars <- function(data,
     # Remove Scottish LSOAs
     filter(rgn22cd != "S99999999") %>%
     
-    # Full join to LSOA lookup data
-    full_join(data_lsoa_lookup, by = "lsoa21cd")
+    # Left join to LSOA lookup data (only keep rows in main EPC data)
+    left_join(data_lsoa_lookup, by = "lsoa21cd") %>%
+    
+    # Create 'most recent' variable (assume all EPCs without UPRN are most recent)
+    mutate(most_recent = TRUE)
   
   # Set to data.table
   setDT(data_epc_cleaned_covars_with_uprn)
@@ -121,19 +116,28 @@ merge_data_epc_cleaned_covars <- function(data,
   
   # Merge two data.tables to recreate main data.table
   data_epc_cleaned_covars <- bind_rows(data_epc_cleaned_covars_with_uprn,
-                                       data_epc_cleaned_covars_without_uprn)
-  
-  # Merge final data to smoke control areas using UPRN
-  data_epc_cleaned_covars <- data_epc_cleaned_covars %>%
+                                       data_epc_cleaned_covars_without_uprn) %>%
     
-    # Retain all rows in main data (left join)
-    left_join(sca_data, by = "uprn") %>%
-    
-    # Clean duplicated columns
+    # Remove duplicate columns
     select(!ends_with(".y")) %>%
     
-    # Rename duplicated columns
-    rename_with(~ str_replace(., ".x", ""))
+    rename_with(~ str_replace(., ".x", "")) %>%
+    
+    # Remove unused variables
+    select(!c(postcode, 
+              pcds, 
+              inspection_date,
+              uprn)) %>%
+    
+    # Set character variables as factors
+    mutate(across(where(is.character), as.factor))
+  
+  # Test remove ancilliary datasets
+  rm(data_uprn_sca_lookup,
+     data_epc_cleaned_covars_with_uprn,
+     data_epc_cleaned_covars_without_uprn,
+     data_geo_pcds,
+     data_geo_pcds_dupes)
   
   # Return 'data_epc_cleaned_covars'
   return(data_epc_cleaned_covars)

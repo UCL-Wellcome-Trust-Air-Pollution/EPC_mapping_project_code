@@ -76,36 +76,25 @@ clean_data_epc <- function(file){
                               .default = tenure)) %>%
     
     # Create new variable for 'property type' similar to 2021 Census
-    mutate(detached = case_when(property_type %in% c("bungalow",
+    mutate(property_type_census = case_when(property_type %in% c("bungalow",
                                                       "house") &
-                           built_form == "detached" ~ 1,
-                           .default = 0),
-           
-      semidetached = case_when(property_type %in% c("bungalow",
-                                                    "house") &
-                               built_form == "semi-detached" ~ 1,
-                             .default = 0),
-      
-      terrace = case_when(property_type %in% c("bungalow",
-                                               "house") &
-                          built_form %in% c("mid-terrace",
-                                             "end-terrace",
-                                             "enclosed end-terrace",
-                                             "enclosed mid-terrace") ~ 1,
-                          .default = 0),
-      
-      house_form_missing = case_when(property_type %in% c("bungalow",
-                                                          "house") &
-                                     is.na(built_form) ~ 1,
-                                   .default = 0),
-      
-      flat = case_when(property_type %in% c("flat",
-                                           "maisonette") ~ 1,
-                     .default = 0),
-      
-      accom_other = case_when(property_type == "park home" ~ 1,
-                              .default = 0)
-    )  %>%
+                           built_form == "detached" ~ "Detached",
+                           property_type %in% c("bungalow",
+                                                "house") &
+                             built_form == "semi-detached" ~ "Semi Detached",
+                           property_type %in% c("bungalow",
+                                                "house") &
+                             built_form %in% c("mid-terrace",
+                                               "end-terrace",
+                                               "enclosed end-terrace",
+                                               "enclosed mid-terrace") ~ "Terrace",
+                           property_type %in% c("bungalow",
+                                                "house") &
+                             is.na(built_form) ~ "house_form_missing",
+                           property_type %in% c("flat",
+                                                "maisonette") ~ "Flat",
+                           property_type == "park home" ~ "Other accommodation",
+                           .default = NA))  %>%
     
     # Generate indicator variable for SFA as main/secondary heat source overall and in houses only
     mutate(
@@ -140,8 +129,16 @@ clean_data_epc <- function(file){
     # Clean postcode variable to remove whitespace and set to lowercase
     mutate(postcode = tolower(str_replace_all(postcode, fixed(" "), ""))) %>%
     
+    # Remove unused variables
+    select(!c(construction_age_band,
+              mainheat_description,
+              secondheat_description)) %>%
+    
     # Filter duplicated rows
-    distinct()
+    distinct() %>%
+    
+    # Mutate characters to factors
+    mutate(across(where(is.character), as.factor))
   
   # Close connection
   dbDisconnect(con)

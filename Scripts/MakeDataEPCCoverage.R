@@ -15,11 +15,11 @@
 # Define function to generate dataset of EPC coverage by geography -------------
 
 make_data_epc_coverage <- function(data_epc,
-                                   path_stat_geo_files,
+                                   data_uprn_sca_lookup,
                                    geography_var){
   
   # Load UPRN dataset from specified path
-  data_geo <- merge_statistical_geographies(path_stat_geo_files) %>%
+  data_uprn_sca_lookup <- data_uprn_sca_lookup %>%
     
     summarise(n_uprn = n(),
               .by = geography_var)
@@ -37,7 +37,7 @@ make_data_epc_coverage <- function(data_epc,
   # dataset with percentage of UPRNs in the lookup which exist in the EPC data
   data_coverage <- data_epc %>% 
     
-    left_join(data_geo, by = geography_var) %>%
+    left_join(data_uprn_sca_lookup, by = geography_var) %>%
     
     # Make variable for the percentage coverage of UPRNs by geography variable
     summarise(coverage_perc = n_epc/n_uprn*100,

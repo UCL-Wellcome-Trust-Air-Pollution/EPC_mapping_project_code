@@ -13,6 +13,7 @@
 # Source functions -------------------------------------------------------------
 
 source(here("Scripts/CleanDataEPC.R"))
+source(here("Scripts/MergeGeoDataSCA.R"))
 source(here("Scripts/MergeDataEPCCleanedCovars.R"))
 source(here("Scripts/GetMappingBoundaries.R"))
 source(here("Scripts/MakeChoroplethMap.R"))
@@ -25,3 +26,6 @@ source(here("Scripts/PrepareDataToMap.R"))
 source(here("Scripts/MakeDataEPCCoverage.R"))
 source(here("Scripts/MakeScatterPlot.R"))
 source(here("Scripts/MakeLinePlot.R"))
+source(here("Scripts/MakeUPRNSCALookup.R"))
+source(here("Scripts/MakeOSMDensityMap.R"))
+source(here("Scripts/MakePatchworkPlot.R"))

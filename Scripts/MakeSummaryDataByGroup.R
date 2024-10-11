@@ -47,31 +47,32 @@ make_summary_data_by_group <- function(data,
                               "any_sfa_h",
                               "any_wood",
                               "any_wood_h",
-                              "pre_1950",
-                              "detached",
-                              "semidetached",
-                              "terrace",
-                              "flat",
-                              "accom_other",
-                              "house_form_missing")), ~ sum(., na.rm = TRUE)),
+                              "pre_1950")), ~ sum(., na.rm = TRUE)),
+              
               # Total number of EPCS
               epc = n(),
               
               # Total number of EPCs on houses
-              epc_house_total = sum(
-                       detached, semidetached, terrace,
-                       house_form_missing),
+              epc_house_total = sum(property_type %in% c("bungalow", 
+                                                                "house"), na.rm = TRUE),
               
               # Average IMD score/decile across smallest grouping variable
               imd_score = mean(imd_score, na.rm = TRUE), 
               imd_decile = mean(imd_decile, na.rm = TRUE),
+              
+              # Indicator for whether any part of geography is in an SCA
+              # If there is any overlap with an SCA, the geography is classified
+              # as 1
+              sca_area = case_when(mean(sca_area, na.rm = TRUE) > 0 ~ 1,
+                                   .default = 0),
+              
               .by = group_vars) %>%
     
     # Join to area/population data
     full_join(data_area_pop_lsoa, by = group_vars) %>%
 
     # Create new variables for concentration of SFAs per km2 and proportion of EPCs
-    # with SFAs (restricted to hou)
+    # with SFAs (restricted to houses)
     mutate(sfa_conc = any_sfa/area_in_km2,
 
            wood_conc = any_wood/area_in_km2,
@@ -79,7 +80,10 @@ make_summary_data_by_group <- function(data,
            sfa_epc = (any_sfa_h/epc_house_total)*100,
 
            wood_epc = (any_wood_h/epc_house_total)*100,
-           .by = group_vars)
+           .by = group_vars) %>%
+    
+    # Convert NaNs to NAs
+    mutate(across(where(is.numeric), ~ na_if(., NaN)))
   
   return(summary_data)
 }
