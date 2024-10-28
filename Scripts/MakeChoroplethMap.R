@@ -26,7 +26,8 @@ make_choropleth_map <- function(fill_data,
                                 winsorise = FALSE,
                                 lower_perc = NULL,
                                 upper_perc = NULL,
-                                legend_title){
+                                legend_title,
+                                legend_position){
   
   # If 'n_var' is specified, filter data to plot based on number of obs higher than 'n_threshold'
   if(filter_low_n) fill_data <- fill_data %>% filter({{n_var}} > n_threshold)
@@ -58,7 +59,13 @@ make_choropleth_map <- function(fill_data,
     
     theme_void() +
     
-    labs(fill = legend_title)
+    theme(legend.title = element_text(size = 10),
+          legend.text = element_text(size = 8),
+          legend.justification.inside = c(1, 1),
+          plot.title = element_text(face = "bold")) +
+    
+    guides(fill = guide_colourbar(position = legend_position,
+                                  title = legend_title))
   
   return(choropleth_map)
   

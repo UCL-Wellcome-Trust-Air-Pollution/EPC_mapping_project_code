@@ -123,11 +123,27 @@ merge_data_epc_cleaned_covars <- function(data,
     
     rename_with(~ str_replace(., ".x", "")) %>%
     
+    # Create unique (anonymised) ID variable for each property
+    mutate(id = cur_group_id(),
+           .by = uprn) %>%
+    
+    # Create indicator for EPC number by property (inverse of row_number() function)
+    # and for total number of EPCs by property
+    mutate(epc_number = max(row_number()) - row_number() + 1,
+           total_epc = max(row_number()),
+           .by = id) %>%
+    
+    # Create new binary variable for urban/rural
+    mutate(urban = case_when(grepl("Urban", ruc11) ~ 1,
+                             grepl("Rural", ruc11) ~ 0,
+                             .default = NA)) %>%
+    
     # Remove unused variables
     select(!c(postcode, 
               pcds, 
               inspection_date,
-              uprn)) %>%
+              uprn,
+              ruc11)) %>%
     
     # Set character variables as factors
     mutate(across(where(is.character), as.factor))

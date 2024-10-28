@@ -1,27 +1,119 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|d56cf3a3d8bfb3c2|||||||||||||||
-choropleth_map|stem|13f71a83e4dd489b|fe11cc27bc3bd543|8b6fd236bb657f9e|33728421||t19975.772337426s|83010372209b6d27|34325000|rds|local|vector|||0.3||
-clean_data_epc|function|50f87977d5f16c81|||||||||||||||
-cross_tab_imd_decile_any_wood|stem|4836fdf19d85e418|82da5ce9c43626ee|a5fbc9638b8facff|1784087488|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Output/Tables/cross_tab_imd_decile_any_wood.html|t19976.6016074564s|6a867a7548b16ef1|15388|file|local|vector|||156.14|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectcol_var   Now  data  selectall_ofcol_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectrow_var   Now  data  selectall_ofrow_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+.Random.seed|object|bca0d743d86d7c0c|||||||||||||||
+build_logit_model|function|659d1a82b844beb2|||||||||||||||
+choropleth_map|stem|d1ea98dbaa25c522|fe11cc27bc3bd543|8b145b5b6da1d5c4|33728421||t19978.4474865559s|d91f01ac43f0f876|34322169|rds|local|vector|||0.2||
+choropleth_map_epc_coverage_lsoa|stem|de890c5189adca97|60eedde9145dd935|3b1906ac6456f597|-2084612859|Output/Maps/choropleth_map_epc_coverage_lsoa.png|t20017.6314942377s|c43ec1cab347112d|4003180|file|local|vector|||18.89||
+choropleth_map_epc_coverage_lsoa_london|stem|58b5067b9b8303d1|0ca5a932e61d78ae|4d5b634f2149fa3e|43775315||t19992.3781596077s|11167166fe7b9360|42606957|qs|local|vector|||0.25||
+choropleth_map_epc_coverage_ward_london|stem|bc0b9542623a75c6|69f538453c84a441|705835d1462126e8|1356853475||t20014.470104969s|7d757fbe9cc71808|16405044|qs|local|vector|||0.078||
+choropleth_map_la|stem|80e90e20df669ec4|47b4f7054c253610|73dcf477b2d125a5|1549604646||t19988.3869976097s|5fa31ac7e82622e9|7130661|qs|local|vector|||0.11||
+choropleth_map_lsoa|stem|ee3b6c101c658b21|d157eaefd782a3bb|82765c259ff2e5da|-199019735||t19988.3894337213s|16997d2e8c1023ba|32814945|qs|local|vector|||0.06||
+choropleth_map_sfa_conc_pred_lsoa|stem|206bdda817b1d168|30f7a665bcf74284|506da36f1dcd20ad|-1365123091||t20024.6915063988s|ad19ff39fc5b28ec|2316271407|qs|local|vector|||0.594||
+choropleth_map_sfa_pc_lsoa|stem|d55602c3da8e13aa|2fa2a99e278c4d4b|506da36f1dcd20ad|1969493534||t20024.6928815256s|c29746efbd94f00a|2316332654|qs|local|vector|||0.312||
+choropleth_map_ward|stem|843656a19bde523a|319ccdd7467ca1a7|b5d9e18756c79d67|-1246894256||t19988.3870042078s|fd5a706dd8fa448c|14769757|qs|local|vector|||0.03||
+choropleth_map_wood_conc_lsoa_london|stem|b69020d321c3d7d3|74b585ee3c93a0a1|aa2a7e2aa8cda2fc|901416400||t20011.6999984202s|a4b056866d38036a|47902787|qs|local|vector|||0.078||
+choropleth_map_wood_conc_pred_lsoa|stem|a6826e983f9d9773|930f1b40554eae5c|506da36f1dcd20ad|-324159053||t20024.6921717835s|9a9bc240d2ac8dc3|2316285180|qs|local|vector|||0.546||
+choropleth_map_wood_conc_pred_lsoa_london|stem|4c8a44f93ff25984|1f679e644f4beb77|506da36f1dcd20ad|-2028820306||t20024.692304585s|bb3c8385217971a1|475816166|qs|local|vector|||0.156||
+choropleth_map_wood_conc_pred_ward|stem|bee7dd42e84eed92|445d2e7c7a629f8b|d4da7b9ee0a08be9|-153962530||t20014.4712460637s|c26e3fb9e693e9b8|96858798|qs|local|vector|||0.047||
+choropleth_map_wood_pc_la|stem|ba344051315c284a|63346e8a78198162|4b51f361e22a7537|1559649811||t20014.4704050021s|49fa805f5b6cf1a4|49786124|qs|local|vector|||0.031||
+choropleth_map_wood_pc_lsoa|stem|20a5b006d6ca32f3|6f21307b4c39d960|506da36f1dcd20ad|-505547426||t20024.6937219527s|98b6f0c1f7f73fc5|2316295392|qs|local|vector|||0.453||
+choropleth_map_wood_pc_lsoa_2009|stem|f7d0c0030bf6438b|10feff344fe46c29|dfe386002bff0375|-723806087||t20014.4702930054s|f8c68b3068fa7ccc|216359131|qs|local|vector|||0.453||
+choropleth_map_wood_pc_lsoa_2023|stem|15469daa815bf7b9|302dc2683fd1dded|dfe386002bff0375|825135747||t20014.470385408s|096ef0ede53cbafd|216212501|qs|local|vector|||0.437||
+choropleth_map_wood_pc_lsoa_2024|stem|3cd57ec9c7b0f660|efbb9d13ef67d0c5|9039cafe139634dc|-1053122603||t20006.4617118231s|75f74bbfb1a71b2d|208452183|qs|local|vector|||0.297||
+choropleth_map_wood_pc_lsoa_london|stem|085c6796e62b845b|1780a83903814c8f|506da36f1dcd20ad|-2001476855||t20024.69304799s|ed11ae9e99cb287e|475833542|qs|local|vector|||0.141||
+choropleth_map_wood_pc_ward|stem|2bc5d875c6cd5dd3|df44609f95ff762f|d4da7b9ee0a08be9|486893468||t20014.4704396569s|a43d8fd7834fbd7b|96875936|qs|local|vector|||0.031||
+clean_data_epc|function|307e4a3f9b664d48|||||||||||||||
+cross_tab_imd_decile_any_wood|stem|3a2f8b127efe09fd|4ccc1edaee13059b|b8dff41dd5eaf2b0|1784087488||t19991.4615564913s|d43266a4ba6c1f7c|24245553|qs|local|vector|||66.75|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectrow_var   Now  data  selectall_ofrow_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectcol_var   Now  data  selectall_ofcol_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
 data_epc|stem||f1f429588d000705|2c530c1562a7fbd1|1258954618|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Data/raw/data_epc.duckdb|t19971.695438906s||0|file|local|vector|||||_paths_ file not found or no read permission at CUsersuctpckeOneDrive  University College LondonEPC_project_codeDatarawepc_datadata_epc.duckdb
-data_epc_cleaned|stem|40c1db5eab5e7d42|f046987e57aafec0|7661be8d6ac88971|-502665896||t19972.7172527937s|f16de60c78214801|390870794|rds|local|vector|||215.39||
-data_epc_cleaned_covars|stem|c822c095f47c654a|b67cdf3f404e340a|a9d0e20154d2e86d|-977625867||t19975.7363068242s|3aeecebd5bfebf3d|1126524750|rds|local|vector|||451.92||
-data_epc_lsoa_cross_section|stem|d23877248654aa95|b6415e646180ee5c|1424b9f3cc692034|1067368091||t19975.7557288246s|9bab377d63a50892|2172949|rds|local|vector|||24.03|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_epc_cleaned|stem|d07a1a720220c875|f046987e57aafec0|ae81f9d69b75c02d|-502665896||t20007.7045332962s|91d2f9f89bb765fc|474098342|parquet|local|vector|||504.188||
+data_epc_cleaned_covars|stem|03750fe235a1de93|f31f0d1359f447c7|8090e49593c45806|-977625867||t20019.7298261714s|533584375db55411|1215787934|parquet|local|vector|||619.5||
+data_epc_cleaned_covars_all_epc|stem|a10ccebae18f5be8|24a00335e86b89b9|81c94aeef0685929|506787796||t19983.808717491s|752e58ea9a7bccb4|1510880570|rds|local|vector|||774.54||
+data_epc_cleaned_covars_most_recent|stem|3f1deeda6b7687b9|4f893a9924685985|81c94aeef0685929|1065223008||t19983.7911295144s|31f71c9aa88350ed|1113208287|rds|local|vector|||1302.33||
+data_epc_coverage_lsoa|stem|7b43bf38b4655ece|874172672bd738bb|f48026f2ac51a9e7|689723018||t19979.6980076544s|d71cb223d0e1842f|169|rds|local|vector|||410.53||
+data_epc_coverage_lsoa_to_map|stem|2c87c1592e737586|88367659a4a01233|a5baa85aafd63a5f|1888182610||t20017.6312491132s|438467b3dc802b35|295377260|qs|local|vector|||56.172||
+data_epc_coverage_ward_to_map|stem|8d44d858c41a20c8|468854d382e27376|6a33e610872599aa|1323401089||t20017.3340396993s|95b066319e0c99a1|10615659|qs|local|vector|||48.219|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgeography_var   Now  data  selectall_ofgeography_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_epc_la_by_year|stem|03d71103dbea6e16|88e8d696935383ee|922b5b3a8ebcebd5|-893131494||t20024.6906088766s|a33beb3fdce259d9|549083|parquet|local|vector|||61.796||
+data_epc_la_by_year_to_map|stem|b4014743b0a0f39f|6ba18e9f23b00b47|4763529645057b74|109945327||t20015.6534959109s|01ba452d28fb1e45|7881837|qs|local|vector|||43.703||
+data_epc_la_cross_section|stem|174511a5052daef4|41f1e8a576d8a271|922b5b3a8ebcebd5|1505329818||t20024.6869811761s|a69d4a6d6238e02a|85403|parquet|local|vector|||19.265||
+data_epc_la_cross_section_to_map|stem|896bce00cabf9b3b|3f7d4b2492c70dc5|8b152319b0b2695f|-2099702649||t20024.6908187418s|4578f9385ef9d937|27749947|qs|local|vector|||0.156||
+data_epc_lsoa_by_year|stem|1d9b5451a166d34f|6d3abffeacd55b2f|922b5b3a8ebcebd5|-714459826||t20024.6897094272s|ee6a1fd9868c759a|20798753|parquet|local|vector|||191.516||
+data_epc_lsoa_by_year_for_shiny|stem|27250389962013cb|e21525c49912c57e|8d8999e4c0df7e22|355766144|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Data/Cleaned/data_epc_lsoa_by_year.csv|t19978.6640629619s|3a795365d4b8fc92|76245643|file|local|vector|||15.75||
+data_epc_lsoa_by_year_most_recent_EPC|stem||74591755ef130e2f|1424b9f3cc692034|188835906||t19977.3827541298s||0|rds|local|vector|||1.47||ℹ In argument most_recent  1.Caused by error object most_recent not found
+data_epc_lsoa_by_year_to_map|stem|8ef566b9b6574da5|441e2452e6ca8abf|385227285ea2a367|-2090408913||t20015.6508172601s|d4b148cbf27343b9|45231241|qs|local|vector|||203.906||
+data_epc_lsoa_cross_section|stem|d0bea80db6042239|6c6032f9db9b2a30|922b5b3a8ebcebd5|1067368091||t20024.6866466137s|c5dba011d40a4dab|4713143|parquet|local|vector|||30.687||
+data_epc_lsoa_cross_section_to_map|stem|1a6f31852a9a521d|ef62dc1f9b7c2514|19ecabbfd810b583|1746386826||t20024.6907666614s|d06828a386109c3e|299165785|qs|local|vector|||1.187||
+data_epc_lsoa_housing_type|stem|7f106442e465f469|80a2b128e38655e3|922b5b3a8ebcebd5|661849144||t20024.6850344392s|40b3c0eb4781990e|7860410|parquet|local|vector|||107.266|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlsoa_var   Now  data  selectall_oflsoa_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selecthousing_type_var   Now  data  selectall_ofhousing_type_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgeo_level_var   Now  data  selectall_ofgeo_level_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_epc_ward_by_year|stem|c718f474397a241d|c2f06ad4c51e0c43|922b5b3a8ebcebd5|-538454520||t20024.6862096752s|ca5d4d4531e0ab51|9613118|parquet|local|vector|||69.281||
+data_epc_ward_by_year_for_shiny|stem|8d9e77d8bbb4d09b|6c8e4dd5e3c75b70|c3da8e9f223aa534|-88281696|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Data/Cleaned/data_epc_ward_by_year.csv|t19989.3745858048s|64d96a69e6b0691e|19468581|file|local|vector|||4.37||
+data_epc_ward_by_year_to_map|stem|cf031de9fe333219|97ae0463436d951f|ffc6fbe8ac35602e|1461762512||t20015.6518228532s|82784ba904f70910|23021321|qs|local|vector|||85.344||
+data_epc_ward_cross_section|stem|b409f367863ce078|7714320f3f9ea875|922b5b3a8ebcebd5|-836163729||t20024.6873992249s|c3e22071a0af1091|1390840|parquet|local|vector|||22.266||
+data_epc_ward_cross_section_to_map|stem|4eb8be067da28a7c|b85cc152327e9422|2743b7a866d5ad40|-1394779409||t20024.6908468884s|c2c1b370cceaa7f5|86724704|qs|local|vector|||0.328||
+data_for_logit_model|stem|c86489600cea947d|1c725a82586e0352|32920abbc4a510a6|187498502||t20020.4162280384s|e6920838fb4a5e38|161416877|qs|local|vector|||22.25|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectoutcome_var   Now  data  selectall_ofoutcome_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectnumeric_to_factor_vars   Now  data  selectall_ofnumeric_to_factor_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_housing_type_census|stem|0b887a3fc358afd1|bd1ccccde357c1d5|600d3ca1026aa84e|243965187||t20024.6836425757s|3cde740dc46c9c7d|1810722|qs|local|vector|||13.797||
+data_housing_type_os_epc|stem|46da6ed37a64b058|ef28406f9115c190|0d6fc566ed939b58|1502561757||t20017.6353963432s|76cd1098031252de|365|qs|local|vector|||9.218||
+data_os|stem|7d2474bd919e9e63|87b2c647c8c00d0a|bf62f96deb952baa|-1119668480||t20017.6299983214s|c963e6ca2be21bec|105199413|qs|local|vector|||22.031||
+data_uprn_sca_lookup|stem|58c2eedcfb54dc41|3105b017959e9315|40326225e64c301f|-1667461808||t20011.4562676125s|11efc1cf77744c96|1304073785|parquet|local|vector|||638.563|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlong_var   Now  data  selectall_oflong_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlat_var   Now  data  selectall_oflat_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+density_map_patchwork|stem|d731b7e738fca08f|c226e77907b7522d|bf001d876a569008|-1702623631|C:/Users/uctpcke/Documents/EPC_project_code/Output/Maps/patchwork_make_osm_density_map.png|t19998.7130183389s|b1bf090ab3701e4b|7781766|file|local|vector|||128.375||
+density_map_wood_greater_london|stem|7486a89b2493b9fd|5a23a6452ab74495|e2e8f3787558e175|-1477514946|C:/Users/uctpcke/Documents/EPC_project_code/Output/Maps/density_map_Greater_London.png|t19998.6817873418s|22c4916bcc2167b3|3018687|file|local|vector|||42.906||
+density_map_wood_greater_manchester|stem|8be354c59ff43f6b|37086166c1edc27b|e2e8f3787558e175|-1236517751|C:/Users/uctpcke/Documents/EPC_project_code/Output/Maps/density_map_Greater_Manchester.png|t19998.6823548792s|8828a84fd52a6b4c|2551096|file|local|vector|||10.422||
+density_map_wood_west_midlands|stem|572a0ba40d8a5a23|7fc51c947bbac5e0|e2e8f3787558e175|1870925588|C:/Users/uctpcke/Documents/EPC_project_code/Output/Maps/density_map_West_Midlands.png|t19998.6820434248s|91232881156547ca|2191000|file|local|vector|||22.125||
+density_map_wood_west_yorkshire|stem|6401962593bcf9af|997c621716897249|e2e8f3787558e175|-2056738468|C:/Users/uctpcke/Documents/EPC_project_code/Output/Maps/density_map_West_Yorkshire.png|t19998.6822339829s|dd3ff7647d402a95|3028529|file|local|vector|||16.437||
+EPC_project_manuscript|stem|1d7c2f32b8e476ab|87991ec80aa978eb|bfa2d451192207b5|1167858861|EPC_project_manuscript.pdf*EPC_project_manuscript_files*EPC_project_manuscript.qmd|t20020.4203011659s||29828615|file|local|vector|||348||Error running quarto cli.Caused by error System command quarto.exe failed
 f|object|697a17e4a5a1d1a0|||||||||||||||
+facet_wood_pc_imd_score_region|stem|7f5e4f1c6746c477|6845d7d5f3523eda|e3a335afe4dd14c4|-1234471905|Output/Figures/facet_wood_pc_imd_score_region.png|t20019.73467621s|989efa196da61165|2180945|file|local|vector|||9.281|Removed 1050 rows containing missing values or values outside the scale rangegeom_point.|
+facet_wood_pc_imd_score_region_urban|stem|8eb3aeca26df31ac|79f440f5fbd3722a|e3a335afe4dd14c4|-2001976714|Output/Figures/facet_wood_pc_imd_score_region_urban.png|t20020.3862872158s|8f083df3fbc5aee4|1814446|file|local|vector|||12.11|Removed 6 rows containing missing values or values outside the scale rangegeom_point.|
+facet_wood_pc_property_type_region|stem|0df16b91fc952e50|4a280b20fec80a49|e3a335afe4dd14c4|2100699736|Output/Figures/facet_wood_pc_property_type_region.png|t20019.7319819369s|7a2cfb517bf9bee4|526971|file|local|vector|||6.375||
+facet_wood_pc_white_pct_region|stem|12c962eec14255d1|6a6fd840b73fb115|e3a335afe4dd14c4|-938591422|Output/Figures/facet_wood_pc_white_pct_region.png|t20020.3870025304s|4bab13a058ddf03e|1632271|file|local|vector|||8.906|Removed 35 rows containing missing values or values outside the scale rangegeom_point.|
+facet_wood_pc_white_pct_region_urban|stem|0ddf72e3e2af334e|785beadbc1029758|e3a335afe4dd14c4|-1907695542|Output/Figures/facet_wood_pc_white_pct_region_urban.png|t20020.3851127357s|56ba9dd84868caa0|1590249|file|local|vector|||17.359|Removed 6 rows containing missing values or values outside the scale rangegeom_point.|
+get_air_pollution_data|function|d8732f82521fbf90|||||||||||||||
 get_data_parquet|function|5a6fac66da79741c|||||||||||||||
-get_mapping_boundaries|function|0f837ed5a5c5e027|||||||||||||||
+get_mapping_boundaries|function|cb4ae6482a4a1e00|||||||||||||||
+get_os_data|function|81142330a4b604ea|||||||||||||||
 get_percentile|function|05053628aaada4e5|||||||||||||||
-la_boundaries|stem|a156bb7759352b71|a68fbb3cc8260f0c|6dd3fe1e420536c3|1975968175||t19971.7136452537s|26ff259f6fb30324|6965525|rds|local|vector|||11.59||
-lsoa_boundaries|stem|b5659220997a257e|28fa8e22d47218e4|6dd3fe1e420536c3|1619345||t19971.6954381142s|89e89fcae9b4847c|25318796|rds|local|vector|||21.45||
-make_choropleth_map|function|80d949deba7bff9f|||||||||||||||
-make_cross_tab|function|6b2ad365fc587a0a|||||||||||||||
-make_grouped_scatter_plot|function|2a485f33d01af3e1|||||||||||||||
-make_lsoa_lookup_data|function|3c133798d2ee5aa6|||||||||||||||
-make_summary_data_by_geography|function|e6259507c10745cc|||||||||||||||
-make_summary_table|function|f599994c8d08677f|||||||||||||||
-merge_data_epc_cleaned_covars|function|8c41407475dd572b|||||||||||||||
-merge_statistical_geographies|function|9e216e65bc82e93e|||||||||||||||
-scatter_plot_opts|object|230b3142fd15e27a|||||||||||||||
-scatter_plot_pc_wood_imd|stem|ffe1ce9666696036|74604b84ed1be1a5|aa22e24595c937c5|-1856023104||t19975.7723460522s|d709de4c6e6fef72|4527333|rds|local|vector|||0.11||
-tab_housing_chars_by_any_wood|stem|d980c3f76d64c820|3e828b22d186956d|bdba857485ad1374|-179754714|C:/Users/uctpcke/OneDrive - University College London/EPC_project_code/Output/Tables/tab_housing_chars_by_any_wood.html|t19976.3373490641s|cc3901f4e0aa33eb|19262|file|local|vector|||133.31|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_var   Now  data  selectall_ofgroup_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectvars_to_summarise   Now  data  selectall_ofvars_to_summariseSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+get_shapefile|function|839865805d19c7ed|||||||||||||||
+la_boundaries|stem|4b26ba8e00fe182c|d637dc8871bd5df3|0829908d420f46d8|1975968175||t20017.5555894067s|c45609781185b6d8|27709255|qs|local|vector|||9.921||
+line_plot_n_wood_epc_rgn_imd|stem|2fac73f90ff4a579|b76e639bcd72384b|1d378a695b786240|2120123525||t19998.5644866494s|8da2af3c1ff9401c|1654020341|qs|local|vector|||0.844||
+line_plot_opts|object|5096f3631c5400d3|||||||||||||||
+line_plot_perc_wood_epc_rgn_imd|stem|4cc50b49836aa47a|5676e57dc9a08863|1d378a695b786240|586156912||t19998.5642220882s|b78e849c4fad5f44|1654047050|qs|local|vector|||2.578||
+line_plot_pm25_emissions_absolute|stem|c208a80f0abc8699|d1debe5779ba0f93|3cc5331f9482e528|-615761944||t20007.4414703665s|528bc4055b718822|148655|qs|local|vector|||0.109||
+line_plot_pm25_emissions_perc|stem|509b553847f443de|3faef63bb7fba8a4|3cc5331f9482e528|1356136575||t20007.441464283s|27e13647bd866545|148339|qs|local|vector|||5.563||
+logit_model|stem|4b74749f103dae80|4afb519026cd188f|a34670c8de2d06cb|-1658778886||t20020.6864997933s|4b126809eb2d3c25|3466807684|qs|local|vector|||108.906||
+lsoa_boundaries|stem|ef2f11319f1f67d0|f2f89b9abbb9a248|0829908d420f46d8|1619345||t20017.5660469505s|e8b3e0a41ca2079b|295137180|qs|local|vector|||14.828||
+make_choropleth_map|function|41c6cb7527635ade|||||||||||||||
+make_choropleth_map_2|function|b59898e1bd71813e|||||||||||||||
+make_cross_tab|function|fe8a658bcf886f00|||||||||||||||
+make_data_epc_coverage|function|78e4d90b86826b4b|||||||||||||||
+make_data_housing_type_census|function|f3e02d61cfce699b|||||||||||||||
+make_data_housing_type_os_epc|function|0063ebdb808d5990|||||||||||||||
+make_grouped_scatter_plot|function|2b85649dafd792f8|||||||||||||||
+make_line_plot|function|8a6b429b6d2f64ec|||||||||||||||
+make_lsoa_lookup_data|function|0d883dd54bc2021d|||||||||||||||
+make_osm_density_map|function|a8535195380e740b|||||||||||||||
+make_patchwork_plot|function|f49960ec2349733f|||||||||||||||
+make_scatter_plot|function|e96825a27361cfa5|||||||||||||||
+make_summary_data_by_geography|function|686905f5c92ad64a|||||||||||||||
+make_summary_data_by_group|function|6d7eb0cafdf14f74|||||||||||||||
+make_summary_table|function|5570caaf28553778|||||||||||||||
+make_uprn_sca_lookup|function|a87ccbdd0e7482f9|||||||||||||||
+markdown_summary_epc_coverage|stem|8302b16b308bd364|caf3081617605bfb|ea46950afadd245b|-363378102|Output/Markdown/markdown_summary_epc_coverage.html*Output/Markdown/markdown_summary_epc_coverage.rmd|t19983.9291776879s|239a119b2ea24281|878524|file|local|vector|||49.28||
+merge_data_epc_cleaned_covars|function|7307c10db75463e8|||||||||||||||
+merge_geo_data_sca|function|2eece486f50693eb|||||||||||||||
+merge_statistical_geographies|function|24d3cc3e9d5dbf08|||||||||||||||
+patchwork_choropleth_map_sfa_pc_conc_pred_lsoa|stem|4aed15a8ae95e32c|4f7961b76c15cec0|724e06be4324e7dd|-189923352|Output/Maps/patchwork_choropleth_map_sfa_pc_conc_pred_lsoa.png|t20024.719293383s|07a83960c6dc4ec5|6197855|file|local|vector|||39.203||
+patchwork_choropleth_map_wood_pc_conc_pred_lsoa|stem|e12d450bf441e97b|6d866d565c5de6ec|f583b0d881172188|-1727230386|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa.png|t20024.720016387s|ded294d4860360a1|6191416|file|local|vector|||37.469||
+patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london|stem|6d829a028c01c8d3|308c8f3c76cd072c|3dcaa13f16b057ac|-1834238227|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london.png|t20024.7193787261s|620f95418b6cba22|4148630|file|local|vector|||3.484||
+patchwork_scatter_wood_pc_imd_white_eth|stem|904b0263aa98b266|04d997c453ed2c2d|32feca41ae47fcf7|-1529922383|Output/Figures/patchwork_scatter_wood_pc_imd_white_eth.png|t20020.3911946196s|ff81d1c23d2b7288|1261082|file|local|vector|||2.61|Removed 10 rows containing missing values or values outside the scale rangegeom_point.|
+patchwork_wood_conc_perc_h_pred_actual|stem|5f434eafd95f5da3|63077cf66f09a7e2|c8951db92aad4fb5|-273418987|Output/Figures/patchwork_wood_conc_perc_h_pred_actual.png|t20024.7627356976s|4dd1b3321413d046|1111246|file|local|vector|||2.64|Removed 62 rows containing missing values or values outside the scale rangegeom_point.|
+prepare_data_for_logit_model|function|6b3a654041f3a336|||||||||||||||
+prepare_data_to_map|function|b3a6f3f13d2c93d5|||||||||||||||
+quarto_summary_epc_coverage|stem|d3e438d68db5386b|9e8330c3741f9932|6bb7b08e487e9552|-1573681089|Output/Quarto/quarto_summary_epc_coverage.html*Output/Quarto/quarto_summary_epc_coverage.qmd|t19982.7007081787s|815bb6cbdfa4fa7d|23215|file|local|vector|||47.5||
+quarto_summary_epc_project|stem|58a974c7c641f936|1f8dcce5cbba2361|1995d263b726bc30|-1773753728|quarto_summary_epc_project.html*quarto_summary_epc_project_files*quarto_summary_epc_project.qmd|t19989.5711080403s|724f57a2a265345e|53137|file|local|vector|||100.05||
+scatter_plot_epc_coverage_pc_wood_lsoa|stem|f9ab2fc3b54aa9f4|f32ccb6dd5adaa80|dde01eda4e2ef56f|1938933723|Output/Figures/scatter_plot_epc_coverage_pc_wood_lsoa.png|t20017.5876459854s|45a7b13fa380d231|3072949|file|local|vector|||1.937|Removed 71 rows containing missing values or values outside the scale rangegeom_point.|
+scatter_plot_opts|object|4442375c7aad0e86|||||||||||||||
+scatter_plot_pc_wood_imd|stem|6efa2d6f2dbe2d1f|a4739e93d657d5f6|72cb26930499a385|-1856023104||t20020.3873954784s|9ce0a927bdbdebd4|2810670146|qs|local|vector|||2.594||
+scatter_plot_pc_wood_white_eth|stem|d928475d4b9caa90|2d283d75714254f2|72cb26930499a385|2019506418||t20020.3878221719s|0b7b243bebc98470|2810670161|qs|local|vector|||2.203||
+scatter_wood_conc_vs_predicted_lsoa|stem|9ffab49eddffb08d|913e37da9e650068|a350cf4f84b936ca|646257077||t20024.7102255361s|d5bf7a69bbcd731d|21086215|qs|local|vector|||0||
+scatter_wood_perc_h_vs_predicted_lsoa|stem|4b6767535fd40e13|8cdfb70b8fedabe7|a350cf4f84b936ca|1701892574||t20024.7626980581s|e0b25a1c371cdf33|21086964|qs|local|vector|||0.016||
+tab_housing_chars_by_any_wood|stem|96f8c76e601485dc|1e33a6263d56dc6b|01a57239e9f82dce|-179754714||t19991.4874495759s|9b969a7e3a04319b|1540823561|qs|local|vector|||424.21|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_var   Now  data  selectall_ofgroup_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectvars_to_summarise   Now  data  selectall_ofvars_to_summariseSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+ward_boundaries|stem|c787b90b1f6b50a7|8ff96eeea73da201|0829908d420f46d8|568186909||t20017.5660977488s|eca5fecdbac24a03|85755771|qs|local|vector|||1.64||
 write_data_parquet|function|d3015fb097e6285d|||||||||||||||
+write_data_to_file|function|1f46f1612e2d489b|||||||||||||||

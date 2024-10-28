@@ -16,7 +16,7 @@
 clean_data_epc <- function(file){
   
   # Define inputs for data cleaning --------------------------------------------
-
+  
   # List of strings to identify SFA properties
   any_sfa_lookup <- c("wood", "coal", "mineral", "anthracite", "coed", "glo", 
                       "smokeless", "dual fuel", "mwynau")
@@ -26,10 +26,10 @@ clean_data_epc <- function(file){
   
   # Define bands to recode construction age to pre Clean Air Act 1956 when chimneys less common
   pre_1950_bands <- c("england and wales: 1900-1929", "england and wales: 1930-1949", 
-    "england and wales: before 1900","1700", "1800", "1805", "1820", 
-    "1825", "1849", "1850", "1867", "1876", "1880", "1885", "1889",
-    "1890", "1900", "1902", "1910", "1915", "1920", "1929", "1930", 
-    "1935", "1940", "1950")
+                      "england and wales: before 1900","1700", "1800", "1805", "1820", 
+                      "1825", "1849", "1850", "1867", "1876", "1880", "1885", "1889",
+                      "1890", "1900", "1902", "1910", "1915", "1920", "1929", "1930", 
+                      "1935", "1940", "1950")
   
   # Generate SQL query to clean data ---------------------------------------------
   
@@ -77,24 +77,24 @@ clean_data_epc <- function(file){
     
     # Create new variable for 'property type' similar to 2021 Census
     mutate(property_type_census = case_when(property_type %in% c("bungalow",
-                                                      "house") &
-                           built_form == "detached" ~ "Detached",
-                           property_type %in% c("bungalow",
-                                                "house") &
-                             built_form == "semi-detached" ~ "Semi Detached",
-                           property_type %in% c("bungalow",
-                                                "house") &
-                             built_form %in% c("mid-terrace",
-                                               "end-terrace",
-                                               "enclosed end-terrace",
-                                               "enclosed mid-terrace") ~ "Terrace",
-                           property_type %in% c("bungalow",
-                                                "house") &
-                             is.na(built_form) ~ "house_form_missing",
-                           property_type %in% c("flat",
-                                                "maisonette") ~ "Flat",
-                           property_type == "park home" ~ "Other accommodation",
-                           .default = NA))  %>%
+                                                                 "house") &
+                                              built_form == "detached" ~ "Detached",
+                                            property_type %in% c("bungalow",
+                                                                 "house") &
+                                              built_form == "semi-detached" ~ "Semi Detached",
+                                            property_type %in% c("bungalow",
+                                                                 "house") &
+                                              built_form %in% c("mid-terrace",
+                                                                "end-terrace",
+                                                                "enclosed end-terrace",
+                                                                "enclosed mid-terrace") ~ "Terrace",
+                                            property_type %in% c("bungalow",
+                                                                 "house") &
+                                              is.na(built_form) ~ "House Form Missing",
+                                            property_type %in% c("flat",
+                                                                 "maisonette") ~ "Flat",
+                                            property_type == "park home" ~ "Other accommodation",
+                                            .default = NA))  %>%
     
     # Generate indicator variable for SFA as main/secondary heat source overall and in houses only
     mutate(
@@ -104,22 +104,26 @@ clean_data_epc <- function(file){
       
       any_wood = case_when(wood_m == 1 | wood_s == 1 ~ 1,
                            wood_m == 0 & wood_s == 0 ~ 0,
-                            .default = NA),
+                           .default = NA),
       
       any_sfa_h = case_when((any_sfa_m == 1 | any_sfa_s == 1) &
-                              property_type %in% c("bungalow",
-                                                   "house") ~ 1,
-                            (any_sfa_m == 0 & any_sfa_s == 0) |
-                              !(property_type %in% c("bungalow",
-                                  "house")) ~ 0,
+                              property_type_census %in% c("Detached",
+                                                   "Semi Detached",
+                                                   "Terrace") ~ 1,
+                            (any_sfa_m == 0 & any_sfa_s == 0) &
+                              (property_type_census %in% c("Detached",
+                                                            "Semi Detached",
+                                                            "Terrace")) ~ 0,
                             .default = NA),
       
       any_wood_h = case_when((wood_m == 1 | wood_s == 1) &
-                             property_type %in% c("bungalow",
-                                                   "house") ~ 1,
-                             (wood_m == 0 & wood_s == 0) |
-                               !(property_type %in% c("bungalow",
-                                                      "house")) ~ 0,
+                             property_type_census %in% c("Detached",
+                                                         "Semi Detached",
+                                                         "Terrace") ~ 1,
+                             (wood_m == 0 & wood_s == 0) &
+                               (property_type_census %in% c("Detached",
+                                                     "Semi Detached",
+                                                     "Terrace")) ~ 0,
                              .default = NA)
     ) %>%
     

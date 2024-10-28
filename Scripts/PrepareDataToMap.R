@@ -15,13 +15,11 @@
 # Define function to merge datasets ready to map -------------------------------
 
 prepare_data_to_map <- function(fill_data,
+                                shapefile_data,
                                 join_var){
   
-  # Get fill boundary data using 'join_var'
-  fill_boundary_data <- get_mapping_boundaries(join_var)
-  
   # Generate merged dataset
-  data_to_map <- fill_boundary_data %>%
+  data_to_map <- shapefile_data %>%
     
     # Left join to preserve only the rows in the mapping geometries data
     left_join(fill_data, by = join_var)

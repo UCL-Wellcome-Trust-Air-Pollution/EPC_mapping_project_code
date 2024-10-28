@@ -26,6 +26,7 @@ merge_statistical_geographies <- function(path_stat_geo_files){
                                                                 "PCDS",
                                                                 "GRIDGB1E",
                                                                 "GRIDGB1N",
+                                                                "OA21CD",
                                                                 "lsoa21cd",
                                                                 "wd22cd",
                                                                 "rgn22cd"))

@@ -12,20 +12,19 @@
 
 make_grouped_scatter_plot <- function(data, 
                                       x_var, 
-                                      y_var_numerator, 
-                                      y_var_denominator, 
+                                      y_var, 
                                       group_var, 
                                       colour_var, 
-                                      size_var){
+                                      size_var,
+                                      legend_position){
   
   scatter_plot <- data %>%
     
-    # Group by grouping variable
-    group_by({{group_var}}, {{colour_var}}) %>%
-    
-    summarise(perc = sum({{y_var_numerator}}, na.rm = TRUE) / sum({{y_var_denominator}}, na.rm = TRUE) * 100,
+    summarise(perc = mean({{y_var}}, na.rm = TRUE) * 100,
               pop = sum({{size_var}}, na.rm = TRUE),
-              x_var = mean({{x_var}}, na.rm = TRUE)) %>%
+              x_var = mean({{x_var}}, na.rm = TRUE),
+              .by = c({{group_var}},
+                      {{colour_var}})) %>%
     
     # Arrange by 'size_var' to ensure smaller bubbles appear in front
     arrange(desc(pop)) %>%
@@ -40,7 +39,9 @@ make_grouped_scatter_plot <- function(data,
                    size = pop),
                alpha = 0.7) +
     
-    scatter_plot_opts
+    scatter_plot_opts +
+    
+    theme(legend.position = legend_position)
   
   return(scatter_plot)
   

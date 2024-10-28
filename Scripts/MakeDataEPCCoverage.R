@@ -15,35 +15,45 @@
 # Define function to generate dataset of EPC coverage by geography -------------
 
 make_data_epc_coverage <- function(data_epc,
+                                   data_os,
                                    data_uprn_sca_lookup,
-                                   geography_var){
+                                   group_var){
   
-  # Load UPRN dataset from specified path
-  data_uprn_sca_lookup <- data_uprn_sca_lookup %>%
+  # Load OS AddressBase dataset from specified path
+  data_os_uprn <- data_os %>%
+  
+  # Left join OS data to statistical geographies
+    left_join(data_uprn_sca_lookup, by = "uprn") %>%
     
-    summarise(n_uprn = n(),
-              .by = geography_var)
+    # Filter non-matched UPRNs (exclude if cannot be linked to a statistical geography)
+    # and Scottish LSOAs
+    filter(!is.na(lsoa21cd) & str_sub(lsoa21cd, 1, 1) != "S")
   
-  # FIlter most recent EPCs and generate an ID column in the EPC data (to ensure replicability in case
-  # of changes to variable names, etc)
+  # Keep distinct UPRNs in EPC data
   data_epc <- data_epc %>%
     
-    filter(most_recent == TRUE) %>%
+    distinct(uprn, .keep_all = TRUE) %>%
     
-    summarise(n_epc = n(),
-              .by = c(geography_var, "rgn22nm"))
+    # Make indicator variable for existence of EPC
+    mutate(epc_exists = 1) %>%
+    
+    # Select relevant cols
+    select(uprn, epc_exists)
   
-  # Left join UPRN data to EPC data, group by specified geography, and summarise
-  # dataset with percentage of UPRNs in the lookup which exist in the EPC data
-  data_coverage <- data_epc %>% 
+  # Left join UPRN lookup to EPC data
+  data_epc_coverage <- data_os_uprn %>% 
     
-    left_join(data_uprn_sca_lookup, by = geography_var) %>%
+    # Left join OS data to EPC data by UPRN
+    left_join(data_epc, by = "uprn") %>%
     
-    # Make variable for the percentage coverage of UPRNs by geography variable
-    summarise(coverage_perc = n_epc/n_uprn*100,
-              .by = c(geography_var, "rgn22nm"))
+    # Set 'epc_exists' to 0 if NA
+    mutate(epc_exists = case_when(is.na(epc_exists) ~ 0,
+                                  .default = epc_exists)) %>%
+    
+    # Summarise coverage by geography variable
+    summarise(epc_coverage = mean(epc_exists, na.rm = TRUE) * 100,
+              .by = {{group_var}})
   
-  # Return dataframe of coverage
-  return(data_coverage)
+  return(data_epc_coverage)
   
 }
