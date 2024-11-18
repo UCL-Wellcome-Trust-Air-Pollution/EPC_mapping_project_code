@@ -37,7 +37,8 @@ tar_option_set(
                "extrafont",
                "viridis",
                "patchwork",
-               "tidyr"),
+               "tidyr",
+               "openair"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -195,6 +196,21 @@ list(
   tar_target(data_epc_ward_cross_section_to_map, prepare_data_to_map(data_epc_ward_cross_section,
                                                                      shapefile_data = ward_boundaries,
                                                                      join_var = "wd22cd")),
+  
+  tar_target(data_openair, get_openair_data(source_list = c("aurn",
+                                                            "aqe",
+                                                            "waqn",
+                                                            "local"),
+                                            year_list = c(2021),
+                                            frequency = "hourly",
+                                            pollutant_list = "all",
+                                            month_list = c(1, 2))),
+  
+  tar_target(data_openair_epc_cleaned, merge_openair_epc_data(data_openair = data_openair,
+                                                              data_epc = data_epc_cleaned_covars,
+                                                              long_var_epc = "long",
+                                                              lat_var_epc = "lat",
+                                                              buffer_radius = 500)),
   
   # Make figures ---------------------------------------------------------------
 
@@ -606,9 +622,30 @@ list(
                                                                "tenure",
                                                                "sca_area",
                                                                "imd_score",
-                                                               "white_pct")))#,
+                                                               "white_pct"))),
+  
+  tar_target(data_urban_for_logit_model, prepare_data_for_logit_model(data = data_epc_cleaned_covars[data_epc_cleaned_covars$urban == 1,],
+                                                                outcome_var = "any_wood_h",
+                                                                predictor_vars = c("year",
+                                                                                   "property_type_census",
+                                                                                   "tenure",
+                                                                                   "sca_area",
+                                                                                   "imd_score",
+                                                                                   "white_pct"),
+                                                                numeric_to_factor_vars = c("any_wood_h",
+                                                                                           "sca_area"),
+                                                                most_recent_only = TRUE)),
+  
+  tar_target(logit_model_urban, build_logit_model(data = data_urban_for_logit_model,
+                                            outcome_var = "any_wood_h",
+                                            predictor_vars = c("year",
+                                                               "property_type_census",
+                                                               "tenure",
+                                                               "sca_area",
+                                                               "imd_score",
+                                                               "white_pct"))),
 
-  # tar_quarto(EPC_project_manuscript,
-  #           "EPC_project_manuscript.qmd",
-  #           quiet = FALSE)
+  tar_quarto(EPC_project_manuscript,
+            "EPC_project_manuscript.qmd",
+            quiet = FALSE)
 )
