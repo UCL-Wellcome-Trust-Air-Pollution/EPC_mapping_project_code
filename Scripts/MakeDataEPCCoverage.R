@@ -17,7 +17,27 @@
 make_data_epc_coverage <- function(data_epc,
                                    data_os,
                                    data_uprn_sca_lookup,
-                                   group_var){
+                                   group_var,
+                                   path_lsoa_size,
+                                   path_imd_eng,
+                                   path_imd_wales,
+                                   path_lsoa11_lsoa21_lookup,
+                                   path_ethnicity,
+                                   path_region,
+                                   path_ward,
+                                   path_urban_rural,
+                                   path_age){
+  
+  # Make LSOA lookup data
+  data_lsoa_lookup <- make_lsoa_lookup_data(path_lsoa_size,
+                                            path_imd_eng,
+                                            path_imd_wales,
+                                            path_lsoa11_lsoa21_lookup,
+                                            path_ethnicity,
+                                            path_region,
+                                            path_ward,
+                                            path_urban_rural,
+                                            path_age)
   
   # Load OS AddressBase dataset from specified path
   data_os_uprn <- data_os %>%
@@ -38,7 +58,8 @@ make_data_epc_coverage <- function(data_epc,
     mutate(epc_exists = 1) %>%
     
     # Select relevant cols
-    select(uprn, epc_exists)
+    select(uprn, 
+           epc_exists)
   
   # Left join UPRN lookup to EPC data
   data_epc_coverage <- data_os_uprn %>% 
@@ -52,7 +73,10 @@ make_data_epc_coverage <- function(data_epc,
     
     # Summarise coverage by geography variable
     summarise(epc_coverage = mean(epc_exists, na.rm = TRUE) * 100,
-              .by = {{group_var}})
+              .by = {{group_var}}) %>%
+  
+  # Merge to LSOA lookup data
+  left_join(data_lsoa_lookup, by = "lsoa21cd")
   
   return(data_epc_coverage)
   

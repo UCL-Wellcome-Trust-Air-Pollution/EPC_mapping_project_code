@@ -8,12 +8,10 @@
 
 # Comments ---------------------------------------------------------------------
 
-# We could also include 2024 data (up to June) in any anaylsis of percentages - seems unlikely that
-# what time of year a property gets an EPC would be correlated with any meaningful variables
-
 # Define function to clean main EPC data ---------------------------------------
 
-clean_data_epc <- function(file){
+clean_data_epc <- function(file,
+                           path_data_os){
   
   # Define inputs for data cleaning --------------------------------------------
   
@@ -31,7 +29,22 @@ clean_data_epc <- function(file){
                       "1890", "1900", "1902", "1910", "1915", "1920", "1929", "1930", 
                       "1935", "1940", "1950")
   
-  # Generate SQL query to clean data ---------------------------------------------
+  # Load OS data ---------------------------------------------------------------
+  
+  data_os <- vroom(path_data_os, col_select = c("UPRN",
+                                                "CLASSIFICATION_CODE",
+                                                "END_DATE")) %>%
+    
+    # Clean names
+    clean_names() %>%
+    
+    # Filter only residential properties (classification code starts with 'R')
+    filter(str_sub(classification_code, 1, 1) == "R") %>%
+    
+    # Remove classification code
+    select(!classification_code)
+  
+  # Generate SQL query to clean data -------------------------------------------
   
   # Establish a connection
   con <- dbConnect(duckdb(), dbdir = here(paste0("Data/raw/epc_data/", file)))
@@ -146,6 +159,18 @@ clean_data_epc <- function(file){
   
   # Close connection
   dbDisconnect(con)
+  
+  # Left join EPC data to OS data and remove records which have an end date in OS data
+  data_epc_cleaned <- data_epc_cleaned %>%
+    
+    # Join by UPRN
+    left_join(data_os, by = "uprn") %>%
+    
+    # Remove all entries where end_date is non-na
+    filter(is.na(end_date)) %>%
+    
+    # Remove 'end_date' variable
+    select(!end_date)
   
   # Return 'data_epc_cleaned'
   return(data_epc_cleaned)

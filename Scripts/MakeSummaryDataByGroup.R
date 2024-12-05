@@ -98,9 +98,12 @@ make_summary_data_by_group <- function(data_epc,
                                                         "Semi Detached",
                                                         "Terrace"), na.rm = TRUE),
       
-      # Average IMD score/decile across smallest grouping variable
+      # Average socio-economic indicators across smallest grouping variable
       imd_score = mean(imd_score, na.rm = TRUE), 
       imd_decile = mean(imd_decile, na.rm = TRUE),
+      white_pct = mean(white_pct, na.rm = TRUE),
+      median_age_mid_2022 = mean(median_age_mid_2022, na.rm = TRUE),
+      urban = mean(urban, na.rm = TRUE),
       
       # Indicator for whether any part of geography is in an SCA
       # If there is any overlap with an SCA, the geography is classified as 1

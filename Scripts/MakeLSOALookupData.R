@@ -20,7 +20,8 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
                                   path_ethnicity,
                                   path_region,
                                   path_ward,
-                                  path_urban_rural){
+                                  path_urban_rural,
+                                  path_age){
 
   # Load LSOA size dataset
   data_lsoa_size <- vroom(here(path_lsoa_size), col_select = c("LSOA21CD",
@@ -178,6 +179,19 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     
     select(!n)
   
+  # Load LSOA median age dataset
+  data_age <- read_excel(path_age, sheet = "Median age LSOA 2021", skip = 3) %>%
+    
+    # Clean names
+    clean_names() %>%
+    
+    # Select relevant columns
+    select(lsoa_2021_code,
+           median_age_mid_2022) %>%
+    
+    # Rename cols
+    rename(lsoa21cd = lsoa_2021_code)
+  
   # Create LSOA-level lookup dataset
   
   data_lsoa_lookup <- data_lsoa_size %>%
@@ -188,6 +202,9 @@ make_lsoa_lookup_data <- function(path_lsoa_size,
     
     # Left join to urban/rural classification
     left_join(data_urban_rural, by = "lsoa21cd") %>%
+    
+    # Left join to median age data
+    left_join(data_age, by = "lsoa21cd") %>%
     
     # Full join to ethnicity data
     full_join(data_ethnicity, by = "lsoa21cd") %>%

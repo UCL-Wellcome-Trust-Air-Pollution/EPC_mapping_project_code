@@ -28,7 +28,8 @@ merge_data_epc_cleaned_covars <- function(data,
                                           path_ethnicity,
                                           path_region,
                                           path_ward,
-                                          path_urban_rural){
+                                          path_urban_rural,
+                                          path_age){
 
   # Merge statistical geographies and SCA areas --------------------------------
   
@@ -64,7 +65,8 @@ merge_data_epc_cleaned_covars <- function(data,
                                             path_ethnicity,
                                             path_region,
                                             path_ward,
-                                            path_urban_rural)
+                                            path_urban_rural,
+                                            path_age)
   
   # Merge statistical geographies and secondary data onto main EPC data --------
   
@@ -139,10 +141,9 @@ merge_data_epc_cleaned_covars <- function(data,
                              .default = NA)) %>%
     
     # Remove unused variables
-    select(!c(postcode, 
-              pcds, 
+    select(!c(postcode,
               inspection_date,
-              uprn,
+              pcds, 
               ruc11)) %>%
     
     # Set character variables as factors
