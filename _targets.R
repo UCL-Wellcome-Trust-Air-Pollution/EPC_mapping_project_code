@@ -38,7 +38,9 @@ tar_option_set(
                "viridis",
                "patchwork",
                "tidyr",
-               "openair"),
+               "furrr",
+               "fs",
+               "future"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -53,8 +55,14 @@ list(
   
   # Generate datasets ----------------------------------------------------------
   
+  tar_target(data_epc_raw, get_epc_data_from_zip(path_data_epc_folders = here("Data/raw/epc_data/epc_data_extracted"),
+                                                 epc_cols_to_select = c("UPRN", "SECONDHEAT_DESCRIPTION", "MAINHEAT_DESCRIPTION",
+                                                                        "INSPECTION_DATE", "CONSTRUCTION_AGE_BAND", "PROPERTY_TYPE",
+                                                                        "BUILT_FORM", "TENURE", "POSTCODE")),
+             format = "parquet"),
+  
   tar_target(data_epc_cleaned,
-             clean_data_epc(file = "data_epc.duckdb",
+             clean_data_epc(data_epc_raw,
                             path_data_os = here("Data/raw/os_data/ID32_Class_records.csv")),
              format = "parquet"),
 
@@ -114,6 +122,28 @@ list(
                                                                    group_vars = c("lsoa21cd",
                                                                                   "rgn22nm"),
                                                                    most_recent_only = TRUE),
+             format = "parquet"),
+  
+  tar_target(data_epc_ward_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars,
+                                                                   data_housing_type_census = data_housing_type_census,
+                                                                   lsoa_var = "lsoa21cd",
+                                                                   geo_level_var = "wd22cd",
+                                                                   housing_type_var = "property_type_census",
+                                                                   n_cutoff_conc_pred = 20,
+                                                                   group_vars = c("wd22cd",
+                                                                                  "rgn22nm"),
+                                                                   most_recent_only = TRUE),
+             format = "parquet"),
+  
+  tar_target(data_epc_la_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars,
+                                                                     data_housing_type_census = data_housing_type_census,
+                                                                     lsoa_var = "lsoa21cd",
+                                                                     geo_level_var = "lad22cd",
+                                                                     housing_type_var = "property_type_census",
+                                                                     n_cutoff_conc_pred = 20,
+                                                                     group_vars = c("lad22cd",
+                                                                                    "rgn22nm"),
+                                                                     most_recent_only = TRUE),
              format = "parquet"),
   
   tar_target(data_epc_region_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars,

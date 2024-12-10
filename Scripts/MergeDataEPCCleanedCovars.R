@@ -76,6 +76,10 @@ merge_data_epc_cleaned_covars <- function(data,
     # Filter non-missing UPRNs
     filter(!is.na(uprn)) %>%
     
+    # Keep only distinct rows with UPRNs (we do not do this for those with missing UPRNs
+    # since these entries may contain multiple properties with same postcode)
+    distinct() %>%
+    
     # Left join to statistical geographies by UPRN
     left_join(data_uprn_sca_lookup, by = "uprn") %>%
     
