@@ -10,7 +10,7 @@
 
 # Define function to clean main EPC data ---------------------------------------
 
-clean_data_epc <- function(file,
+clean_data_epc <- function(data_epc_raw,
                            path_data_os){
   
   # Define inputs for data cleaning --------------------------------------------
@@ -29,6 +29,10 @@ clean_data_epc <- function(file,
                       "1890", "1900", "1902", "1910", "1915", "1920", "1929", "1930", 
                       "1935", "1940", "1950")
   
+  # Define strings for missing data to set to NA
+  na_strings <- c("na", "n a", "n / a", "n/a", "n/ a", "not available", "invalid!",
+                  "no data!", "not applicable", ",", "")
+  
   # Load OS data ---------------------------------------------------------------
   
   data_os <- vroom(path_data_os, col_select = c("UPRN",
@@ -46,15 +50,22 @@ clean_data_epc <- function(file,
   
   # Generate SQL query to clean data -------------------------------------------
   
-  # Establish a connection
-  con <- dbConnect(duckdb(), dbdir = here(paste0("Data/raw/epc_data/", file)))
-  
   # Generate SQL query and store result as lazy datatable (allows you to access 
   #data.table functionality using dplyr code)
-  data_epc_cleaned <- dbReadTable(con, "data_epc") %>%
+  data_epc_cleaned <- data_epc_raw %>%
     
     # Clean names using Janitor
     clean_names() %>%
+    
+    # Mutate values to lower case where variable type is character
+    mutate_if(is.character,  ~ tolower(.)) %>%
+    
+    # Replace all strings in 'na_strings' with NA
+    mutate_if(is.character, ~ case_when(. %in% na_strings ~ NA_character_,
+                                            .default = .)) %>%
+    
+    # Mutate variable for year of EPC
+    mutate(year = year(inspection_date)) %>%
     
     # Filter years in 2009-2024
     filter(year > 2008) %>%
@@ -151,14 +162,8 @@ clean_data_epc <- function(file,
               mainheat_description,
               secondheat_description)) %>%
     
-    # Filter duplicated rows
-    distinct() %>%
-    
     # Mutate characters to factors
     mutate(across(where(is.character), as.factor))
-  
-  # Close connection
-  dbDisconnect(con)
   
   # Left join EPC data to OS data and remove records which have an end date in OS data
   data_epc_cleaned <- data_epc_cleaned %>%
