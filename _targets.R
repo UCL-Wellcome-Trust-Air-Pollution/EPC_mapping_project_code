@@ -55,14 +55,8 @@ list(
   
   # Generate datasets ----------------------------------------------------------
   
-  tar_target(data_epc_raw, get_epc_data_from_zip(path_data_epc_folders = here("epc_data/epc_data_extracted"),
-                                                 epc_cols_to_select = c("UPRN", "SECONDHEAT_DESCRIPTION", "MAINHEAT_DESCRIPTION",
-                                                                        "INSPECTION_DATE", "CONSTRUCTION_AGE_BAND", "PROPERTY_TYPE",
-                                                                        "BUILT_FORM", "TENURE", "POSTCODE")),
-             format = "parquet"),
-  
   tar_target(data_epc_cleaned,
-             clean_data_epc(data_epc_raw,
+             clean_data_epc(path_data_epc_raw = here("Data/raw/epc_data/data_epc_raw.parquet"),
                             path_data_os = here("Data/raw/os_data/ID32_Class_records.csv")),
              format = "parquet"),
 
