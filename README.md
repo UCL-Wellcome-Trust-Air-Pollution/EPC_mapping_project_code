@@ -5,7 +5,7 @@ This repository stores the code files for the project - "High resolution mapping
 
 2. Download the 'Data.tar' file from https://zenodo.org/records/14382720 and unzip the file in the R Project directory. The data should be in a folder called 'Data'. All data is provided under the UK Open Government License version 3.0
 
-3. Download the main EPC data to your local device and unzip (see below for detailed instructions on how to do this). FOr windows users, the 'Scripts' folder of the repository contains a .bat file which can be used to unzip the data
+3. Download the main EPC data to your local device and unzip (see below for detailed instructions on how to do this). For Windows users, the 'Scripts' folder of the repository contains a .bat file which can be used to unzip the data
 
 4. Run the 'run.R' file in the 'Scripts' folder of the directory. You may need to change the 'path_data_epc_folders' variable to the path to the unzipped EPC data folders on your local device (see step 3). The full pipeline should now run.
 
