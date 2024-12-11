@@ -9,6 +9,8 @@ This repository stores the code files for the project - "High resolution mapping
 
 4. Run the 'run.R' file in the 'Scripts' folder of the directory. YOu may need to change the 'path_data_epc_folders' variable to the path to the unzipped EPC data folders on your local device
 
+5. Once you have run the pipeline for the first time, you should see a file called 'data_epc_raw.parquet' in the 'Data/raw/epc_data' folder. Once you have verified this is the case, you can safely delete the original unzipped EPC data folder, since the file is very large (>40Gb). If you run the pipeline again, you will be prompted that the raw EPC data already exists, and you have the option to skip the merging of raw data files.
+
 ## Downloading the main EPC data
 
 EPC data is provided under license for research purposes by the Department of Levelling Up, Housing, and Communities. To access the data, you need to sign up at the following link: https://epc.opendatacommunities.org/login. Once you have signed up/logged in to the EPC site, click the 'Download all results (.zip)' icon in the top right of the screen. THis will download a large .zip file of EPC certificates by Local Authority. Unzip this folder in your R Project directory. 
