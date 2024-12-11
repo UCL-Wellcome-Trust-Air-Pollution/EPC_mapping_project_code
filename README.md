@@ -13,4 +13,4 @@ This repository stores the code files for the project - "High resolution mapping
 
 ## Downloading the main EPC data
 
-EPC data is provided under license for research purposes by the Department of Levelling Up, Housing, and Communities. To access the data, you need to sign up at the following link: https://epc.opendatacommunities.org/login. Once you have signed up/logged in to the EPC site, click the 'Download all results (.zip)' icon in the top right of the screen. This will download a large .zip file of EPC certificates by Local Authority. Unzip this folder in your R Project directory. 
+EPC data is provided under license for research purposes by the Department of Levelling Up, Housing, and Communities. To access the data, you need to sign up at the following link: https://epc.opendatacommunities.org/login. Once you have signed up/logged in to the EPC site, navigate to the 'Domestic EPC' tab and click the 'Download all results (.zip)' icon in the top right of the screen. This will download a large .zip file of EPC certificates by Local Authority. Unzip this folder in your R Project directory. 
