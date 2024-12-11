@@ -7,6 +7,7 @@ library(tidylog)
 library(here)
 library(ggplot2)
 library(viridis)
+library(crew)
 
 # Set options to prefer tidylog if conflicts 
 
