@@ -45,39 +45,3 @@ scatter_plot_opts <- list(
     axis.line = element_line(),
     axis.title.y=element_text(angle=0))
 )
-
-# Line plot options
-line_plot_opts <- list(
-  
-  # Main theme
-  theme_bw(base_size = 12),
-  
-  # Theme customisation
-  theme(
-    # Title options
-    plot.title = element_text(face = "bold"),
-                         
-    # Panel options
-    panel.border = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor.y = element_blank(),
-     
-    # Legend options
-    legend.box = "vertical",
-    legend.title = element_text(face = "bold"),
-    legend.text = element_text(size = 8),
-     
-    # Facet options
-    strip.background = element_blank(),
-    strip.text = element_text(face = "bold"),
-     
-    # Axis options
-    axis.line = element_line(),
-    axis.title.y=element_text(angle=0)),
-  
-  # Colour options
-  scale_colour_viridis(option = "inferno",
-                       discrete = TRUE),
-                       geom_line(size = 1))

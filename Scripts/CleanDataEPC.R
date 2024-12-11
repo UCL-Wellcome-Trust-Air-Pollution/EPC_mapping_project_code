@@ -10,7 +10,7 @@
 
 # Define function to clean main EPC data ---------------------------------------
 
-clean_data_epc <- function(data_epc_raw,
+clean_data_epc <- function(path_data_epc_raw,
                            path_data_os){
   
   # Define inputs for data cleaning --------------------------------------------
@@ -52,7 +52,7 @@ clean_data_epc <- function(data_epc_raw,
   
   # Generate SQL query and store result as lazy datatable (allows you to access 
   #data.table functionality using dplyr code)
-  data_epc_cleaned <- data_epc_raw %>%
+  data_epc_cleaned <- read_parquet(path_data_epc_raw) %>%
     
     # Clean names using Janitor
     clean_names() %>%
