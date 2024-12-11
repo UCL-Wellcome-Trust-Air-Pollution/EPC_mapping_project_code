@@ -1,4 +1,4 @@
-# Created by use_targets()
+### Targets file to produce EPC manuscript
 
 # Load packages required to define the pipeline
 library(targets)
@@ -55,7 +55,7 @@ list(
   
   # Generate datasets ----------------------------------------------------------
   
-  tar_target(data_epc_raw, get_epc_data_from_zip(path_data_epc_folders = here("Data/raw/epc_data/epc_data_extracted"),
+  tar_target(data_epc_raw, get_epc_data_from_zip(path_data_epc_folders = here("epc_data/epc_data_extracted"),
                                                  epc_cols_to_select = c("UPRN", "SECONDHEAT_DESCRIPTION", "MAINHEAT_DESCRIPTION",
                                                                         "INSPECTION_DATE", "CONSTRUCTION_AGE_BAND", "PROPERTY_TYPE",
                                                                         "BUILT_FORM", "TENURE", "POSTCODE")),
