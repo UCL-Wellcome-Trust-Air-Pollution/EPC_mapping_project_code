@@ -49,6 +49,7 @@ make_summary_data_by_group <- function(data_epc,
            n_sfa_predicted = sum(sfa_perc * n_properties, na.rm = TRUE),
            wood_perc_h_predicted = sum(wood_perc * n_properties * property_type_h / sum(n_properties * property_type_h, na.rm = TRUE), na.rm = TRUE) * 100,
            sfa_perc_predicted = sum(sfa_perc * n_properties * property_type_h / sum(n_properties * property_type_h, na.rm = TRUE), na.rm = TRUE) * 100,
+           sfa_perc_all_properties_predicted = sum(sfa_perc * n_properties / sum(n_properties, na.rm = TRUE), na.rm = TRUE) * 100,
            n_properties_census = sum(n_properties, na.rm = TRUE),
            .by = geo_level_var)
   

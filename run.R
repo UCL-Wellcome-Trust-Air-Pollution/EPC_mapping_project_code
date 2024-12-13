@@ -22,13 +22,6 @@ path_data_epc_folders <- "Data/raw/epc_data/epc_data_extracted"
 output_dir <- "Data/raw/epc_data"
 
 # Collect EPC data from unzipped folders ---------------------------------------
-library(here)
-library(fs)
-library(future)
-library(furrr)
-library(dplyr)
-library(vroom)
-library(arrow)
 
 # Source merging function
 source(here("Scripts/GetEPCData.R"))
