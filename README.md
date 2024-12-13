@@ -1,11 +1,11 @@
 # EPC mapping project code base
 This repository stores the code files for the project - "High resolution mapping of wood burning hotspots using Energy Performance Certificates: A case study in England and Wales". To recreate the analysis on your local device, please carry out the following steps:
 
-1. Clone the GitHub repository to your local device
+1. Clone the GitHub repository to your local device. For users who do not have Git installed on their local machine, a .tar file of the code base is available via Zenodo ('Code.tar'). Please ensure you use the directory with the R Project in it as your root directory.
 
-2. Download the 'Data.tar' file from https://zenodo.org/records/14382720 and unzip the file in the R Project directory. The data should be in a folder called 'Data'. All data is provided under the UK Open Government License version 3.0
+2. Download the 'Data.tar' file from https://zenodo.org/records/14382720 and unzip the file in the R Project directory. The data should be in a folder called 'Data' in the root directory. All data is provided under the UK Open Government License version 3.0
 
-3. Download the main EPC data to your local device and unzip (see below for detailed instructions on how to do this). For Windows users, the 'Scripts' folder of the repository contains a .bat file which can be used to unzip the data. Note that this file requires the user to have installed 7Zip and added 7Zip to the system path.
+3. Download the main EPC data to your local device and unzip (see below for detailed instructions on how to do this). For Windows users, the 'Scripts' folder of the repository contains a .bat file which can be used to unzip the data. Note that this file requires the user to have installed 7Zip and added 7Zip to the system path. Otherwise, the .tar file can be unzipped manually. 
 
 4. Run the 'run.R' file in the 'Scripts' folder of the directory. You may need to change the 'path_data_epc_folders' variable to the path to the unzipped EPC data folders on your local device (see step 3). The full pipeline should now run.
 
