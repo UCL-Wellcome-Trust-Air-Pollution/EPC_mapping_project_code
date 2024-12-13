@@ -16,13 +16,19 @@
 # Set path to unzipped EPC data and directory for output data ------------------
 
 # Update this path with the path on your local device (note: the path only needs to be specified from the R Project directory)
-path_data_epc_folders <- "epc_data/epc_data_extracted"
+path_data_epc_folders <- "Data/raw/epc_data/epc_data_extracted"
 
 # Set output directory (this should be within the 'Data' subfolder)
 output_dir <- "Data/raw/epc_data"
 
 # Collect EPC data from unzipped folders ---------------------------------------
 library(here)
+library(fs)
+library(future)
+library(furrr)
+library(dplyr)
+library(vroom)
+library(arrow)
 
 # Source merging function
 source(here("Scripts/GetEPCData.R"))

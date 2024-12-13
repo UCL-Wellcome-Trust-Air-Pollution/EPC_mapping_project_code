@@ -1,50 +1,42 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|def6869d4225e6cc|||||||||||||||
-build_logit_model|function|659d1a82b844beb2|||||||||||||||
-choropleth_map_epc_coverage_lsoa|stem|af48dffedc48f73c|60eedde9145dd935|ce235ac60780ac79|-2084612859|Output/Maps/choropleth_map_epc_coverage_lsoa.png|t20068.5245192375s|8424d1c675386abf|3996199|file|local|vector|||23.313||
-choropleth_map_n_wf_laei|stem|4bf9badd42dfdaaf|a44bece7dad49881|c4970f84098df698|-1891109820||t20068.5233915151s|137a8c370a05cd12|36676922|qs|local|vector|||0.016||
-choropleth_map_sfa_conc_pred_lsoa|stem|8558551850b3258f|30f7a665bcf74284|5db3bb18f529dbbd|-1365123091||t20068.5248504732s|c936cfeb078d36ee|2318488134|qs|local|vector|||0.25||
-choropleth_map_sfa_conc_pred_lsoa_london|stem|be455283544d57e4|97c34dbb968e03de|5db3bb18f529dbbd|1639341773||t20068.5249358661s|9a36aabf0d3adb49|476603135|qs|local|vector|||0.109||
-choropleth_map_sfa_pc_lsoa|stem|5741454b2603a57b|837649bbdaf76153|5db3bb18f529dbbd|1969493534||t20068.525207791s|36fb3fda022fd836|2318513927|qs|local|vector|||0.266||
-choropleth_map_sfa_pc_lsoa_london|stem|e14487bcc6d83c67|7d1af3f2a5859aaa|5db3bb18f529dbbd|-719377330||t20068.5252959092s|18a70270018183c3|476538313|qs|local|vector|||0.094||
-choropleth_map_wood_conc_pred_lsoa|stem|c9035d27507e0200|930f1b40554eae5c|5db3bb18f529dbbd|-324159053||t20068.5256668683s|9dd7c18dc8d94e54|2318405972|qs|local|vector|||0.313||
-choropleth_map_wood_conc_pred_lsoa_london|stem|0e636d5af59eb097|440c3e0e8ec45fcd|5db3bb18f529dbbd|-2028820306||t20068.5253736241s|1ce4a470d9a9f9a4|476600219|qs|local|vector|||0.125||
-choropleth_map_wood_emissions_laei|stem|a439c257fdf1e5a3|26b593ae159d3991|c4970f84098df698|-1648732628||t20068.5233807451s|d883540bc5c07959|36665256|qs|local|vector|||0.078||
-choropleth_map_wood_pc_lsoa|stem|b4b3393c9eae1ae5|670cd688ab47c538|5db3bb18f529dbbd|-505547426||t20068.5259725913s|b841380548be9d68|2318509102|qs|local|vector|||0.203||
-choropleth_map_wood_pc_lsoa_london|stem|d1aa400191ae0fd0|cc78114ed84c8ed9|5db3bb18f529dbbd|-2001476855||t20068.5260543153s|737639bfc64c23e2|476537521|qs|local|vector|||0.093||
-clean_data_epc|function|e190209ce35c4909|||||||||||||||
-data_epc_cleaned|stem|4d33fd9550c24fff|043da35d65adb432|92d7ff7236ebf540|-502665896||t20068.4322058881s|e3db554baaf77351|486155830|parquet|local|vector|||344.88||
-data_epc_cleaned_covars|stem|33a1178035d67a72|d886dad338c65a60|4dfdf6c05da83863|-977625867||t20068.509335616s|4beacec731744d23|1216166277|parquet|local|vector|||725.984||
-data_epc_coverage|stem|b8c652ce092f2110|864bc20a016f1d0e|17986f696a2cfca5|910691584||t20068.5137023539s|1daa1d55353ed308|1581853|qs|local|vector|||55.141||
-data_epc_coverage_lsoa_to_map|stem|2c5171babc56fc4d|9451c997e24cc140|51a911203df162a7|1888182610||t20068.523366595s|f5608704a12bd6a6|296578452|qs|local|vector|||0.609||
-data_epc_la_cross_section|stem|fa84c173013df975|41f1e8a576d8a271|0b2cd42fdd0be687|1505329818||t20068.5232621999s|d0ca8bbea9e4cb90|95108|parquet|local|vector|||25.328||
-data_epc_lsoa_cross_section|stem|06db720203779265|6c6032f9db9b2a30|0b2cd42fdd0be687|1067368091||t20068.5209097146s|60d42d51d9a2d059|5018692|parquet|local|vector|||45.64||
-data_epc_lsoa_cross_section_to_map|stem|73c6c1f77e965492|ef62dc1f9b7c2514|fab050a3d16a6472|1746386826||t20068.5239593991s|b5a8d50939ed7dc3|299472602|qs|local|vector|||0.843||
-data_epc_lsoa_housing_type|stem|d520aacf35fe422f|80a2b128e38655e3|0b2cd42fdd0be687|661849144||t20068.5179555282s|3649fec19ac5bdce|8413629|parquet|local|vector|||56.157||
-data_epc_region_cross_section|stem|70cf05b66b7df5f4|96053c8c13b6434f|0b2cd42fdd0be687|-156931015||t20068.5170621445s|b3db8e6c19e2232b|17714|parquet|local|vector|||19.375||
-data_epc_ward_cross_section|stem|7b1ef719c8b5a198|7714320f3f9ea875|0b2cd42fdd0be687|-836163729||t20068.5140291642s|b8b50036d3c739de|1537125|parquet|local|vector|||20.984|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlsoa_var   Now  data  selectall_oflsoa_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selecthousing_type_var   Now  data  selectall_ofhousing_type_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgeo_level_var   Now  data  selectall_ofgeo_level_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
-data_housing_type_census|stem|0b887a3fc358afd1|bd1ccccde357c1d5|600d3ca1026aa84e|243965187||t20068.4277024126s|3cde740dc46c9c7d|1810722|qs|local|vector|||8.3||
-data_housing_type_os_epc|stem|25849e79157a613d|ef28406f9115c190|89aa53e132e503c3|1502561757||t20068.5128220831s|76cd1098031252de|365|qs|local|vector|||8.375||
-data_laei|stem|d4ffbeb2dc7df781|e6d438958402ce75|e5135675a0fe24ea|-1210848746||t20068.5167377324s|3fa4661ee8d80aed|741686|qs|local|vector|||193.719||
-data_os|stem|7d2474bd919e9e63|87b2c647c8c00d0a|bf62f96deb952baa|-1119668480||t20068.4356820648s|c963e6ca2be21bec|105199413|qs|local|vector|||23.15||
-data_uprn_sca_lookup|stem|58c2eedcfb54dc41|3105b017959e9315|40326225e64c301f|-1667461808||t20068.4459906878s|11efc1cf77744c96|1304073785|parquet|local|vector|||637.17|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlong_var   Now  data  selectall_oflong_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlat_var   Now  data  selectall_oflat_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
-facet_wood_pc_imd_score_region|stem|051709740f10f922|1e8d8b73526598e8|1eba5987ea25a505|-1234471905|Output/Figures/facet_wood_pc_imd_score_region.png|t20068.5198583383s|9cb4d371fbbbd124|2513764|file|local|vector|||8.328|Removed 7 rows containing missing values or values outside the scale rangegeom_point.|
-facet_wood_pc_imd_score_region_urban|stem|14c46fe007519013|79f440f5fbd3722a|1eba5987ea25a505|-2001976714|Output/Figures/facet_wood_pc_imd_score_region_urban.png|t20068.5213307799s|315f138693eefe0c|1817491|file|local|vector|||12.797|Removed 7 rows containing missing values or values outside the scale rangegeom_point.|
-facet_wood_pc_median_age_region|stem|2af3d3a6630b8ce7|1bf0bc69374fd3b1|1eba5987ea25a505|-1325275718|Output/Figures/facet_wood_pc_median_age_region.png|t20068.519641578s|87721cca53b4cdb5|2685774|file|local|vector|||8.891|Removed 7 rows containing missing values or values outside the scale rangegeom_point.|
-facet_wood_pc_median_age_region_urban|stem|bfe10d75c5b39718|be4dbe3acf620bbe|1eba5987ea25a505|-315001388|Output/Figures/facet_wood_pc_median_age_region_urban.png|t20068.5190895989s|8228ea569d6c0bac|1871545|file|local|vector|||12.64|Removed 7 rows containing missing values or values outside the scale rangegeom_point.|
-facet_wood_pc_property_type_imd_decile_rural|stem|0057f51f51330d65|beef7561d932f53c|1eba5987ea25a505|190569178||t20068.5224728691s|6892111bff9d1224|1304047022|qs|local|vector|||8.765||
-facet_wood_pc_property_type_imd_decile_urban|stem|7b3ee929851f7e5a|8703c3b2d1b96043|1eba5987ea25a505|577327291||t20068.5219406358s|b4bb996852783eef|1304047339|qs|local|vector|||20.672||
-facet_wood_pc_property_type_region|stem|1b52f05d5f72f36b|4a280b20fec80a49|1eba5987ea25a505|2100699736|Output/Figures/facet_wood_pc_property_type_region.png|t20068.519383107s|83405ac08fddac50|526522|file|local|vector|||2.828||
-facet_wood_pc_white_pct_region|stem|72631c18b38eba0d|5c63fdb6c66e91a9|1eba5987ea25a505|-938591422|Output/Figures/facet_wood_pc_white_pct_region.png|t20068.5228573222s|12a1faa6c224dd34|1910889|file|local|vector|||8.829|Removed 7 rows containing missing values or values outside the scale rangegeom_point.|
-facet_wood_pc_white_pct_region_urban|stem|8d7705b8d71c9dd5|785beadbc1029758|1eba5987ea25a505|-1907695542|Output/Figures/facet_wood_pc_white_pct_region_urban.png|t20068.5182246572s|35cb85997d01b31e|1592457|file|local|vector|||14.406|Removed 7 rows containing missing values or values outside the scale rangegeom_point.|
-get_openair_data|function|cf32d1f84b1ff1b8|||||||||||||||
-get_os_data|function|81142330a4b604ea|||||||||||||||
+.Random.seed|object|ee064a4cc42766f7|||||||||||||||
+choropleth_map_n_wf_laei|stem|967aa726e8b31f69|a44bece7dad49881|3bf812ef01a648b6|-1891109820||t20070.4808037988s|379f3103dca40429|36651440|qs|local|vector|||0.016||
+choropleth_map_sfa_conc_pred_lsoa|stem|32f2dd98377356cf|30f7a665bcf74284|6e8f36424826e846|-1365123091||t20070.5449070759s|7358a4de8b07a6a6|2318448400|qs|local|vector|||0.25||
+choropleth_map_sfa_conc_pred_lsoa_london|stem|ed6f06757f9bb96b|97c34dbb968e03de|6e8f36424826e846|1639341773||t20070.5442618905s|952f873cb6dd5876|476559748|qs|local|vector|||0.125||
+choropleth_map_sfa_pc_lsoa|stem|357e8528aeda8308|837649bbdaf76153|6e8f36424826e846|1969493534||t20070.5451998098s|a5d7523911d98964|2318475778|qs|local|vector|||0.281||
+choropleth_map_sfa_pc_lsoa_london|stem|5f1b85b3de9ec48e|7d1af3f2a5859aaa|6e8f36424826e846|-719377330||t20070.5441877277s|a83006d93a5c4a82|476500750|qs|local|vector|||0.125||
+choropleth_map_wood_conc_pred_lsoa|stem|8403dd9b3a0c1519|930f1b40554eae5c|6e8f36424826e846|-324159053||t20070.5445319102s|9a8ccbf12becccf5|2318361109|qs|local|vector|||0.265||
+choropleth_map_wood_conc_pred_lsoa_london|stem|a61a40d1943c8972|440c3e0e8ec45fcd|6e8f36424826e846|-2028820306||t20070.5446199973s|abdc87a6dbb2e288|476557979|qs|local|vector|||0.172||
+choropleth_map_wood_emissions_laei|stem|bab62d1c367167e6|26b593ae159d3991|3bf812ef01a648b6|-1648732628||t20070.4806726226s|475a1404fa4f1abf|36658179|qs|local|vector|||0.171||
+choropleth_map_wood_pc_lsoa|stem|3bc4925bcc866ae2|670cd688ab47c538|6e8f36424826e846|-505547426||t20070.5440299014s|5d8b78a69f0423aa|2318470950|qs|local|vector|||0.343||
+choropleth_map_wood_pc_lsoa_london|stem|a2045f2eba5002a8|cc78114ed84c8ed9|6e8f36424826e846|-2001476855||t20070.5441158932s|cd427ff9ae7be591|476500322|qs|local|vector|||0.125||
+clean_data_epc|function|08280800223a0f84|||||||||||||||
+data_epc_cleaned|stem|fb8518c8743a9e03|5794175b89fbc904|1758543064befa1c|-502665896||t20070.5258798744s|c1051bbd1fdd827f|445816560|parquet|local|vector|||372.234||
+data_epc_cleaned_covars|stem|cd7746e277c21ded|d886dad338c65a60|26275e70268ba387|-977625867||t20070.5629161586s|46fc674cad2b21f6|1213188564|parquet|local|vector|||651.313||
+data_epc_la_cross_section|stem|75c25cd45a7b7e0e|41f1e8a576d8a271|81ba5e3ea1ac99a6|1505329818||t20070.5671635582s|8243432ad7b17576|94971|parquet|local|vector|||31.704|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlsoa_var   Now  data  selectall_oflsoa_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selecthousing_type_var   Now  data  selectall_ofhousing_type_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgeo_level_var   Now  data  selectall_ofgeo_level_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectgroup_vars   Now  data  selectall_ofgroup_varsSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_epc_lsoa_cross_section|stem|0d391632b782e95a|6c6032f9db9b2a30|81ba5e3ea1ac99a6|1067368091||t20070.5679276609s|2d1d187611789c2a|5061041|parquet|local|vector|||41.5||
+data_epc_lsoa_cross_section_to_map|stem|f67f57cb0a415b4b|ef62dc1f9b7c2514|c9940d056df758fd|1746386826||t20070.5436943619s|2dcadfb31fee1baf|299460931|qs|local|vector|||0.64||
+data_epc_region_cross_section|stem|e95aadf4b720e47e|96053c8c13b6434f|81ba5e3ea1ac99a6|-156931015||t20070.5689674578s|f717246103cbb7dc|17717|parquet|local|vector|||27.766||
+data_epc_ward_cross_section|stem|f08dbb1ebd29d031|7714320f3f9ea875|81ba5e3ea1ac99a6|-836163729||t20070.5696398054s|01969aad4fbfce47|1541795|parquet|local|vector|||37.734||
+data_housing_type_census|stem|0b887a3fc358afd1|bd1ccccde357c1d5|600d3ca1026aa84e|243965187||t20070.4691013255s|3cde740dc46c9c7d|1810722|qs|local|vector|||7.609||
+data_housing_type_os_epc|stem|335534ccf4253480|503ac2feaeef0fdf|2c530c1562a7fbd1|1502561757||t20070.4731561843s|76cd1098031252de|365|qs|local|vector|||0||
+data_indicators_region|stem|ad51ef4b63275c41|54ea8bbf1f19a431|c61fafba0761afac|1925230832||t20070.5663482017s|d906d67b3a4bc9d8|874175|qs|local|vector|||11.375||
+data_laei|stem|b48fbc280a581bb1|c634d0ad6ed55ffb|2c530c1562a7fbd1|-1210848746||t20070.4732089264s|0e1dc64f81f8ee6d|741697|qs|local|vector|||0.047||
+data_uprn_sca_lookup|stem|58c2eedcfb54dc41|2e945c2bb0298f61|398340c1033acf07|-1667461808||t20070.4796014208s|11efc1cf77744c96|1304073785|parquet|local|vector|||525.829|Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlong_var   Now  data  selectall_oflong_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.. Using an external vector in selections was deprecated in tidyselect 1.1.0.ℹ Please use all_of or any_of instead.   Was  data  selectlat_var   Now  data  selectall_oflat_varSee httpstidyselect.rlib.orgreferencefaqexternalvector.html.|
+data_wood_pc_property_type_imd_decile_rural|stem|a3c371b8f8e32e20|a6e5ea34cf7e6618|c61fafba0761afac|-1939072743||t20070.5666900732s|623585eac6114059|4377|qs|local|vector|||10.469||
+data_wood_pc_property_type_imd_decile_urban|stem|9a06587dffad972b|bce94be0173a4b84|c61fafba0761afac|-2037819747||t20070.5682016805s|9e5289d5216caea2|4460|qs|local|vector|||10.734||
+data_wood_pc_property_type_region|stem|5300407721854b18|7793a697f6b90e53|c61fafba0761afac|954055299||t20070.5664697436s|3e5869e3a936cb88|4358|qs|local|vector|||1.516||
+facet_wood_pc_imd_score_region|stem|05cb5b18cbea74c2|958a0d202aefecdf|4ece2f740ea2d228|-1234471905|Output/Figures/facet_wood_pc_imd_score_region.png|t20070.5435852072s|1f171973554f04ab|2516579|file|local|vector|||2.172|Removed 6 rows containing missing values or values outside the scale rangegeom_point.|
+facet_wood_pc_median_age_region|stem|eb08b8046e1b7f97|97b7d627ff609205|4ece2f740ea2d228|-1325275718|Output/Figures/facet_wood_pc_median_age_region.png|t20070.5435204469s|ecba94b06dc87528|2686676|file|local|vector|||2.078|Removed 6 rows containing missing values or values outside the scale rangegeom_point.|
+facet_wood_pc_property_type_imd_decile_rural|stem|7c5271478287ea4a|22579293e531eedc|8121edc12606a521|190569178||t20070.5436292814s|7e50a147bd7f45ee|126979|qs|local|vector|||0||
+facet_wood_pc_property_type_imd_decile_urban|stem|ba7c633b16ed051b|0def6bb472ecaab2|766eb6d87fc1eb89|577327291||t20070.5437144838s|4d6d1135eecf7f2f|127023|qs|local|vector|||0.015||
+facet_wood_pc_property_type_region|stem|5df5f5f9b36720a5|70f602b02743cbcb|2b4d4bdc4be6533f|2100699736|Output/Figures/facet_wood_pc_property_type_region.png|t20070.5436262814s|87ac836f2af424ab|526770|file|local|vector|||1.078||
+facet_wood_pc_white_pct_region|stem|f13471b701767373|0531b44687faf876|4ece2f740ea2d228|-938591422|Output/Figures/facet_wood_pc_white_pct_region.png|t20070.5436108068s|c9c4a75ffb4a97b2|1911125|file|local|vector|||1.969|Removed 6 rows containing missing values or values outside the scale rangegeom_point.|
+get_os_data|function|fa4750475554f92f|||||||||||||||
 get_percentile|function|05053628aaada4e5|||||||||||||||
 get_shapefile|function|839865805d19c7ed|||||||||||||||
-histogram_epc_coverage_region|stem|aeb29ba982fdb7aa|81a12202853ff72f|5cffa2952c4d5548|519099029||t20068.5232967034s|3ad7ccf74607cc42|88|qs|local|vector|||1.094||
-la_boundaries|stem|4b26ba8e00fe182c|d637dc8871bd5df3|0829908d420f46d8|1975968175||t20068.4317197312s|c45609781185b6d8|27709255|qs|local|vector|||1.34||
-line_plot_opts|object|5096f3631c5400d3|||||||||||||||
-lsoa_boundaries|stem|ef2f11319f1f67d0|f2f89b9abbb9a248|0829908d420f46d8|1619345||t20068.5126183494s|e8b3e0a41ca2079b|295137180|qs|local|vector|||6.438||
+la_boundaries|stem|4b26ba8e00fe182c|d637dc8871bd5df3|0829908d420f46d8|1975968175||t20070.4690074347s|c45609781185b6d8|27709255|qs|local|vector|||8.032||
+lsoa_boundaries|stem|ef2f11319f1f67d0|f2f89b9abbb9a248|0829908d420f46d8|1619345||t20070.4732033866s|e8b3e0a41ca2079b|295137180|qs|local|vector|||1.532||
 make_choropleth_map|function|41c6cb7527635ade|||||||||||||||
 make_data_epc_coverage|function|c2ed6646d7915e1b|||||||||||||||
 make_data_housing_type_census|function|f3e02d61cfce699b|||||||||||||||
@@ -54,23 +46,20 @@ make_laei_data|function|185b58c5c88bc9d8|||||||||||||||
 make_lsoa_lookup_data|function|17e3d2bc4adbba0c|||||||||||||||
 make_patchwork_plot|function|f49960ec2349733f|||||||||||||||
 make_summary_data_by_group|function|a7bf12835f3bc842|||||||||||||||
-make_uprn_sca_lookup|function|a87ccbdd0e7482f9|||||||||||||||
-merge_data_epc_cleaned_covars|function|8a64b1da0a331ef6|||||||||||||||
+make_uprn_sca_lookup|function|b1c69b4df4cfb31a|||||||||||||||
+merge_data_epc_cleaned_covars|function|09f1c52b490d54d8|||||||||||||||
 merge_geo_data_sca|function|2eece486f50693eb|||||||||||||||
-merge_statistical_geographies|function|24d3cc3e9d5dbf08|||||||||||||||
-patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined|stem|6d37788d0c41b610|4d48217a52efc399|0406f8b734aedc26|-1865709182|Output/Maps/patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined.png|t20068.5269743637s|527ec9af26d4a54a|10437506|file|local|vector|||48.797||
-patchwork_choropleth_map_wood_pc_conc_pred_lsoa|stem|9e0b0d9e5d09bee8|6d866d565c5de6ec|f98e309c98571bac|-1727230386|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa.png|t20068.5278758298s|931316160782eaa5|6183467|file|local|vector|||59.109||
-patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined|stem|c7d55a1cb4f952f6|fef0b745875036f3|3b60ef2e9a791956|-1919080344|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.png|t20068.5287624137s|ee875c72b397b756|10369654|file|local|vector|||47.125||
-patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london|stem|f12b828162fabf36|308c8f3c76cd072c|c9da24e16b5d5194|-1834238227|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london.png|t20068.5288933003s|ef308f3326c406c0|4194058|file|local|vector|||4.984||
-patchwork_facet_wood_pc_imd_decile|stem|7abf1c1cc93aaf0b|5689cb015969ca49|f6f513027a8c6137|-1387638116|Output/Figures/patchwork_facet_wood_pc_imd_decile.png|t20068.5242321627s|81125ecb5b72dfdb|1009615|file|local|vector|||2.156||
-patchwork_laei_wood_emissions_n_wf|stem|b14344c5235dfb42|f8e368fa4e149719|e7c80ac6c5413f5c|922068831|Output/Maps/patchwork_laei_wood_emissions_n_wf.png|t20068.524563243s|62fc1ddbc374145a|1567846|file|local|vector|||1.344||
-patchwork_scatter_wood_pc_imd_white_eth_age|stem|50af0c3778436c22|04d997c453ed2c2d|35d0bdc84c0c5801|1520605782|Output/Figures/patchwork_scatter_wood_pc_imd_white_eth.png|t20068.523873684s|87d2ba399706f4c0|1261344|file|local|vector|||4.109|Removed 10 rows containing missing values or values outside the scale rangegeom_point.|
-patchwork_wood_conc_perc_h_pred_actual|stem|b2f043514a3ad99b|63077cf66f09a7e2|a89bc40ae46b95b8|-273418987|Output/Figures/patchwork_wood_conc_perc_h_pred_actual.png|t20068.5260927025s|5ae564e87b121fdd|1094727|file|local|vector|||2.578|Removed 48 rows containing missing values or values outside the scale rangegeom_point.|
-prepare_data_for_logit_model|function|6b3a654041f3a336|||||||||||||||
+patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined|stem|2fb34db0ed6d012e|4d48217a52efc399|9893d5b8bb0edc3a|-1865709182|Output/Maps/patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined.png|t20070.54994516s|ce0b8688d4ca7614|10438267|file|local|vector|||140.781||
+patchwork_choropleth_map_wood_pc_conc_pred_lsoa|stem|e3f369f0803a2341|6d866d565c5de6ec|76a81c21bd86afe3|-1727230386|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa.png|t20070.5464596047s|c92de0aad7d255dd|6191272|file|local|vector|||71.297||
+patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined|stem|d7cc9cf81a78f02c|fef0b745875036f3|8fff60334f8f7be5|-1919080344|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.png|t20070.5478429756s|228e5d84744cfcf7|10386919|file|local|vector|||83.859||
+patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london|stem|97acbd46ab4c839b|308c8f3c76cd072c|9c31ac612ffce5d5|-1834238227|Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london.png|t20070.5479937804s|1c93fb6ec2a03b9e|4199882|file|local|vector|||5.766||
+patchwork_facet_wood_pc_imd_decile|stem|980f856511321dce|5689cb015969ca49|b717e7318bff2c2a|-1387638116|Output/Figures/patchwork_facet_wood_pc_imd_decile.png|t20070.5452739709s|29ff2930be1a7d41|1009776|file|local|vector|||1.641||
+patchwork_laei_wood_emissions_n_wf|stem|b14344c5235dfb42|f8e368fa4e149719|a733dc1acc69da59|922068831|Output/Maps/patchwork_laei_wood_emissions_n_wf.png|t20070.4897168509s|62fc1ddbc374145a|1567846|file|local|vector|||1.89||
+patchwork_scatter_wood_pc_imd_white_eth_age|stem|787aece6ba14dcbf|04d997c453ed2c2d|1db5604cb4b89fc5|1520605782|Output/Figures/patchwork_scatter_wood_pc_imd_white_eth.png|t20070.5701832892s|16811035fb35cf80|1262068|file|local|vector|||3.5|Removed 10 rows containing missing values or values outside the scale rangegeom_point.|
+patchwork_wood_conc_perc_h_pred_actual|stem|766865edb92561f6|63077cf66f09a7e2|1908f9e3dbd1abac|-273418987|Output/Figures/patchwork_wood_conc_perc_h_pred_actual.png|t20070.5452501191s|044dad61e31c9709|1177330|file|local|vector|||2.734|Removed 62 rows containing missing values or values outside the scale rangegeom_point.|
 prepare_data_to_map|function|b3a6f3f13d2c93d5|||||||||||||||
 scatter_plot_opts|object|4442375c7aad0e86|||||||||||||||
-scatter_plot_pc_wood_imd|stem|9476ae230344be5f|a4739e93d657d5f6|298b7f7fcd226796|-1856023104||t20068.520275108s|8963ca65bc637383|2607887452|qs|local|vector|||2.375||
-scatter_plot_pc_wood_white_eth|stem|ca00f6cf8570f5ea|2d283d75714254f2|298b7f7fcd226796|2019506418||t20068.5186625071s|cf77f6324ecf72e2|2607872683|qs|local|vector|||2.812||
-scatter_wood_conc_vs_predicted_lsoa|stem|82a86671ecbc7891|d2dc22c3e91b1d98|8dea71e2312c54ab|646257077||t20068.5239708058s|7d427ea820c3a358|22408473|qs|local|vector|||0.016||
-scatter_wood_perc_h_vs_predicted_lsoa|stem|1518c2106d3c2206|70a58c14c4c5cb19|8dea71e2312c54ab|1701892574||t20068.524008558s|1f707626df4a94b4|22411275|qs|local|vector|||0||
-set_spatial_points|function|0692f133ae6a89ba|||||||||||||||
+scatter_plot_pc_wood_imd|stem|801af98ee50ca236|a4739e93d657d5f6|03118d9efcfd3f94|-1856023104||t20070.5655899271s|b05938bdd3b7ab64|2778169524|qs|local|vector|||4.36||
+scatter_plot_pc_wood_white_eth|stem|fcb39a41ba267ba6|2d283d75714254f2|03118d9efcfd3f94|2019506418||t20070.5661219763s|076680e0c93da8e8|2778169561|qs|local|vector|||2.14||
+scatter_wood_conc_vs_predicted_lsoa|stem|aa49fd7e38036660|d2dc22c3e91b1d98|8c77a6357d39fb76|646257077||t20070.5437112993s|9f0777248db26fc8|22550759|qs|local|vector|||0.016||
+scatter_wood_perc_h_vs_predicted_lsoa|stem|1d36e4daaad552e8|70a58c14c4c5cb19|8c77a6357d39fb76|1701892574||t20070.5437047584s|31301ac936cfcb36|22553103|qs|local|vector|||0.015||

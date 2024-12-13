@@ -10,8 +10,7 @@
 
 # Define function to clean main EPC data ---------------------------------------
 
-clean_data_epc <- function(path_data_epc_raw,
-                           path_data_os){
+clean_data_epc <- function(path_data_epc_raw){
   
   # Define inputs for data cleaning --------------------------------------------
   
@@ -33,29 +32,15 @@ clean_data_epc <- function(path_data_epc_raw,
   na_strings <- c("na", "n a", "n / a", "n/a", "n/ a", "not available", "invalid!",
                   "no data!", "not applicable", ",", "")
   
-  # Load OS data ---------------------------------------------------------------
-  
-  data_os <- vroom(path_data_os, col_select = c("UPRN",
-                                                "CLASSIFICATION_CODE",
-                                                "END_DATE")) %>%
-    
-    # Clean names
-    clean_names() %>%
-    
-    # Filter only residential properties (classification code starts with 'R')
-    filter(str_sub(classification_code, 1, 1) == "R") %>%
-    
-    # Remove classification code
-    select(!classification_code)
-  
-  # Generate SQL query to clean data -------------------------------------------
-  
-  # Generate SQL query and store result as lazy datatable (allows you to access 
-  #data.table functionality using dplyr code)
+  # Clean data -----------------------------------------------------------------
+
   data_epc_cleaned <- read_parquet(path_data_epc_raw) %>%
     
     # Clean names using Janitor
     clean_names() %>%
+    
+    # Arrange so that most recent inspection date is first
+    arrange(desc(inspection_date)) %>%
     
     # Mutate values to lower case where variable type is character
     mutate_if(is.character,  ~ tolower(.)) %>%
@@ -161,18 +146,6 @@ clean_data_epc <- function(path_data_epc_raw,
     
     # Mutate characters to factors
     mutate(across(where(is.character), as.factor))
-  
-  # Left join EPC data to OS data and remove records which have an end date in OS data
-  data_epc_cleaned <- data_epc_cleaned %>%
-    
-    # Join by UPRN
-    left_join(data_os, by = "uprn") %>%
-    
-    # Remove all entries where end_date is non-na
-    filter(is.na(end_date)) %>%
-    
-    # Remove 'end_date' variable
-    select(!end_date)
   
   # Return 'data_epc_cleaned'
   return(data_epc_cleaned)

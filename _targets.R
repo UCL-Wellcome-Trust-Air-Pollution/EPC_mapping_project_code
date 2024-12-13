@@ -38,10 +38,7 @@ tar_option_set(
                "extrafont",
                "viridis",
                "patchwork",
-               "tidyr",
-               "furrr",
-               "fs",
-               "future"),
+               "tidyr"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -57,21 +54,18 @@ list(
   # Generate datasets ----------------------------------------------------------
   
   tar_target(data_epc_cleaned,
-             clean_data_epc(path_data_epc_raw = here("Data/raw/epc_data/data_epc_raw.parquet"),
-                            path_data_os = here("Data/raw/os_data/ID32_Class_records.csv")),
+             clean_data_epc(path_data_epc_raw = here("Data/raw/epc_data/data_epc_raw.parquet")),
              format = "parquet"),
 
-  tar_target(data_uprn_sca_lookup, make_uprn_sca_lookup(path_stat_geo_files = "Data/raw/geo_files",
+  tar_target(data_uprn_sca_lookup, make_uprn_sca_lookup(path_stat_geo_files = here("Data/raw/geo_files/nsul_lookup.parquet"),
                                                         sca_path_eng = here("Data/raw/sca_data/Smoke_Control_Area_Boundaries_and_Exemptions.shp"),
                                                         sca_path_wal = here("Data/raw/sca_data/final_wales_sca.shp"),
                                                         long_var = "gridgb1e",
                                                         lat_var = "gridgb1n"),
              format = "parquet"),
   
-  tar_target(data_os, get_os_data(here("Data/raw/os_data/ID32_Class_records.csv"))),
-  
-  tar_target(data_housing_type_os_epc, make_data_housing_type_os_epc(data_os,
-                                                                     data_epc_cleaned)),
+  # Load summary OS/EPC data (does not update with pipeline)
+  tar_target(data_housing_type_os_epc, read_parquet(here("Data/raw/os_data/data_housing_type_os_epc.parquet"))),
   
   tar_target(data_housing_type_census, make_data_housing_type_census(path_data_housing_type_census = here("Data/raw/census_data/TS044-2021-4-filtered-2024-10-15T15_26_58Z.csv"),
                                                                      path_region = "Data/raw/lsoa_data/Ward_to_Local_Authority_District_to_County_to_Region_to_Country_dec22.csv",
@@ -89,24 +83,6 @@ list(
                                                                     path_urban_rural = "Data/raw/lsoa_data/Rural_Urban_Classification_(2011)_of_Lower_Layer_Super_Output_Areas_in_England_and_Wales.csv",
                                                                     path_age = "Data/raw/lsoa_data/sapelsoabroadage20112022.xlsx"),
              format = "parquet"),
-  
-  tar_target(data_epc_coverage, make_data_epc_coverage(data_epc_cleaned,
-                                                       data_os,
-                                                       data_uprn_sca_lookup,
-                                                       group_var = lsoa21cd,
-                                                       path_lsoa_size = "Data/raw/lsoa_data/SAM_LSOA_DEC_2021_EW_in_KM.csv",
-                                                       path_imd_eng = "Data/raw/lsoa_data/File_5_-_IoD2019_Scores.xlsx",
-                                                       path_imd_wales = "Data/raw/lsoa_data/wimd-2019-index-and-domain-scores-by-small-area.ods",
-                                                       path_lsoa11_lsoa21_lookup = "Data/raw/lsoa_data/LSOA_(2011)_to_LSOA_(2021)_to_Local_Authority_District_(2022)_Best_Fit_Lookup_for_EW_(V2).csv",
-                                                       path_ethnicity = "Data/raw/lsoa_data/TS021-2021-3-filtered-2023-10-02T10_09_04Z.csv",
-                                                       path_region = "Data/raw/lsoa_data/Ward_to_Local_Authority_District_to_County_to_Region_to_Country_dec22.csv",
-                                                       path_ward = "Data/raw/lsoa_data/LSOA_(2021)_to_Ward_to_Lower_Tier_Local_Authority_(May_2022)_Lookup_for_England_and_Wales.csv",
-                                                       path_urban_rural = "Data/raw/lsoa_data/Rural_Urban_Classification_(2011)_of_Lower_Layer_Super_Output_Areas_in_England_and_Wales.csv",
-                                                       path_age = "Data/raw/lsoa_data/sapelsoabroadage20112022.xlsx")),
-  
-  tar_target(data_epc_coverage_lsoa_to_map, prepare_data_to_map(fill_data = data_epc_coverage,
-                                                            shapefile_data = lsoa_boundaries,
-                                                            join_var = "lsoa21cd")),
 
   tar_target(data_epc_lsoa_cross_section, make_summary_data_by_group(data = data_epc_cleaned_covars,
                                                                    data_housing_type_census = data_housing_type_census,
@@ -151,18 +127,6 @@ list(
                                                                most_recent_only = TRUE),
              format = "parquet"),
   
-  tar_target(data_epc_lsoa_housing_type, make_summary_data_by_group(data = data_epc_cleaned_covars,
-                                                               data_housing_type_census = data_housing_type_census,
-                                                               lsoa_var = "lsoa21cd",
-                                                               geo_level_var = "lsoa21cd",
-                                                               housing_type_var = "property_type_census",
-                                                               n_cutoff_conc_pred = 20,
-                                                               group_vars = c("lsoa21cd",
-                                                                              "property_type_census",
-                                                                              "rgn22nm"),
-                                                               most_recent_only = TRUE),
-             format = "parquet"),
-  
   tar_target(lsoa_boundaries, get_shapefile(shapefile_path = here("Data/raw/map_boundary_data/LSOA_2021_EW_BFC_V10.shp"),
                                             geography_var = lsoa21cd)),
   
@@ -173,10 +137,88 @@ list(
                                                                      shapefile_data = lsoa_boundaries,
                                                                      join_var = "lsoa21cd")),
   
-  tar_target(data_laei, make_laei_data(path_data_laei = "Data/raw/laei_data/Shapefile SHP/LAEI2019-pm2-5-grid-emissions-domestic.shp",
-                                       data_os = data_os,
-                                       data_uprn_sca_lookup = data_uprn_sca_lookup,
-                                       data_epc_cleaned_covars = data_epc_cleaned_covars)),
+  # Load LAEI shapefile with predicted concentration of WF heat sources (does not update with pipeline)
+  tar_target(data_laei, st_read(here("Data/raw/laei_data/data_laei.shp")) %>%
+               
+               rename(n_wood_pred = n_wd_pr,
+                      pm_25_emissions = pm_25_m)),
+  
+  tar_target(data_indicators_region, data_epc_cleaned_covars %>% 
+               
+               # Change region vars for formatting plot
+               mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
+                                          .default = rgn22nm)) %>%
+               
+               # Generate percentage of WF heat sources and mean IMD score by LSOA
+               # We are measuring prevalence so restrict to houses only
+               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, 
+                         imd_score = mean(imd_score, na.rm = TRUE),
+                         median_age_mid_2022 = mean(median_age_mid_2022, na.rm = TRUE),
+                         white_pct = mean(white_pct, na.rm = TRUE),
+                         urban = mean(urban, na.rm = TRUE),
+                         .by = c(lsoa21cd, rgn22nm)) %>% 
+               
+               # Remove NA urban areas
+               filter(!is.na(urban))),
+  
+  tar_target(data_wood_pc_property_type_region, data_epc_cleaned_covars %>% 
+               
+               # Summarise WF prevalence by region, year, and housing type
+               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, .by = c(year, property_type_census, rgn22nm)) %>% 
+               
+               # Filter Nan values (for flats, house type missing)
+               filter(!is.nan(wood_perc)) %>%
+               
+               # Change region name for plotting
+               mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber", .default = rgn22nm))),
+  
+  tar_target(data_wood_pc_property_type_imd_decile_urban, data_epc_cleaned_covars %>% 
+               
+               # Generate new IMD decile variable by urban/rural
+               mutate(imd_decile_ruc = factor(ntile(desc(imd_score), n = 10), labels = c("1 - Most deprived",
+                                                                                         "2",
+                                                                                         "3",
+                                                                                         "4",
+                                                                                         "5",
+                                                                                         "6",
+                                                                                         "7",
+                                                                                         "8",
+                                                                                         "9",
+                                                                                         "10 - Least deprived")),
+                      .by = urban) %>%
+               
+               # FIlter urban LSOAs
+               filter(urban == 1) %>%
+               
+               # Summarise WF prevalence by region, year, and housing type
+               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, .by = c(year, property_type_census, imd_decile_ruc)) %>% 
+               
+               # Filter Nan values (for flats, house type missing)
+               filter(!is.nan(wood_perc) & !is.na(imd_decile_ruc))),
+  
+  tar_target(data_wood_pc_property_type_imd_decile_rural, data_epc_cleaned_covars %>% 
+               
+               # Generate new IMD decile variable by urban/rural
+               mutate(imd_decile_ruc = factor(ntile(desc(imd_score), n = 10), labels = c("1 - Most deprived",
+                                                                                         "2",
+                                                                                         "3",
+                                                                                         "4",
+                                                                                         "5",
+                                                                                         "6",
+                                                                                         "7",
+                                                                                         "8",
+                                                                                         "9",
+                                                                                         "10 - Least deprived")),
+                      .by = urban) %>%
+               
+               # Filter rural LSOAs
+               filter(urban == 0) %>%
+               
+               # Summarise WF prevalence by region, year, and housing type
+               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, .by = c(year, property_type_census, imd_decile_ruc)) %>% 
+               
+               # Filter Nan values (for flats, house type missing)
+               filter(!is.nan(wood_perc) & !is.na(imd_decile_ruc))),
   
   # Make figures ---------------------------------------------------------------
 
@@ -432,21 +474,7 @@ list(
   
   # Facet wraps
   
-  tar_target(facet_wood_pc_imd_score_region, (data_epc_cleaned_covars %>% 
-               
-               # Change region vars for formatting plot
-               mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
-                                          .default = rgn22nm)) %>%
-               
-               # Generate percentage of WF heat sources and mean IMD score by LSOA
-               # We are measuring prevalence so restrict to houses only
-               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, 
-                         imd_score = mean(imd_score, na.rm = TRUE),
-                         urban = mean(urban, na.rm = TRUE),
-                         .by = c(lsoa21cd, rgn22nm)) %>% 
-                 
-                 # Remove NA urban areas
-                 filter(!is.na(urban)) %>%
+  tar_target(facet_wood_pc_imd_score_region, (data_indicators_region %>% 
                
                # Make plot
                ggplot(aes(x = imd_score, 
@@ -475,20 +503,7 @@ list(
                ggsave("Output/Figures/facet_wood_pc_imd_score_region.png", ., height = 5, width = 8, dpi = 700),
              format = "file"),
   
-  tar_target(facet_wood_pc_white_pct_region, (data_epc_cleaned_covars %>% 
-               
-               # Change region vars for formatting plot
-               mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
-                                          .default = rgn22nm)) %>%
-               
-               # Generate percentage of WF heat sources and mean white percentage by LSOA
-               # We are measuring prevalence so restrict to houses only
-               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, 
-                         white_pct = mean(white_pct, na.rm = TRUE), 
-                         urban = mean(urban, na.rm = TRUE),
-                         .by = c(lsoa21cd, rgn22nm)) %>% 
-                 
-                 filter(!is.na(urban)) %>%
+  tar_target(facet_wood_pc_white_pct_region, (data_indicators_region %>%
                
                # Make scatter plot
                ggplot(aes(x = white_pct, 
@@ -518,20 +533,7 @@ list(
                ggsave("Output/Figures/facet_wood_pc_white_pct_region.png", ., height = 5, width = 8, dpi = 700),
              format = "file"),
   
-  tar_target(facet_wood_pc_median_age_region, (data_epc_cleaned_covars %>% 
-                                                
-                                                # Change region vars for formatting plot
-                                                mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
-                                                                           .default = rgn22nm)) %>%
-                                                
-                                                # Generate percentage of WF heat sources and median age by LSOA
-                                                # We are measuring prevalence so restrict to houses only
-                                                summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, 
-                                                          median_age_mid_2022 = mean(median_age_mid_2022, na.rm = TRUE),
-                                                          urban = mean(urban, na.rm = TRUE),
-                                                          .by = c(lsoa21cd, rgn22nm)) %>% 
-                                                 
-                                                 filter(!is.na(urban)) %>%
+  tar_target(facet_wood_pc_median_age_region, (data_indicators_region %>%
                                                 
                                                 # Make plot
                                                 ggplot(aes(x = median_age_mid_2022, 
@@ -560,116 +562,7 @@ list(
                ggsave("Output/Figures/facet_wood_pc_median_age_region.png", ., height = 5, width = 8, dpi = 700),
              format = "file"),
   
-  tar_target(facet_wood_pc_imd_score_region_urban, (data_epc_cleaned_covars %>% 
-                                                
-                                                # Change region vars for formatting plot
-                                                mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
-                                                                           .default = rgn22nm)) %>%
-                                                  
-                                                  # Filter only urban areas
-                                                  filter(urban == 1) %>%
-                                                
-                                                # Generate percentage of WF heat sources and mean IMD score by LSOA
-                                                # We are measuring prevalence so restrict to houses only
-                                                summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, imd_score = mean(imd_score, na.rm = TRUE), .by = c(lsoa21cd, rgn22nm)) %>% 
-                                                
-                                                # Make plot
-                                                ggplot(aes(x = imd_score, y = wood_perc)) + 
-                                                
-                                                geom_point(alpha = 0.2,
-                                                           size = 0.1) + 
-                                                
-                                                facet_wrap(~rgn22nm) + 
-                                                
-                                                # Set plot options
-                                                scatter_plot_opts +
-                                                
-                                                labs(x = "IMD Score",
-                                                     y = "WF heat\nsource (%)") +
-                                                
-                                                theme(strip.text = element_text(size = 8))) %>%
-               
-               ggsave("Output/Figures/facet_wood_pc_imd_score_region_urban.png", ., height = 5, width = 8, dpi = 700),
-             format = "file"),
-  
-  tar_target(facet_wood_pc_white_pct_region_urban, (data_epc_cleaned_covars %>% 
-                                                
-                                                # Change region vars for formatting plot
-                                                mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
-                                                                           .default = rgn22nm)) %>%
-                                                  
-                                                  # Filter urban areas only
-                                                  filter(urban == 1) %>%
-                                                
-                                                # Generate percentage of WF heat sources and mean white percentage by LSOA
-                                                # We are measuring prevalence so restrict to houses only
-                                                summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, 
-                                                          white_pct = mean(white_pct, na.rm = TRUE), 
-                                                          .by = c(lsoa21cd, rgn22nm)) %>% 
-                                                
-                                                # Make scatter plot
-                                                ggplot(aes(x = white_pct, 
-                                                           y = wood_perc)) + 
-                                                
-                                                geom_point(alpha = 0.2,
-                                                           size = 0.1) + 
-                                                
-                                                # Facet by region var
-                                                facet_wrap(~rgn22nm) + 
-                                                
-                                                # Set plot options
-                                                scatter_plot_opts +
-                                                
-                                                labs(x = "White ethnicity (%)",
-                                                     y = "WF heat\nsource (%)") +
-                                                
-                                                theme(strip.text = element_text(size = 8))) %>%
-               
-               ggsave("Output/Figures/facet_wood_pc_white_pct_region_urban.png", ., height = 5, width = 8, dpi = 700),
-             format = "file"),
-  
-  tar_target(facet_wood_pc_median_age_region_urban, (data_epc_cleaned_covars %>% 
-                                                 
-                                                 # Change region vars for formatting plot
-                                                 mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber",
-                                                                            .default = rgn22nm)) %>%
-                                                   
-                                                   # Filter urban regions
-                                                   filter(urban == 1) %>%
-                                                 
-                                                 # Generate percentage of WF heat sources and median age by LSOA
-                                                 # We are measuring prevalence so restrict to houses only
-                                                 summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, median_age_mid_2022 = mean(median_age_mid_2022, na.rm = TRUE), .by = c(lsoa21cd, rgn22nm)) %>% 
-                                                 
-                                                 # Make plot
-                                                 ggplot(aes(x = median_age_mid_2022, y = wood_perc)) + 
-                                                 
-                                                 geom_point(alpha = 0.2,
-                                                            size = 0.1) + 
-                                                 
-                                                 facet_wrap(~rgn22nm) + 
-                                                 
-                                                 # Set plot options
-                                                 scatter_plot_opts +
-                                                 
-                                                 labs(x = "Median age",
-                                                      y = "WF heat\nsource (%)") +
-                                                 
-                                                 theme(strip.text = element_text(size = 8))) %>%
-               
-               ggsave("Output/Figures/facet_wood_pc_median_age_region_urban.png", ., height = 5, width = 8, dpi = 700),
-             format = "file"),
-  
-  tar_target(facet_wood_pc_property_type_region, (data_epc_cleaned_covars %>% 
-               
-               # Summarise WF prevalence by region, year, and housing type
-               summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, .by = c(year, property_type_census, rgn22nm)) %>% 
-               
-               # Filter Nan values (for flats, house type missing)
-               filter(!is.nan(wood_perc)) %>% 
-               
-               # Change region name for plotting
-               mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber", .default = rgn22nm)) %>% 
+  tar_target(facet_wood_pc_property_type_region, (data_wood_pc_property_type_region %>% 
                
                # Make facet wrap
                ggplot() + 
@@ -690,29 +583,7 @@ list(
                ggsave("Output/Figures/facet_wood_pc_property_type_region.png", ., height = 5, width = 8, dpi = 700),
              format = "file"),
   
-  tar_target(facet_wood_pc_property_type_imd_decile_urban, data_epc_cleaned_covars %>% 
-                                                              
-                                                              # Generate new IMD decile variable by urban/rural
-                                                              mutate(imd_decile_ruc = factor(ntile(desc(imd_score), n = 10), labels = c("1 - Most deprived",
-                                                                                                                                        "2",
-                                                                                                                                        "3",
-                                                                                                                                        "4",
-                                                                                                                                        "5",
-                                                                                                                                        "6",
-                                                                                                                                        "7",
-                                                                                                                                        "8",
-                                                                                                                                        "9",
-                                                                                                                                        "10 - Least deprived")),
-                                                                     .by = urban) %>%
-                                                              
-                                                              # FIlter urban LSOAs
-                                                              filter(urban == 1) %>%
-                                                        
-                                                        # Summarise WF prevalence by region, year, and housing type
-                                                        summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, .by = c(year, property_type_census, imd_decile_ruc)) %>% 
-                                                        
-                                                        # Filter Nan values (for flats, house type missing)
-                                                        filter(!is.nan(wood_perc) & !is.na(imd_decile_ruc)) %>% 
+  tar_target(facet_wood_pc_property_type_imd_decile_urban, data_wood_pc_property_type_imd_decile_urban %>% 
                                                         
                                                         # Make facet wrap
                                                         ggplot() + 
@@ -729,29 +600,7 @@ list(
                                                           
                                                           ggtitle("A")),
   
-  tar_target(facet_wood_pc_property_type_imd_decile_rural, data_epc_cleaned_covars %>% 
-                                                              
-               # Generate new IMD decile variable by urban/rural
-               mutate(imd_decile_ruc = factor(ntile(desc(imd_score), n = 10), labels = c("1 - Most deprived",
-                                                                                         "2",
-                                                                                         "3",
-                                                                                         "4",
-                                                                                         "5",
-                                                                                         "6",
-                                                                                         "7",
-                                                                                         "8",
-                                                                                         "9",
-                                                                                         "10 - Least deprived")),
-                      .by = urban) %>%
-                                                              
-                                                              # Filter rural LSOAs
-                                                              filter(urban == 0) %>%
-                                                              
-                                                              # Summarise WF prevalence by region, year, and housing type
-                                                              summarise(wood_perc = mean(any_wood_h, na.rm = TRUE) * 100, .by = c(year, property_type_census, imd_decile_ruc)) %>% 
-                                                              
-                                                              # Filter Nan values (for flats, house type missing)
-                                                              filter(!is.nan(wood_perc) & !is.na(imd_decile_ruc)) %>% 
+  tar_target(facet_wood_pc_property_type_imd_decile_rural, data_wood_pc_property_type_imd_decile_rural %>% 
                                                               
                                                               # Make facet wrap
                                                               ggplot() + 
@@ -767,46 +616,6 @@ list(
                                                                    colour = "Property type") +
                                                               
                                                               ggtitle("B")),
-  
-  tar_target(histogram_epc_coverage_region, (data_epc_coverage %>%
-                                               
-                                               # Change region name for plotting
-                                               mutate(rgn22nm = case_when(rgn22nm == "Yorkshire and The Humber" ~ "Yorkshire and\nThe Humber", .default = rgn22nm)) %>%
-                                               
-                                               ggplot() +
-                                               
-                                               geom_histogram(aes(x = epc_coverage),
-                                                              fill = "black",
-                                                              colour = "white",
-                                                              alpha = 0.7,
-                                                              linewidth = 0.2,
-                                                              bins = 50) +
-                                               
-                                               facet_wrap(~rgn22nm) +
-                                               
-                                               scatter_plot_opts +
-                                               
-                                               labs(x = "Percentage of properties matched to EPC data",
-                                                     y = "Number of\nLSOAs")) %>%
-               
-               ggsave("Output/Figures/histogram_epc_coverage_region.png", ., dpi = 700, width = 8, height = 5)),
-
-  tar_target(choropleth_map_epc_coverage_lsoa, (make_choropleth_map(fill_data = data_epc_coverage_lsoa_to_map,
-                                                                   fill_var = epc_coverage,
-                                                                   n_var = NULL,
-                                                                   n_threshold = NULL,
-                                                                   boundary_data = la_boundaries,
-                                                                   fill_palette = "inferno",
-                                                                   scale_lower_lim = 0,
-                                                                   scale_upper_lim = 100,
-                                                                   winsorise = FALSE,
-                                                                   lower_perc = NULL,
-                                                                   upper_perc = NULL,
-                                                                   legend_title = "Percentage",
-                                                                   legend_position = "inside")) %>%
-               
-               ggsave("Output/Maps/choropleth_map_epc_coverage_lsoa.png", ., height = 5, width = 8, dpi = 700),
-             format = "file"),
   
   # Patchwork plots
   tar_target(patchwork_choropleth_map_wood_pc_conc_pred_lsoa, (make_patchwork_plot(list = list(choropleth_map_wood_pc_lsoa,

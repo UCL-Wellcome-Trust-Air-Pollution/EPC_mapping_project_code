@@ -18,7 +18,7 @@ make_uprn_sca_lookup <- function(path_stat_geo_files,
                                  lat_var){
   
   # Get UPRN lookup datasets and merge using 'merge statistical geographies' function
-  data_geo_uprn <- merge_statistical_geographies(path_stat_geo_files)
+  data_geo_uprn <- read_parquet(path_stat_geo_files)
   
   # Add in SCA status using 'merge_geo_data_sca' function
   data_uprn_sca_lookup <- merge_geo_data_sca(geo_data = data_geo_uprn,

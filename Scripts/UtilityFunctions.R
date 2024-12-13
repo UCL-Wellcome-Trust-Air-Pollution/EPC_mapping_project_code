@@ -53,31 +53,29 @@ make_data_housing_type_os_epc <- function(data_os,
 
 get_os_data <- function(data_os_path){
   
-  data_os <- vroom(data_os_path, col_select = c("UPRN",
-                                                "CLASSIFICATION_CODE",
-                                                "END_DATE")) %>%
+  data_os <- read_parquet(data_os_path) #%>%
     
-    # Clean names
-    clean_names() %>%
-    
-    # Keep only records which are still active (i.e. end_date is NA)
-    filter(is.na(end_date)) %>%
-    
-    select(!end_date) %>%
-    
-    # Filter only residential properties (classification code starts with 'R')
-    filter(str_sub(classification_code, 1, 1) == "R") %>%
-    
-    # Mutate new variable capturing Census property types
-    mutate(property_type_census = factor(case_when(classification_code == "RD02" ~ "Detached",
-                                        classification_code == "RD03" ~ "Semi Detached",
-                                        classification_code == "RD04" ~ "Terrace",
-                                        classification_code == "RD06" ~ "Flat",
-                                        classification_code %in% c("RD01",
-                                                                   "RD07",
-                                                                   "RD08",
-                                                                   "RD10") ~ "Other accommodation",
-                                        .default = "House form missing")))
+    # # Clean names
+    # clean_names() %>%
+    # 
+    # # Keep only records which are still active (i.e. end_date is NA)
+    # filter(is.na(end_date)) %>%
+    # 
+    # select(!end_date) %>%
+    # 
+    # # Filter only residential properties (classification code starts with 'R')
+    # filter(str_sub(classification_code, 1, 1) == "R") %>%
+    # 
+    # # Mutate new variable capturing Census property types
+    # mutate(property_type_census = factor(case_when(classification_code == "RD02" ~ "Detached",
+    #                                     classification_code == "RD03" ~ "Semi Detached",
+    #                                     classification_code == "RD04" ~ "Terrace",
+    #                                     classification_code == "RD06" ~ "Flat",
+    #                                     classification_code %in% c("RD01",
+    #                                                                "RD07",
+    #                                                                "RD08",
+    #                                                                "RD10") ~ "Other accommodation",
+    #                                     .default = "House form missing")))
   
 }
 
