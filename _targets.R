@@ -252,6 +252,36 @@ list(
                
                ggtitle("B")),
   
+  tar_target(scatter_plot_pc_wood_imd_urban, make_grouped_scatter_plot(data = data_epc_cleaned_covars[data_epc_cleaned_covars$urban == 1,],
+                                                                 x_var = imd_score,
+                                                                 y_var = any_wood_h,
+                                                                 group_var = imd_decile,
+                                                                 colour_var = rgn22nm,
+                                                                 size_var = num_people,
+                                                                 legend_position = "bottom") + 
+               labs(colour = NULL,
+                    x = "Mean IMD score",
+                    y = "Wood fuel (%)") +
+               
+               guides(size = guide_legend(title = "Population")) +
+               
+               ggtitle("A")),
+  
+  tar_target(scatter_plot_pc_wood_white_eth_urban, make_grouped_scatter_plot(data = data_epc_cleaned_covars[data_epc_cleaned_covars$urban == 1,],
+                                                                       x_var = white_pct,
+                                                                       y_var = any_wood_h,
+                                                                       group_var = imd_decile,
+                                                                       colour_var = rgn22nm,
+                                                                       size_var = num_people,
+                                                                       legend_position = "bottom") + 
+               labs(colour = NULL,
+                    x = "White ethnicity (%)",
+                    y = NULL) +
+               
+               guides(size = guide_legend(title = "Population")) +
+               
+               ggtitle("B")),
+  
   tar_target(scatter_wood_conc_vs_predicted_lsoa, (data_epc_lsoa_cross_section %>%
                
                ggplot(aes(x = wood_conc,
@@ -654,13 +684,22 @@ list(
                ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
-  tar_target(patchwork_scatter_wood_pc_imd_white_eth_age, (make_patchwork_plot(list = list(scatter_plot_pc_wood_imd,
+  tar_target(patchwork_scatter_wood_pc_imd_white_eth, (make_patchwork_plot(list = list(scatter_plot_pc_wood_imd,
                                                                                       scatter_plot_pc_wood_white_eth),
                                                                            legend_position = "right",
                                                                           guides = "collect",
                                                                           ncol = 1)) %>%
                
                ggsave("Output/Figures/patchwork_scatter_wood_pc_imd_white_eth.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_scatter_wood_pc_imd_white_eth_urban, (make_patchwork_plot(list = list(scatter_plot_pc_wood_imd_urban,
+                                                                                       scatter_plot_pc_wood_white_eth_urban),
+                                                                           legend_position = "right",
+                                                                           guides = "collect",
+                                                                           ncol = 1)) %>%
+               
+               ggsave("Output/Figures/patchwork_scatter_wood_pc_imd_white_eth_urban.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
   tar_target(patchwork_facet_wood_pc_imd_decile, (make_patchwork_plot(list = list(facet_wood_pc_property_type_imd_decile_urban,
