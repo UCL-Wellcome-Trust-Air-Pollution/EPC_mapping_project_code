@@ -471,7 +471,7 @@ list(
                      plot.title = element_text(face = "bold")) +
                
                guides(fill = guide_colourbar(position = "bottom",
-                                             title = "Estimated WF PM2.5 (tonnes/year)")) +
+                                             title = expression("Estimated WF PM"[2.5]~"(tonnes/year)"))) +
                
                ggtitle("A")),
   
@@ -663,7 +663,7 @@ list(
                                                                                    guides = "keep",
                                                                                    ncol = 2)) %>%
                
-               ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.png", ., dpi = 700, width = 8, height = 10),
+               ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.png", ., dpi = 700, width = 8, height = 8),
              format = "file"),
   
   tar_target(patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined, (make_patchwork_plot(list = list(choropleth_map_sfa_pc_lsoa,
@@ -673,7 +673,7 @@ list(
                                                                                    guides = "keep",
                                                                                    ncol = 2)) %>%
                
-               ggsave("Output/Maps/patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined.png", ., dpi = 700, width = 8, height = 10),
+               ggsave("Output/Maps/patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined.png", ., dpi = 700, width = 8, height = 8),
              format = "file"),
   
   tar_target(patchwork_choropleth_map_wood_pc_conc_pred_lsoa_london, (make_patchwork_plot(list = list(choropleth_map_wood_pc_lsoa_london,
@@ -708,7 +708,7 @@ list(
                                                                       legend_position = "bottom",
                                                                       ncol = 1)) %>%
                
-               ggsave("Output/Figures/patchwork_facet_wood_pc_imd_decile.png", ., dpi = 700, width = 8, height = 10),
+               ggsave("Output/Figures/patchwork_facet_wood_pc_imd_decile.png", ., dpi = 700, width = 8, height = 8),
              format = "file"),
   
   tar_target(patchwork_wood_conc_perc_h_pred_actual, (make_patchwork_plot(list = list(scatter_wood_conc_vs_predicted_lsoa,
@@ -725,7 +725,7 @@ list(
                ggsave("Output/Maps/patchwork_laei_wood_emissions_n_wf.png", ., dpi = 700, width = 8, height = 5),
              format = "file")#,
   
-  # tar_quarto(EPC_project_manuscript,
-  #           "EPC_project_manuscript.qmd",
-  #           quiet = FALSE)
+  #tar_quarto(EPC_project_manuscript,
+            #"EPC_project_manuscript.qmd",
+            #quiet = FALSE)
 )
