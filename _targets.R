@@ -38,7 +38,8 @@ tar_option_set(
                "extrafont",
                "viridis",
                "patchwork",
-               "tidyr"),
+               "tidyr",
+               "scales"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -132,10 +133,17 @@ list(
   
   tar_target(la_boundaries, get_shapefile(shapefile_path = here("Data/raw/map_boundary_data/LAD_DEC_2022_UK_BFC_V2.shp"),
                                           geography_var = lad22cd)),
+  
+  tar_target(ward_boundaries, get_shapefile(shapefile_path = here("Data/raw/map_boundary_data/WD_DEC_22_GB_BFC.shp"),
+                                          geography_var = wd22cd)),
 
   tar_target(data_epc_lsoa_cross_section_to_map, prepare_data_to_map(fill_data = data_epc_lsoa_cross_section,
                                                                      shapefile_data = lsoa_boundaries,
                                                                      join_var = "lsoa21cd")),
+  
+  tar_target(data_epc_ward_cross_section_to_map, prepare_data_to_map(fill_data = data_epc_ward_cross_section,
+                                                                     shapefile_data = ward_boundaries,
+                                                                     join_var = "wd22cd")),
   
   # Load LAEI shapefile with predicted concentration of WF heat sources (does not update with pipeline)
   tar_target(data_laei, st_read(here("Data/raw/laei_data/data_laei.shp")) %>%
@@ -220,8 +228,143 @@ list(
                # Filter Nan values (for flats, house type missing)
                filter(!is.nan(wood_perc) & !is.na(imd_decile_ruc))),
   
+  tar_target(data_prevalence_la_by_year, data_epc_cleaned_covars %>%
+               
+               # SUmmarise prevalence of WF in houses and n by Local Authority and year
+               summarise(wood_perc_h = mean(any_wood_h, na.rm = TRUE) * 100,
+                         n = sum(!is.na(any_wood_h)),
+                         .by = c(lad22cd, year)) %>%
+               
+               # Filter LAs where < 20 observations in any year
+               filter(all(n >= 20), .by = lad22cd) %>%
+               
+               # Normalise values to percentage point change from 2009
+               mutate(wood_perc_h = wood_perc_h - last(wood_perc_h), .by = lad22cd)),
+  
+  tar_target(data_prevalence_summary_by_year, data_epc_cleaned_covars %>%
+               
+               # SUmmarise prevalence of WF in houses and n by Local Authority and year
+               summarise(wood_perc_h = mean(any_wood_h, na.rm = TRUE) * 100,
+                         .by = c(year)) %>%
+               
+               # Normalise values to percentage point change from 2009
+               mutate(wood_perc_h = wood_perc_h - last(wood_perc_h))),
+  
+  tar_target(data_naei_emissions_by_source_year, vroom("Data/raw/naei_data/export (3).csv") %>% 
+               
+               # Clean names
+               clean_names() %>% 
+               
+               # Select relevant columns
+               select(!c(gas, nfr_crf_group, units)) %>% 
+               
+               # Retain only columns for wood fuel
+               filter(grepl("Wood", activity)) %>% 
+               
+               # Cleaning
+               rename_with(~ str_replace(., "x", ""), .cols = starts_with("x")) %>% 
+               
+               # Pivot to long format
+               pivot_longer(cols = !c(source, activity), names_to = "year", values_to = "emissions") %>% 
+               
+               # Clean source names
+               mutate(source = str_replace(source, "Domestic", "")) %>%
+               
+               # Set missing values to 0 and convert to numeric
+               mutate(emissions = as.numeric(case_when(emissions == "-" ~ "0", .default = emissions))) %>% 
+               
+               # Summarise total emissions in kt by emission source and year
+               summarise(emissions = sum(emissions, na.rm = TRUE), .by = c(source, year))),
+  
+  tar_target(data_naei_emissions_by_year, vroom("Data/raw/naei_data/export (3).csv") %>% 
+               
+               # Clean names
+               clean_names() %>% 
+               
+               # Select relevant columns
+               select(!c(gas, nfr_crf_group, units)) %>% 
+               
+               # Retain only columns for wood fuel
+               filter(grepl("Wood", activity)) %>% 
+               
+               # Cleaning
+               rename_with(~ str_replace(., "x", ""), .cols = starts_with("x")) %>% 
+               
+               # Pivot to long format
+               pivot_longer(cols = !c(source, activity), names_to = "year", values_to = "emissions") %>% 
+               
+               # Set missing values to 0 and convert to numeric
+               mutate(emissions = as.numeric(case_when(emissions == "-" ~ "0", .default = emissions))) %>% 
+               
+               # Summarise total emissions in kt by emission source and year
+               summarise(emissions = sum(emissions, na.rm = TRUE), .by = c(year)) %>%
+               
+               # Add source = "Total" for easy plotting
+               mutate(source = "Total")),
+  
   # Make figures ---------------------------------------------------------------
 
+  tar_target(line_prev_la_by_year, (ggplot(data_prevalence_la_by_year) + 
+               
+               # Add faint lines for LAs
+               geom_line(aes(x = year, y = wood_perc_h, group = lad22cd), alpha = 0.05) + 
+               
+               # Add darker line for total
+               geom_line(data = data_prevalence_summary_by_year, aes(x = year, y = wood_perc_h), linewidth = 1) + 
+               
+               # Theme options and formatting
+               theme_minimal() + 
+               
+               theme(axis.title.y=element_text(angle=0),
+                     axis.text = element_text(size = 12),
+                     plot.title = element_text(face = "bold")) + 
+               
+               labs(x = "", y = "") +
+                 
+                 ggtitle("Change in prevalence of wood burners in EPCs relative to 2009\nby Local Authority (percentage points)") +
+               
+               geom_hline(yintercept = 0) + 
+               
+               scale_y_continuous(breaks = pretty_breaks(n = 10))) %>%
+               
+               ggsave("Output/Figures/line_prev_la_by_year.png", ., width = 8, height = 5)),
+  
+  tar_target(line_naei_emissions_by_source_year, (data_naei_emissions_by_source_year %>%
+                                                    
+                                                    # Bind disaggregated emissions to total emissions
+                                                    bind_rows(data_naei_emissions_by_year) %>%
+                                                    
+                                                    # Order alphabetically for legend
+                                                    arrange(source) %>%
+    
+    ggplot() +
+               
+               # Add lines for each emission source separately
+               geom_line(aes(x = year, y = emissions, group = source, colour = source)) +
+               
+               # Theme options and formatting
+               theme_minimal() + 
+               
+               theme(axis.title.y=element_text(angle=0),
+                     axis.text = element_text(size = 12),
+                     legend.position = "bottom",
+                     legend.title = element_blank(),
+                     plot.title = element_text(face = "bold")) + 
+               
+               labs(x = "", 
+                    y = "") +
+      
+      ggtitle(expression(bold("PM"[bold("2.5")] ~ "emissions by source (kilotonnes)"))) +
+      
+               guides(colour = guide_legend(nrow = 2,
+                                            override.aes = list(linewidth = 2))) +
+      
+               scale_colour_viridis(discrete = TRUE) +
+               
+               scale_y_continuous(breaks = pretty_breaks(n = 10))) %>%
+               
+               ggsave("Output/Figures/line_naei_emissions_by_source_year.png", ., height = 5, width = 8)),
+  
   tar_target(scatter_plot_pc_wood_imd, make_grouped_scatter_plot(data = data_epc_cleaned_covars,
                                                                  x_var = imd_score,
                                                                  y_var = any_wood_h,
@@ -396,7 +539,7 @@ list(
                                                                             winsorise = TRUE,
                                                                             lower_perc = 0.05,
                                                                             upper_perc = 0.95,
-                                                                            legend_title = "Concentration\nper km2",
+                                                                            legend_title = expression(atop("Concentration", paste("per ", km^{2}))),
                                                                      legend_position = "inside") +
                ggtitle("B")),
 
@@ -412,7 +555,7 @@ list(
                                                                      winsorise = TRUE,
                                                                      lower_perc = 0.05,
                                                                      upper_perc = 0.95,
-                                                                     legend_title = "Concentration\nper km2",
+                                                                     legend_title = expression(atop("Concentration", paste("per ", km^{2}))),
                                                                      legend_position = "bottom") +
                ggtitle("D")),
   
@@ -428,7 +571,7 @@ list(
                                                                      winsorise = TRUE,
                                                                      lower_perc = 0.05,
                                                                      upper_perc = 0.95,
-                                                                     legend_title = "Concentration\nper km2",
+                                                                     legend_title = expression(atop("Concentration", paste("per ", km^{2}))),
                                                                      legend_position = "inside") +
                ggtitle("B")),
   
@@ -444,7 +587,7 @@ list(
                                                                             winsorise = TRUE,
                                                                             lower_perc = 0.05,
                                                                             upper_perc = 0.95,
-                                                                            legend_title = "Concentration\nper km2",
+                                                                            legend_title = expression(atop("Concentration", paste("per ", km^{2}))),
                                                                             legend_position = "bottom") +
                ggtitle("D")),
   
@@ -723,9 +866,5 @@ list(
                                                                       guides = "keep")) %>%
                
                ggsave("Output/Maps/patchwork_laei_wood_emissions_n_wf.png", ., dpi = 700, width = 8, height = 5),
-             format = "file")#,
-  
-  #tar_quarto(EPC_project_manuscript,
-            #"EPC_project_manuscript.qmd",
-            #quiet = FALSE)
+             format = "file")
 )

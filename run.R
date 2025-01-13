@@ -15,6 +15,9 @@
 
 # Set path to unzipped EPC data and directory for output data ------------------
 
+# Restore packages
+renv::restore()
+
 # Update this path with the path on your local device (note: the path only needs to be specified from the R Project directory)
 path_data_epc_folders <- "Data/raw/epc_data/epc_data_extracted"
 
