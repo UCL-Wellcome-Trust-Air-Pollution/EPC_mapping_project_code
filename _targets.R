@@ -20,9 +20,10 @@ tar_option_set(
                "stringr",
                "httr2",
                "data.table",
-               "duckdb",
                "janitor",
+               "openair",
                "lubridate",
+               "ggpubr",
                "papeR",
                "gtsummary",
                "gt",
@@ -149,7 +150,9 @@ list(
   tar_target(data_laei, st_read(here("Data/raw/laei_data/data_laei.shp")) %>%
                
                rename(n_wood_pred = n_wd_pr,
-                      pm_25_emissions = pm_25_m)),
+                      pm_25_emissions = pm_25_m) %>%
+               
+               mutate(log_n_wood_pred = ifelse(n_wood_pred > 0, log(n_wood_pred), 0))),
   
   tar_target(data_indicators_region, data_epc_cleaned_covars %>% 
                
@@ -302,8 +305,165 @@ list(
                # Add source = "Total" for easy plotting
                mutate(source = "Total")),
   
+  tar_target(data_openair, get_openair_data(source_list = c("aurn", 
+                                                            "waqn", 
+                                                            "aqe"),
+                                            year_list = 2022:2024,
+                                            frequency = "hourly",
+                                            pollutant_list = c("pm2.5"))),
+  
+  tar_target(data_openair_epc, merge_openair_epc_data(data_openair,
+                                                      data_epc_cleaned_covars,
+                                                      long_var_epc = "long",
+                                                      lat_var_epc = "lat",
+                                                      buffer_radius = 1000)),
+  
+  tar_target(data_openair_epc_laei, make_openair_epc_laei_data(data_openair_epc,
+                                                               data_laei)),
+  
   # Make figures ---------------------------------------------------------------
-
+  
+  tar_target(scatter_log_n_wf_pm2.5_urban, make_scatter_plot_openair(data_openair_epc,
+                                                                      x_var = log_n_wf,
+                                                                      y_var = pm2.5,
+                                                                      days = c("Monday",
+                                                                               "Tuesday",
+                                                                               "Wednesday",
+                                                                               "Thursday",
+                                                                               "Friday",
+                                                                               "Saturday",
+                                                                               "Sunday"),
+                                                                      site_type = "Urban|Suburban",
+                                                                      sca_area = "all") +
+               
+               labs(x = "ln(Number of wood fuel heat sources)",
+                    y = expression("Average PM"["2.5"])) +
+               
+               ggtitle("Average")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_diff_peak_weekday_urban, make_scatter_plot_openair(data_openair_epc,
+                                                                            x_var = log_n_wf,
+                                                                            y_var = pm2.5_diff_peak,
+                                                                            days = c("Monday",
+                                                                                     "Tuesday",
+                                                                                     "Wednesday",
+                                                                                     "Thursday",
+                                                                                     "Friday"),
+                                                                            site_type = "Urban|Suburban",
+                                                                            sca_area = "all") +
+               
+               labs(x = "ln(Number of wood fuel heat sources)",
+                    y = expression("Peak PM"[2.5] - "non-peak PM"[2.5])) +
+               
+               ggtitle("Weekday")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_diff_peak_weekend_urban, make_scatter_plot_openair(data_openair_epc,
+                                                                                              x_var = log_n_wf,
+                                                                                              y_var = pm2.5_diff_peak,
+                                                                                              days = c("Saturday",
+                                                                                                       "Sunday"),
+                                                                                              site_type = "Urban|Suburban",
+                                                                                              sca_area = "all") +
+               
+               labs(x = "ln(Number of wood fuel heat sources)",
+                    y = expression("Peak PM"[2.5] - "non-peak PM"[2.5])) +
+               
+               ggtitle("Weekend")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_urban_background, make_scatter_plot_openair(data_openair_epc,
+                                                                     x_var = log_n_wf,
+                                                                     y_var = pm2.5,
+                                                                     days = c("Monday",
+                                                                              "Tuesday",
+                                                                              "Wednesday",
+                                                                              "Thursday",
+                                                                              "Friday",
+                                                                              "Saturday",
+                                                                              "Sunday"),
+                                                                     site_type = "Urban Background",
+                                                                     sca_area = "all") +
+               
+               labs(x = "ln(Number of wood fuel heat sources)",
+                    y = expression("Average PM"["2.5"])) +
+               
+               ggtitle("Average")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_diff_peak_weekday_urban_background, make_scatter_plot_openair(data_openair_epc,
+                                                                                       x_var = log_n_wf,
+                                                                                       y_var = pm2.5_diff_peak,
+                                                                                       days = c("Monday",
+                                                                                                "Tuesday",
+                                                                                                "Wednesday",
+                                                                                                "Thursday",
+                                                                                                "Friday"),
+                                                                                       site_type = "Urban Background",
+                                                                                       sca_area = "all") +
+               
+               labs(x = "ln(Number of wood fuel heat sources)",
+                    y = expression("Peak PM"[2.5] - "non-peak PM"[2.5])) +
+               
+               ggtitle("Weekday")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_diff_peak_weekend_urban_background, make_scatter_plot_openair(data_openair_epc,
+                                                                                       x_var = log_n_wf,
+                                                                                       y_var = pm2.5_diff_peak,
+                                                                                       days = c("Saturday",
+                                                                                                "Sunday"),
+                                                                                       site_type = "Urban Background",
+                                                                                       sca_area = "all") +
+               
+               labs(x = "ln(Number of wood fuel heat sources)",
+                    y = expression("Peak PM"[2.5] - "non-peak PM"[2.5])) +
+               
+               ggtitle("Weekend")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_urban_density, make_scatter_plot_openair(data_openair_epc,
+                                                                     x_var = log_n,
+                                                                     y_var = pm2.5,
+                                                                     days = c("Monday",
+                                                                              "Tuesday",
+                                                                              "Wednesday",
+                                                                              "Thursday",
+                                                                              "Friday",
+                                                                              "Saturday",
+                                                                              "Sunday"),
+                                                                     site_type = "Urban|Suburban",
+                                                                     sca_area = "all") +
+               
+               labs(x = "ln(Number of properties in EPC data)",
+                    y = expression("Average PM"["2.5"])) +
+               
+               ggtitle("Average")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_diff_peak_weekday_urban_density, make_scatter_plot_openair(data_openair_epc,
+                                                                                       x_var = log_n,
+                                                                                       y_var = pm2.5_diff_peak,
+                                                                                       days = c("Monday",
+                                                                                                "Tuesday",
+                                                                                                "Wednesday",
+                                                                                                "Thursday",
+                                                                                                "Friday"),
+                                                                                       site_type = "Urban|Suburban",
+                                                                                       sca_area = "all") +
+               
+               labs(x = "ln(Number of properties in EPC data)",
+                    y = expression("Peak PM"[2.5] - "non-peak PM"[2.5])) +
+               
+               ggtitle("Weekday")),
+  
+  tar_target(scatter_log_n_wf_pm2.5_diff_peak_weekend_urban_density, make_scatter_plot_openair(data_openair_epc,
+                                                                                       x_var = log_n,
+                                                                                       y_var = pm2.5_diff_peak,
+                                                                                       days = c("Saturday",
+                                                                                                "Sunday"),
+                                                                                       site_type = "Urban|Suburban",
+                                                                                       sca_area = "all") +
+               
+               labs(x = "ln(Number of properties in EPC data)",
+                    y = expression("Peak PM"[2.5] - "non-peak PM"[2.5])) +
+               
+               ggtitle("Weekend")),
+  
   tar_target(line_prev_la_by_year, (ggplot(data_prevalence_la_by_year) + 
                
                # Add faint lines for LAs
@@ -845,6 +1005,18 @@ list(
                ggsave("Output/Figures/patchwork_scatter_wood_pc_imd_white_eth_urban.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
+  tar_target(patchwork_scatter_wood_pc_imd_white_eth_urban_storymap, (make_patchwork_plot(list = list(scatter_plot_pc_wood_imd_urban,
+                                                                                             scatter_plot_pc_wood_white_eth_urban),
+                                                                                 legend_position = "bottom",
+                                                                                 guides = "collect",
+                                                                                 ncol = 2) & 
+                                                                        
+                                                                        plot_annotation("Prevalence of wood fuel heat sources vs. IMD score and percentage white ethicity\nby region and LSOA IMD decile - urban areas",
+                                                                                        theme = theme(plot.title = element_text(face = "bold")))) %>%
+               
+               ggsave("Output/Figures/patchwork_scatter_wood_pc_imd_white_eth_urban_storymap.png", ., width = 8, height = 5),
+             format = "file"),
+  
   tar_target(patchwork_facet_wood_pc_imd_decile, (make_patchwork_plot(list = list(facet_wood_pc_property_type_imd_decile_urban,
                                                                                   facet_wood_pc_property_type_imd_decile_rural),
                                                                       guides = "collect",
@@ -866,5 +1038,41 @@ list(
                                                                       guides = "keep")) %>%
                
                ggsave("Output/Maps/patchwork_laei_wood_emissions_n_wf.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_openair_plots_urban, (make_patchwork_plot(list = list(scatter_log_n_wf_pm2.5_urban,
+                                                                             scatter_log_n_wf_pm2.5_diff_peak_weekday_urban,
+                                                                             scatter_log_n_wf_pm2.5_diff_peak_weekend_urban),
+                                                                 ncol = 3,
+                                                                 guides = "collect",
+                                                                 legend_position = "bottom") +
+                                               
+                                               plot_layout(axis_titles = "collect")) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_openair_plots_urban_background, (make_patchwork_plot(list = list(scatter_log_n_wf_pm2.5_urban_background,
+                                                                             scatter_log_n_wf_pm2.5_diff_peak_weekday_urban_background,
+                                                                             scatter_log_n_wf_pm2.5_diff_peak_weekend_urban_background),
+                                                                 ncol = 3,
+                                                                 guides = "collect",
+                                                                 legend_position = "bottom") +
+                                               
+                                               plot_layout(axis_titles = "collect")) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban_background.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_openair_plots_urban_density, (make_patchwork_plot(list = list(scatter_log_n_wf_pm2.5_urban_density,
+                                                                             scatter_log_n_wf_pm2.5_diff_peak_weekday_urban_density,
+                                                                             scatter_log_n_wf_pm2.5_diff_peak_weekend_urban_density),
+                                                                 ncol = 3,
+                                                                 guides = "collect",
+                                                                 legend_position = "bottom") +
+                                               
+                                               plot_layout(axis_titles = "collect")) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban_density.png", ., dpi = 700, width = 8, height = 5),
              format = "file")
 )

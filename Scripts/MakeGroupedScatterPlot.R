@@ -39,6 +39,8 @@ make_grouped_scatter_plot <- function(data,
                    size = pop),
                alpha = 0.7) +
     
+    scale_size_continuous(labels = label_comma()) +
+    
     scatter_plot_opts +
     
     theme(legend.position = legend_position)

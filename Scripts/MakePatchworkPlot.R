@@ -21,7 +21,8 @@ make_patchwork_plot <- function(list,
     plot_layout(...) &
     
     # Optional legend position
-    theme(legend.position = legend_position)
+    theme(legend.position = legend_position,
+          legend.box = "vertical")
   
   return(patchwork)
   
