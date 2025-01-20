@@ -96,10 +96,25 @@ merge_openair_epc_data <- function(data_openair,
                                         "22", 
                                         "23", 
                                         "00", 
-                                        "01") ~ 1, .default = 0)) %>%
+                                        "01") ~ 1, .default = 0),
+    
+    # Indicator variable for non-peak burning
+    non_peak = case_when(hour %in% c("05",
+                                     "06",
+                                     "07",
+                                     "08",
+                                     "09",
+                                     "10",
+                                     "11",
+                                     "12",
+                                     "13",
+                                     "14",
+                                     "15",
+                                     "16",
+                                     "17") ~ 1, .default = 0)) %>%
     
     # Get difference in mean PM during peak time vs. during non-peak time
-    mutate(pm2.5_diff_peak = mean(pm2.5[peak==1], na.rm = TRUE) - mean(pm2.5[peak==0], na.rm = TRUE),
+    mutate(pm2.5_diff_peak = mean(pm2.5[peak==1], na.rm = TRUE) - mean(pm2.5[non_peak==1], na.rm = TRUE),
            log_n_wf = ifelse(n_wf > 0, log(n_wf), 0), 
            log_n = ifelse(n > 0, log(n), 0),
            .by = c(code, day_id))

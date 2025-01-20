@@ -3,12 +3,15 @@ make_scatter_plot_openair <- function(data_openair,
                                  y_var,
                                  days,
                                  site_type,
-                                 sca_area){
+                                 sca_area,
+                                 source_list){
   
   if(sca_area == "yes") data_openair <- data_openair %>% filter(sca_area == 1)
   if(sca_area == "no") data_openair <- data_openair %>% filter(sca_area == 0)
   
   data_openair <- data_openair %>%
+    
+    filter(source %in% {{source_list}}) %>%
     
     filter(season %in% c("Summer",
                             "Winter")) %>%
@@ -35,7 +38,8 @@ make_scatter_plot_openair <- function(data_openair,
                 se = F) +
     
     stat_cor(method = "pearson",
-             aes(label = after_stat(r.label))) +
+             aes(label = after_stat(r.label))
+             ) +
     
     scatter_plot_opts +
     

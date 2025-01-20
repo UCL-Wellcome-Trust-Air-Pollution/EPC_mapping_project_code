@@ -25,14 +25,15 @@ get_openair_data <- function(source_list,
     filter(!str_detect(zone, paste0(c("Ireland", "Scotland"), collapse = "|"))) %>%
     
     # Keep distinct codes
-    distinct(code)
+    distinct(code, .keep_all = TRUE)
   
   # Get openair data
   openair_data <- importUKAQ(site = sites$code,
                              year = year_list,
                              data_type = frequency,
                              pollutant = pollutant_list,
-                             meta = TRUE) %>%
+                             meta = TRUE,
+                             source = sites$source) %>%
     
     # Create new variable for day of week and month
     mutate(day = weekdays(date),
