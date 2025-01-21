@@ -1,13 +1,19 @@
+# Name of script: MakeScatterPlotOpenair
+# Description:  Defines function to make scatter plot with merged openair data
+# Created by: Calum Kennedy (calum.kennedy.20@ucl.ac.uk)
+# Created on: 15-01-2025
+# Latest update by: Calum Kennedy
+# Latest update on: 20-01-2025
+# Update notes: 
+
+# Define function to make scatter plot with merged openair data ----------------
+
 make_scatter_plot_openair <- function(data_openair,
                                  x_var,
                                  y_var,
                                  days,
                                  site_type,
-                                 sca_area,
                                  source_list){
-  
-  if(sca_area == "yes") data_openair <- data_openair %>% filter(sca_area == 1)
-  if(sca_area == "no") data_openair <- data_openair %>% filter(sca_area == 0)
   
   data_openair <- data_openair %>%
     
