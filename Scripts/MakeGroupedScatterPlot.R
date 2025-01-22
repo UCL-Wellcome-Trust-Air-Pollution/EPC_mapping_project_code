@@ -41,7 +41,11 @@ make_grouped_scatter_plot <- function(data,
     
     scale_size_continuous(labels = label_comma()) +
     
+    scale_colour_manual(values = cbbPalette) +
+    
     scatter_plot_opts +
+    
+    guides(colour = guide_legend(override.aes = list(size = 2))) +
     
     theme(legend.position = legend_position)
   

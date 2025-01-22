@@ -40,7 +40,8 @@ tar_option_set(
                "viridis",
                "patchwork",
                "tidyr",
-               "scales"),
+               "scales",
+               "boot"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -359,7 +360,10 @@ list(
     ggplot() +
                
                # Add lines for each emission source separately
-               geom_line(aes(x = year, y = emissions, group = source, colour = source)) +
+               geom_line(aes(x = year, 
+                             y = emissions, 
+                             group = source, 
+                             colour = source), lwd = 1) +
                
                # Theme options and formatting
                theme_minimal() + 
@@ -378,7 +382,7 @@ list(
                guides(colour = guide_legend(nrow = 2,
                                             override.aes = list(linewidth = 2))) +
       
-               scale_colour_viridis(discrete = TRUE) +
+               scale_colour_manual(values = cbbPalette) +
                
                scale_y_continuous(breaks = pretty_breaks(n = 10))) %>%
                
@@ -676,13 +680,15 @@ list(
                           colour = factor(urban, labels = c("Rural",
                                                             "Urban")))) + 
                
-               geom_point(alpha = 0.2,
+               geom_point(alpha = 0.4,
                           size = 0.1) + 
                
                facet_wrap(~rgn22nm) + 
                
                # Set plot options
                scatter_plot_opts +
+                 
+               scale_colour_manual(values = cbbPalette) +
                
                labs(x = "IMD Score",
                     y = "WF heat\nsource (%)",
@@ -705,7 +711,7 @@ list(
                           colour = factor(urban, labels = c("Rural",
                                                             "Urban")))) + 
                
-                geom_point(alpha = 0.2,
+                geom_point(alpha = 0.4,
                             size = 0.1) + 
                
                  # Facet by region var
@@ -713,6 +719,8 @@ list(
                
                 # Set plot options
                 scatter_plot_opts +
+                 
+                scale_colour_manual(values = cbbPalette) +
                
                 labs(x = "White ethnicity (%)",
                       y = "WF heat\nsource (%)",
@@ -735,13 +743,15 @@ list(
                                                            colour = factor(urban, labels = c("Rural",
                                                                                              "Urban")))) + 
                                                 
-                                                geom_point(alpha = 0.2,
+                                                geom_point(alpha = 0.4,
                                                            size = 0.1) + 
                                                 
                                                 facet_wrap(~rgn22nm) + 
                                                 
                                                 # Set plot options
                                                 scatter_plot_opts +
+                                                 
+                                                scale_colour_manual(values = cbbPalette) +
                                                 
                                                 labs(x = "Median age",
                                                      y = "WF heat\nsource (%)",
@@ -761,11 +771,14 @@ list(
                # Make facet wrap
                ggplot() + 
                
-               geom_line(aes(x = year, y = wood_perc, colour = property_type_census)) + 
+               geom_line(aes(x = year, y = wood_perc, colour = property_type_census),
+                         lwd = 1) + 
                
                facet_wrap(~rgn22nm) + 
                
                scatter_plot_opts +
+                 
+                 scale_colour_manual(values = cbbPalette) +
                  
                  labs(x = "",
                       y = "Wood fuel\nprevalence (%)",
@@ -782,11 +795,14 @@ list(
                                                         # Make facet wrap
                                                         ggplot() + 
                                                         
-                                                        geom_line(aes(x = year, y = wood_perc, colour = property_type_census)) + 
+                                                        geom_line(aes(x = year, y = wood_perc, colour = property_type_census),
+                                                                  lwd = 1) + 
                                                         
                                                         facet_wrap(~imd_decile_ruc) + 
                                                         
                                                         scatter_plot_opts +
+               
+               scale_colour_manual(values = cbbPalette) +
                                                         
                                                         labs(x = "",
                                                              y = "Wood fuel\nprevalence (%)",
@@ -799,11 +815,14 @@ list(
                                                               # Make facet wrap
                                                               ggplot() + 
                                                               
-                                                              geom_line(aes(x = year, y = wood_perc, colour = property_type_census)) + 
+                                                              geom_line(aes(x = year, y = wood_perc, colour = property_type_census),
+                                                                        lwd = 1) + 
                                                               
                                                               facet_wrap(~imd_decile_ruc) + 
                                                               
                                                               scatter_plot_opts +
+               
+               scale_colour_manual(values = cbbPalette) +
                                                               
                                                               labs(x = "",
                                                                    y = "Wood fuel\nprevalence (%)",
@@ -901,25 +920,19 @@ list(
                ggsave("Output/Maps/patchwork_laei_wood_emissions_n_wf.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
-  tar_target(patchwork_openair_plots_urban, (make_patchwork_plot_openair(data_openair = data_openair_epc,
-                                                                         x_var = log_n_wf,
-                                                                         x_lab = "ln(Number of wood fuel heat sources)",
-                                                                         site_type = "Urban|Suburban",
-                                                                         source_list = "aurn",
-                                                                         pm2.5_var = pm2.5,
-                                                                         pm2.5_diff_peak_var = pm2.5_diff_peak)) %>%
-               
-               ggsave("Output/Figures/patchwork_openair_plots_urban.png", ., dpi = 700, width = 8, height = 5),
-             format = "file"),
-  
   tar_target(patchwork_openair_plots_urban_laei, (make_patchwork_plot_openair(data_openair = data_openair_epc_laei,
                                                                               x_var = log_n_wf,
                                                                               x_lab = "ln(Number of wood fuel heat sources)",
-                                                                              site_type = "Urban|Suburban",
+                                                                              site_type = "Urban Background",
                                                                               source_list = c("aurn",
                                                                                               "aqe"),
                                                                               pm2.5_var = pm2.5,
-                                                                              pm2.5_diff_peak_var = pm2.5_diff_peak)) %>%
+                                                                              pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                              correlation_method = "spearman",
+                                                                              bootstrap_method = "bca",
+                                                                              boot_func = get_corr,
+                                                                              n_rep = 10000,
+                                                                              conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_laei.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
@@ -927,11 +940,16 @@ list(
   tar_target(patchwork_openair_plots_urban_laei_alt, (make_patchwork_plot_openair(data_openair = data_openair_epc_laei,
                                                                                   x_var = pm_25_emissions,
                                                                                   x_lab = bquote(paste("Estimated annual ", PM[2.5], " emissions (kt) - LAEI")),
-                                                                                  site_type = "Urban|Suburban",
+                                                                                  site_type = "Urban Background",
                                                                                   source_list = c("aurn",
                                                                                                   "aqe"),
                                                                                   pm2.5_var = pm2.5,
-                                                                                  pm2.5_diff_peak_var = pm2.5_diff_peak)) %>%
+                                                                                  pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                  correlation_method = "spearman",
+                                                                                  bootstrap_method = "bca",
+                                                                                  boot_func = get_corr,
+                                                                                  n_rep = 10000,
+                                                                                  conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_laei_alt.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
@@ -942,18 +960,28 @@ list(
                                                                                     site_type = "Urban Background",
                                                                                     source_list = c("aurn"),
                                                                                     pm2.5_var = pm2.5,
-                                                                                    pm2.5_diff_peak_var = pm2.5_diff_peak)) %>%
+                                                                                    pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                    correlation_method = "spearman",
+                                                                                    bootstrap_method = "bca",
+                                                                                    boot_func = get_corr,
+                                                                                    n_rep = 10000,
+                                                                                    conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_background.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
   tar_target(patchwork_openair_plots_urban_density, (make_patchwork_plot_openair(data_openair = data_openair_epc,
                                                                                  x_var = log_n,
-                                                                                 x_lab = bquote(paste("ln(Number of wood fuel heat sources)")),
+                                                                                 x_lab = bquote(paste("ln(Number of properties)")),
                                                                                  site_type = "Urban Background",
                                                                                  source_list = c("aurn"),
                                                                                  pm2.5_var = pm2.5,
-                                                                                 pm2.5_diff_peak_var = pm2.5_diff_peak)) %>%
+                                                                                 pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                 correlation_method = "spearman",
+                                                                                 bootstrap_method = "bca",
+                                                                                 boot_func = get_corr,
+                                                                                 n_rep = 10000,
+                                                                                 conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_density.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
@@ -961,12 +989,17 @@ list(
   tar_target(patchwork_openair_plots_urban_all_networks, (make_patchwork_plot_openair(data_openair = data_openair_epc,
                                                                                       x_var = log_n_wf,
                                                                                       x_lab = bquote(paste("ln(Number of wood fuel heat sources)")),
-                                                                                      site_type = "Urban|Suburban",
+                                                                                      site_type = "Urban Background",
                                                                                       source_list = c("aurn",
                                                                                                       "aqe",
                                                                                                       "waqn"),
                                                                                       pm2.5_var = pm2.5,
-                                                                                      pm2.5_diff_peak_var = pm2.5_diff_peak)) %>%
+                                                                                      pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                      correlation_method = "spearman",
+                                                                                      bootstrap_method = "bca",
+                                                                                      boot_func = get_corr,
+                                                                                      n_rep = 10000,
+                                                                                      conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_all_networks.png", ., dpi = 700, width = 8, height = 5),
              format = "file")

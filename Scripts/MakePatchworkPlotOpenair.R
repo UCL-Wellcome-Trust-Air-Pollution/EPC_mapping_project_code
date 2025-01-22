@@ -11,15 +11,20 @@
 
 make_patchwork_plot_openair <- function(data_openair,
                                         x_var,
+                                        pm2.5_var,
+                                        pm2.5_diff_peak_var,
                                         x_lab,
                                         site_type,
                                         source_list,
-                                        pm2.5_var,
-                                        pm2.5_diff_peak_var){
+                                        correlation_method,
+                                        bootstrap_method,
+                                        boot_func,
+                                        n_rep,
+                                        conf_int){
   
   # make scatter plot of x_var against average PM2.5 levels in summer and winter
   plot_avg_pm2.5 <- make_scatter_plot_openair(data_openair,
-                                              {{x_var}},
+                                              x_var = {{x_var}},
                                               y_var = {{pm2.5_var}},
                                               days = c("Monday",
                                                        "Tuesday",
@@ -29,7 +34,12 @@ make_patchwork_plot_openair <- function(data_openair,
                                                        "Saturday",
                                                        "Sunday"),
                                               {{site_type}},
-                                              {{source_list}}) +
+                                              {{source_list}},
+                                              correlation_method = correlation_method,
+                                              bootstrap_method = bootstrap_method,
+                                              boot_func = boot_func,
+                                              n_rep = n_rep,
+                                              conf_int = conf_int) +
     
     ggtitle("Average") +
     
@@ -38,7 +48,7 @@ make_patchwork_plot_openair <- function(data_openair,
   
   # Make scatter plot of x_var against difference between peak vs. non-peak PM2.5 on weekdays
   plot_diff_peak_pm2.5_weekdays <- make_scatter_plot_openair(data_openair,
-                                                             {{x_var}},
+                                                             x_var = {{x_var}},
                                                              y_var = {{pm2.5_diff_peak_var}},
                                                              days = c("Monday",
                                                                       "Tuesday",
@@ -46,7 +56,12 @@ make_patchwork_plot_openair <- function(data_openair,
                                                                       "Thursday",
                                                                       "Friday"),
                                                              {{site_type}},
-                                                             {{source_list}}) +
+                                                             {{source_list}},
+                                                             correlation_method = correlation_method,
+                                                             bootstrap_method = bootstrap_method,
+                                                             boot_func = boot_func,
+                                                             n_rep = n_rep,
+                                                             conf_int = conf_int) +
     
     ggtitle("Weekday") +
     
@@ -55,12 +70,17 @@ make_patchwork_plot_openair <- function(data_openair,
   
   # Make scatter plot of x_var against difference between peak vs. non-peak PM2.5 on weekdays
   plot_diff_peak_pm2.5_weekends <- make_scatter_plot_openair(data_openair,
-                                                             {{x_var}},
+                                                             x_var = {{x_var}},
                                                              y_var = {{pm2.5_diff_peak_var}},
                                                              days = c("Saturday",
                                                                       "Sunday"),
                                                              {{site_type}},
-                                                             {{source_list}}) +
+                                                             {{source_list}},
+                                                             correlation_method = correlation_method,
+                                                             bootstrap_method = bootstrap_method,
+                                                             boot_func = boot_func,
+                                                             n_rep = n_rep,
+                                                             conf_int = conf_int) +
     
     ggtitle("Weekend") +
     

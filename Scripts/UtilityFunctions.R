@@ -79,6 +79,23 @@ get_os_data <- function(data_os_path){
   
 }
 
+# Function to calculate correlation coefficient for arbitrary dataframe --------
+
+get_corr <- function(data, 
+                     x_var, 
+                     y_var, 
+                     idx, 
+                     correlation_method){
+  
+  # Calculate correlation of specified df cols
+  corr <- cor(data[[y_var]][idx], 
+              data[[x_var]][idx],
+              method = correlation_method)
+  
+  return(corr)
+  
+}
+
 # Function to load shapefile from path and filter English/Welsh LSOAs ----------
 
 get_shapefile <- function(shapefile_path,

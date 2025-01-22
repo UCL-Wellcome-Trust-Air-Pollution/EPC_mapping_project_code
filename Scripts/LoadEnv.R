@@ -45,3 +45,6 @@ scatter_plot_opts <- list(
     axis.line = element_line(),
     axis.title.y=element_text(angle=0))
 )
+
+# Discrete colour palette
+cbbPalette <- c("#E69F00", "#0072B2", "#009E73", "#56B4E9", "#F0E442", "#D55E00", "#CC79A7", "#000000", "#bbbbbb", "#ee3377")

@@ -25,7 +25,10 @@ make_openair_epc_laei_data <- function(data_openair_epc,
     filter(!is.na(grid_id)) %>%
     
     # Set as df
-    as.data.frame()
+    as_tibble() %>%
+    
+    # Remove geometry variable
+    select(!geometry)
   
   return(data_openair_epc_laei)
   
