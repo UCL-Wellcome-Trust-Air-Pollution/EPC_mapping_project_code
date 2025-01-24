@@ -64,14 +64,14 @@ make_scatter_plot_openair <- function(data_openair,
   names(conf_int) <- seasons
   
   # Get stats text to annotate plot
-  plot_label_winter <- paste("Winter: ", "\u03c1", "=", 
+  plot_label_winter <- paste("Winter: R = ", 
                       conf_int[["Winter"]][["correlation_coefficient"]], 
                       ", 95%CI = [", conf_int[["Winter"]][["lower_bound"]],
                       ", ",
                       conf_int[["Winter"]][["upper_bound"]], "]",
                       sep = "")
   
-  plot_label_summer <- paste("Summer: ", "\u03c1", "=", 
+  plot_label_summer <- paste("Summer: R = ", 
                              conf_int[["Summer"]][["correlation_coefficient"]], 
                              ", 95%CI = [", conf_int[["Summer"]][["lower_bound"]],
                              ", ",
