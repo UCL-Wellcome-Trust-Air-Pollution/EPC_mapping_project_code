@@ -18,11 +18,19 @@
 # Restore packages
 renv::restore()
 
-# Update this path with the path on your local device (note: the path only needs to be specified from the R Project directory)
-path_data_epc_folders <- "Data/raw/epc_data/epc_data_extracted"
+library(here)
+library(future)
+library(fs)
+library(dplyr)
+library(furrr)
+library(vroom)
+library(arrow)
+
+# Update this path with the path to the unzipped EPC data on your local device (note: the path only needs to be specified from the R Project directory)
+path_data_epc_folders <- here("Data/raw/epc_data/epc_data_extracted")
 
 # Set output directory (this should be within the 'Data' subfolder)
-output_dir <- "Data/raw/epc_data"
+output_dir <- ("Data/raw/epc_data")
 
 # Collect EPC data from unzipped folders ---------------------------------------
 
@@ -38,6 +46,9 @@ get_epc_data(path_data_epc_folders = here(path_data_epc_folders),
                                                     "INSPECTION_DATE", "CONSTRUCTION_AGE_BAND", "PROPERTY_TYPE",
                                                     "BUILT_FORM", "TENURE", "POSTCODE"), 
              output_dir = output_dir)
+
+# Remove folder of unzipped EPC data 
+unlink(path_data_epc_folders, recursive = TRUE)
 
 # Run pipeline -----------------------------------------------------------------
 

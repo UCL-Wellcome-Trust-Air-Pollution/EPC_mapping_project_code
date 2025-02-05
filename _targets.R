@@ -56,8 +56,11 @@ list(
   
   # Generate datasets ----------------------------------------------------------
   
+  tar_target(path_data_epc_raw, here("Data/raw/epc_data/data_epc_raw.parquet"),
+             format = "file"),
+  
   tar_target(data_epc_cleaned,
-             clean_data_epc(path_data_epc_raw = here("Data/raw/epc_data/data_epc_raw.parquet")),
+             clean_data_epc(path_data_epc_raw = path_data_epc_raw),
              format = "parquet"),
 
   tar_target(data_uprn_sca_lookup, make_uprn_sca_lookup(path_stat_geo_files = here("Data/raw/geo_files/nsul_lookup.parquet"),

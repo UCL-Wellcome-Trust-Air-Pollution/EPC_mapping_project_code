@@ -40,7 +40,7 @@ get_epc_data <- function(path_data_epc_folders,
   dir.create(file.path(here(output_dir)), showWarnings = FALSE)
   
   # Check if output data already exists - if yes, prompt whether want to rerun the script
-  if(file_exists(paste0(output_dir, "/data_epc_raw.parquet"))) {
+  if(file.exists(paste0(output_dir, "/data_epc_raw.parquet"))) {
     
     response <- prompt_user()
   
@@ -67,7 +67,7 @@ get_epc_data <- function(path_data_epc_folders,
           csv_path <- file.path(.x, "certificates.csv")
           
           # Check if the file exists
-          if (file_exists(csv_path)) {
+          if (file.exists(csv_path)) {
             
             # Read the CSV file using vroom
             vroom(csv_path, col_select = epc_cols_to_select)
@@ -91,7 +91,7 @@ get_epc_data <- function(path_data_epc_folders,
     # If directory to raw EPC data does not exist, return an error and skip merging script
     } else {
       
-      print("The specified directory for the unzipped EPC data does not exist. Please check that the directory is correctly specified, and that the data exists.")
+      print("The specified directory for the unzipped EPC data does not exist. Please check that the directory is correctly specified, that the data is unzipped, and that the data exists.")
       
     }
   
@@ -119,7 +119,7 @@ get_epc_data <- function(path_data_epc_folders,
           csv_path <- file.path(.x, "certificates.csv")
           
           # Check if the file exists
-          if (file_exists(csv_path)) {
+          if (file.exists(csv_path)) {
             
             # Read the CSV file using vroom
             vroom(csv_path, col_select = epc_cols_to_select)
