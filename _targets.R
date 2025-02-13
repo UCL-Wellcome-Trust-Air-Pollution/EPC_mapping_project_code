@@ -150,8 +150,15 @@ list(
                                                                      shapefile_data = ward_boundaries,
                                                                      join_var = "wd22cd")),
   
-  # Load LAEI shapefile with predicted concentration of WF heat sources (does not update with pipeline)
+  # Load LAEI and NAEI shapefiles with predicted concentration of WF heat sources (does not update with pipeline)
   tar_target(data_laei, st_read(here("Data/raw/laei_data/data_laei.shp")) %>%
+               
+               rename(n_wood_pred = n_wd_pr,
+                      pm_25_emissions = pm_25_m) %>%
+               
+               mutate(log_n_wood_pred = ifelse(n_wood_pred > 0, log(n_wood_pred), 0))),
+  
+  tar_target(data_naei, st_read(here("Data/raw/naei_data/data_naei_merged.shp")) %>%
                
                rename(n_wood_pred = n_wd_pr,
                       pm_25_emissions = pm_25_m) %>%
@@ -324,6 +331,9 @@ list(
   
   tar_target(data_openair_epc_laei, make_openair_epc_laei_data(data_openair_epc,
                                                                data_laei)),
+  
+  tar_target(data_openair_epc_naei, make_openair_epc_laei_data(data_openair_epc,
+                                                               data_naei)),
   
   # Make figures ---------------------------------------------------------------
   
@@ -955,6 +965,40 @@ list(
                                                                                   conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_laei_alt.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_openair_plots_urban_naei, (make_patchwork_plot_openair(data_openair = data_openair_epc_naei,
+                                                                              x_var = log_n_wf,
+                                                                              x_lab = "ln(Number of wood fuel heat sources)",
+                                                                              site_type = "Urban Background",
+                                                                              source_list = c("aurn",
+                                                                                              "aqe"),
+                                                                              pm2.5_var = pm2.5,
+                                                                              pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                              correlation_method = "spearman",
+                                                                              bootstrap_method = "bca",
+                                                                              boot_func = get_corr,
+                                                                              n_rep = 10000,
+                                                                              conf_int = 0.95)) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban_naei.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_openair_plots_urban_naei_alt, (make_patchwork_plot_openair(data_openair = data_openair_epc_naei,
+                                                                                  x_var = pm_25_emissions,
+                                                                                  x_lab = bquote(paste("Estimated annual ", PM[2.5], " emissions (kt) - NAEI")),
+                                                                                  site_type = "Urban Background",
+                                                                                  source_list = c("aurn",
+                                                                                                  "aqe"),
+                                                                                  pm2.5_var = pm2.5,
+                                                                                  pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                  correlation_method = "spearman",
+                                                                                  bootstrap_method = "bca",
+                                                                                  boot_func = get_corr,
+                                                                                  n_rep = 10000,
+                                                                                  conf_int = 0.95)) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban_naei_alt.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
   tar_target(patchwork_openair_plots_urban_background, (make_patchwork_plot_openair(data_openair = data_openair_epc,
