@@ -3,7 +3,7 @@ This repository stores the code files for the project - "High resolution mapping
 
 1. Clone the GitHub repository to your local device. For users who do not have Git installed on their local machine, a zip file of the code base is available via Zenodo ('Code.zip'). Please ensure you use the directory with the R Project in it (which is called "EPC_mapping_project_code.RProj") as your root directory.
 
-2. Download the 'Data.tar' file from https://zenodo.org/records/14382720 and unzip the file in the R Project directory. The data should be in a folder called 'Data' in the root directory. All data is provided under the UK Open Government License version 3.0
+2. Download the 'Data.tar' file from https://zenodo.org/records/14863523 and unzip the file in the R Project directory. The data should be in a folder called 'Data' in the root directory. All data is provided under the UK Open Government License version 3.0
 
 3. Download the main EPC data to your local device and unzip (see below for detailed instructions on how to do this). For Windows users, the 'Scripts' folder of the repository contains a .bat file which can be used to unzip the data. Note that this file requires the user to have installed 7Zip and added 7Zip to the system path. Otherwise, the .tar file can be unzipped manually. 
 
