@@ -45,12 +45,6 @@ make_choropleth_map <- function(fill_data,
             colour = NA
             ) +
     
-    geom_sf(data = {{boundary_data}},
-            fill = NA,
-            lwd = 0.01,
-            colour = "gray50"
-            ) +
-    
     scale_fill_viridis(option = fill_palette,
                        direction = -1,
                        limits = c(scale_lower_lim,
