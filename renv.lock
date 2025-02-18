@@ -848,6 +848,37 @@
       ],
       "Hash": "15aeb8c27f5ea5161f9f6a641fafd93a"
     },
+    "furrr": {
+      "Package": "furrr",
+      "Version": "0.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "future",
+        "globals",
+        "lifecycle",
+        "purrr",
+        "rlang",
+        "vctrs"
+      ],
+      "Hash": "da7a4c32196cb2262a41dd5a25d486ff"
+    },
+    "future": {
+      "Package": "future",
+      "Version": "1.34.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "digest",
+        "globals",
+        "listenv",
+        "parallel",
+        "parallelly",
+        "utils"
+      ],
+      "Hash": "475771e3edb711591476be387c9a8c2e"
+    },
     "gdata": {
       "Package": "gdata",
       "Version": "3.0.0",
@@ -974,6 +1005,17 @@
         "ggplot2"
       ],
       "Hash": "a57f0f5dbcfd0d77ad4ff33032f5dc79"
+    },
+    "globals": {
+      "Package": "globals",
+      "Version": "0.16.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "codetools"
+      ],
+      "Hash": "2580567908cafd4f187c1e5a91e98b7f"
     },
     "glue": {
       "Package": "glue",
@@ -1387,6 +1429,16 @@
       ],
       "Hash": "b8552d117e1b808b09a832f589b79035"
     },
+    "listenv": {
+      "Package": "listenv",
+      "Version": "0.9.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "e2fca3e12e4db979dccc6e519b10a7ee"
+    },
     "lme4": {
       "Package": "lme4",
       "Version": "1.1-35.5",
@@ -1695,6 +1747,18 @@
         "xtable"
       ],
       "Hash": "8141d143bdd1fc5146d86fbe30802b4a"
+    },
+    "parallelly": {
+      "Package": "parallelly",
+      "Version": "1.42.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "parallel",
+        "tools",
+        "utils"
+      ],
+      "Hash": "78f830734a4b488f2c72bf00cde6381e"
     },
     "patchwork": {
       "Package": "patchwork",

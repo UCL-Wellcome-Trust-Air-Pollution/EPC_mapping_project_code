@@ -41,7 +41,8 @@ tar_option_set(
                "patchwork",
                "tidyr",
                "scales",
-               "boot"),
+               "boot",
+               "rmapshaper"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -133,8 +134,10 @@ list(
                                                                most_recent_only = TRUE),
              format = "parquet"),
   
-  tar_target(lsoa_boundaries, get_shapefile(shapefile_path = here("Data/raw/map_boundary_data/LSOA_2021_EW_BFC_V10.shp"),
-                                            geography_var = lsoa21cd)),
+  tar_target(lsoa_boundaries, get_shapefile(shapefile_path = here("Data/raw/map_boundary_data/LSOA_2021_EW_BGC_V5.shp"),
+                                            geography_var = lsoa21cd) %>%
+               
+               ms_simplify(keep = 0.25)),
   
   tar_target(la_boundaries, get_shapefile(shapefile_path = here("Data/raw/map_boundary_data/LAD_DEC_2022_UK_BFC_V2.shp"),
                                           geography_var = lad22cd)),
@@ -860,6 +863,16 @@ list(
                                                                                    ncol = 2)) %>%
                
                ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.png", ., dpi = 700, width = 8, height = 8),
+             format = "file"),
+  
+  tar_target(patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined_pdf, (make_patchwork_plot(list = list(choropleth_map_wood_pc_lsoa,
+                                                                                                        choropleth_map_wood_conc_pred_lsoa,
+                                                                                                        choropleth_map_wood_pc_lsoa_london,
+                                                                                                        choropleth_map_wood_conc_pred_lsoa_london),
+                                                                                            guides = "keep",
+                                                                                            ncol = 2)) %>%
+               
+               ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.pdf", ., dpi = 700, width = 8, height = 8),
              format = "file"),
   
   tar_target(patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined, (make_patchwork_plot(list = list(choropleth_map_sfa_pc_lsoa,
