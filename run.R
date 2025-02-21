@@ -13,10 +13,7 @@
 # Once you have run the 'get_epc_data' function once, you may want to delete the initial (unzipped)
 # EPC data folders, as the file size is very large. 
 
-# Set path to unzipped EPC data and directory for output data ------------------
-
-# Restore packages
-renv::restore()
+# Load necessary packages ------------------
 
 library(here)
 library(future)

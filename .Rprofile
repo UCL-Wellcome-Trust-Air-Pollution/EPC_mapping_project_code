@@ -1,5 +1,8 @@
 source("renv/activate.R")
 
+# Restore renv environment
+renv::restore()
+
 # Always prefer tidylog
 conflicted::conflict_prefer_all("tidylog", c("dplyr", "gtsummary", "stats", "papeR", "ggpubr"))
 
