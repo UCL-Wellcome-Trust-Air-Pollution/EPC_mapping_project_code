@@ -865,16 +865,6 @@ list(
                ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.png", ., dpi = 700, width = 8, height = 8),
              format = "file"),
   
-  tar_target(patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined_pdf, (make_patchwork_plot(list = list(choropleth_map_wood_pc_lsoa,
-                                                                                                        choropleth_map_wood_conc_pred_lsoa,
-                                                                                                        choropleth_map_wood_pc_lsoa_london,
-                                                                                                        choropleth_map_wood_conc_pred_lsoa_london),
-                                                                                            guides = "keep",
-                                                                                            ncol = 2)) %>%
-               
-               ggsave("Output/Maps/patchwork_choropleth_map_wood_pc_conc_pred_lsoa_combined.pdf", ., dpi = 700, width = 8, height = 8),
-             format = "file"),
-  
   tar_target(patchwork_choropleth_map_sfa_pc_conc_pred_lsoa_combined, (make_patchwork_plot(list = list(choropleth_map_sfa_pc_lsoa,
                                                                                                choropleth_map_sfa_conc_pred_lsoa,
                                                                                               choropleth_map_sfa_pc_lsoa_london,
