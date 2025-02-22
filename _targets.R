@@ -267,58 +267,6 @@ list(
                # Normalise values to percentage point change from 2009
                mutate(wood_perc_h = wood_perc_h - last(wood_perc_h))),
   
-  tar_target(data_naei_emissions_by_source_year, vroom("Data/raw/naei_data/export (3).csv") %>% 
-               
-               # Clean names
-               clean_names() %>% 
-               
-               # Select relevant columns
-               select(!c(gas, nfr_crf_group, units)) %>% 
-               
-               # Retain only columns for wood fuel
-               filter(grepl("Wood", activity)) %>% 
-               
-               # Cleaning
-               rename_with(~ str_replace(., "x", ""), .cols = starts_with("x")) %>% 
-               
-               # Pivot to long format
-               pivot_longer(cols = !c(source, activity), names_to = "year", values_to = "emissions") %>% 
-               
-               # Clean source names
-               mutate(source = str_replace(source, "Domestic", "")) %>%
-               
-               # Set missing values to 0 and convert to numeric
-               mutate(emissions = as.numeric(case_when(emissions == "-" ~ "0", .default = emissions))) %>% 
-               
-               # Summarise total emissions in kt by emission source and year
-               summarise(emissions = sum(emissions, na.rm = TRUE), .by = c(source, year))),
-  
-  tar_target(data_naei_emissions_by_year, vroom("Data/raw/naei_data/export (3).csv") %>% 
-               
-               # Clean names
-               clean_names() %>% 
-               
-               # Select relevant columns
-               select(!c(gas, nfr_crf_group, units)) %>% 
-               
-               # Retain only columns for wood fuel
-               filter(grepl("Wood", activity)) %>% 
-               
-               # Cleaning
-               rename_with(~ str_replace(., "x", ""), .cols = starts_with("x")) %>% 
-               
-               # Pivot to long format
-               pivot_longer(cols = !c(source, activity), names_to = "year", values_to = "emissions") %>% 
-               
-               # Set missing values to 0 and convert to numeric
-               mutate(emissions = as.numeric(case_when(emissions == "-" ~ "0", .default = emissions))) %>% 
-               
-               # Summarise total emissions in kt by emission source and year
-               summarise(emissions = sum(emissions, na.rm = TRUE), .by = c(year)) %>%
-               
-               # Add source = "Total" for easy plotting
-               mutate(source = "Total")),
-  
   tar_target(data_openair, get_openair_data(source_list = c("aurn",
                                                             "aqe",
                                                             "waqn"),
