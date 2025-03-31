@@ -52,7 +52,7 @@ clean_data_epc <- function(path_data_epc_raw){
     # Mutate variable for year of EPC
     mutate(year = year(inspection_date)) %>%
     
-    # Filter years in 2009-2024
+    # Filter years in 2009-present
     filter(year > 2008) %>%
     
     # Recode construction age to pre Clean Air Act 1956

@@ -35,7 +35,7 @@ tar_option_set(
                "tidylog",
                "conflicted",
                "quarto",
-               "qs",
+               "qs2",
                "extrafont",
                "viridis",
                "patchwork",
