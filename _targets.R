@@ -280,6 +280,18 @@ list(
                                                       lat_var_epc = "lat",
                                                       buffer_radius = 1000)),
   
+  tar_target(data_openair_epc_buffer_500, merge_openair_epc_data(data_openair,
+                                                      data_epc_cleaned_covars,
+                                                      long_var_epc = "long",
+                                                      lat_var_epc = "lat",
+                                                      buffer_radius = 500)),
+  
+  tar_target(data_openair_epc_buffer_2000, merge_openair_epc_data(data_openair,
+                                                      data_epc_cleaned_covars,
+                                                      long_var_epc = "long",
+                                                      lat_var_epc = "lat",
+                                                      buffer_radius = 2000)),
+  
   tar_target(data_openair_epc_laei, make_openair_epc_laei_data(data_openair_epc,
                                                                data_laei)),
   
@@ -904,6 +916,38 @@ list(
                ggsave("Output/Figures/patchwork_openair_plots_urban_background.png", ., dpi = 700, width = 8, height = 5),
              format = "file"),
   
+  tar_target(patchwork_openair_plots_urban_background_buffer_500, (make_patchwork_plot_openair(data_openair = data_openair_epc_buffer_500,
+                                                                                    x_var = log_n_wf,
+                                                                                    x_lab = bquote(paste("ln(Number of wood fuel heat sources)")),
+                                                                                    site_type = "Urban Background",
+                                                                                    source_list = c("aurn"),
+                                                                                    pm2.5_var = pm2.5,
+                                                                                    pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                    correlation_method = "spearman",
+                                                                                    bootstrap_method = "bca",
+                                                                                    boot_func = get_corr,
+                                                                                    n_rep = 10000,
+                                                                                    conf_int = 0.95)) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban_background_buffer_500.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
+  tar_target(patchwork_openair_plots_urban_background_buffer_2000, (make_patchwork_plot_openair(data_openair = data_openair_epc_buffer_2000,
+                                                                                               x_var = log_n_wf,
+                                                                                               x_lab = bquote(paste("ln(Number of wood fuel heat sources)")),
+                                                                                               site_type = "Urban Background",
+                                                                                               source_list = c("aurn"),
+                                                                                               pm2.5_var = pm2.5,
+                                                                                               pm2.5_diff_peak_var = pm2.5_diff_peak,
+                                                                                               correlation_method = "spearman",
+                                                                                               bootstrap_method = "bca",
+                                                                                               boot_func = get_corr,
+                                                                                               n_rep = 10000,
+                                                                                               conf_int = 0.95)) %>%
+               
+               ggsave("Output/Figures/patchwork_openair_plots_urban_background_buffer_2000.png", ., dpi = 700, width = 8, height = 5),
+             format = "file"),
+  
   tar_target(patchwork_openair_plots_urban_density, (make_patchwork_plot_openair(data_openair = data_openair_epc,
                                                                                  x_var = log_n,
                                                                                  x_lab = bquote(paste("ln(Number of properties)")),
@@ -936,5 +980,43 @@ list(
                                                                                       conf_int = 0.95)) %>%
                
                ggsave("Output/Figures/patchwork_openair_plots_urban_all_networks.png", ., dpi = 700, width = 8, height = 5),
-             format = "file")
+             format = "file"),
+  
+  # Run LSOA logit models
+  tar_target(results_logit_model, glm(wood_perc_h_predicted_normalised ~ urban + 
+                                       sca_area + 
+                                       median_age_mid_2022 + 
+                                       white_pct + 
+                                       imd_score, 
+                                     data = data_epc_lsoa_cross_section, 
+                                     family = "binomial")),
+  
+  tar_target(results_logit_model_urban, glm(wood_perc_h_predicted_normalised ~ 
+                                        sca_area + 
+                                        median_age_mid_2022 + 
+                                        white_pct + 
+                                        imd_score, 
+                                      data = data_epc_lsoa_cross_section[data_epc_lsoa_cross_section$urban == 1,], 
+                                      family = "binomial")),
+  
+  tar_target(output_logit_model, tbl_regression(results_logit_model, 
+                                                estimate_fun = label_style_sigfig(digits = 4),
+                                                label = list(urban = "Urban", 
+                                                             sca_area = "Smoke Control Area", 
+                                                             median_age_mid_2022 = "Median Age", 
+                                                             white_pct = "Percentage white ethnicity", 
+                                                             imd_score = "IMD score")) %>% 
+               as_gt() %>% 
+               cols_hide(p.value) %>% 
+               gtsave("Output/Tables/output_logit_model.html")),
+  
+  tar_target(output_logit_model_urban, tbl_regression(results_logit_model_urban, 
+                                                estimate_fun = label_style_sigfig(digits = 4),
+                                                label = list(sca_area = "Smoke Control Area", 
+                                                             median_age_mid_2022 = "Median Age", 
+                                                             white_pct = "Percentage white ethnicity", 
+                                                             imd_score = "IMD score")) %>% 
+               as_gt() %>% 
+               cols_hide(p.value) %>% 
+               gtsave("Output/Tables/output_logit_model_urban.html"))
 )

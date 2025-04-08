@@ -13,13 +13,6 @@
     ]
   },
   "Packages": {
-    "BH": {
-      "Package": "BH",
-      "Version": "1.84.0-0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a8235afbcd6316e6e91433ea47661013"
-    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.2.3",
@@ -106,13 +99,6 @@
         "R"
       ],
       "Hash": "470851b6d5d0ac559e9d01bb352b4021"
-    },
-    "RApiSerialize": {
-      "Package": "RApiSerialize",
-      "Version": "0.1.4",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "363cffb978c5b0e8042623638e984574"
     },
     "RColorBrewer": {
       "Package": "RColorBrewer",
@@ -1973,19 +1959,18 @@
       ],
       "Hash": "1cba04a4e9414bdefc9dcaa99649a8dc"
     },
-    "qs": {
-      "Package": "qs",
-      "Version": "0.27.2",
+    "qs2": {
+      "Package": "qs2",
+      "Version": "0.1.4",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
-        "BH",
         "R",
-        "RApiSerialize",
         "Rcpp",
+        "RcppParallel",
         "stringfish"
       ],
-      "Hash": "54716cfa710dfa4fa63eae0244661478"
+      "Hash": "0b821571b2f7af824b0bd45e09592dc2"
     },
     "quantreg": {
       "Package": "quantreg",
