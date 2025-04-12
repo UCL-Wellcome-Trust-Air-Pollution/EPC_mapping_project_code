@@ -112,9 +112,7 @@ merge_data_epc_cleaned_covars <- function(data,
   setDT(data_epc_cleaned_covars_with_uprn)
         
   # Generate new indicator variable for whether an EPC is the most recent 
-  # for that UPRN. NOTE: I assume here that the rows are pre-ordered by date,
-  # i.e. the more recent EPC is always nearer the top for every UPRN. This was
-  # the case when I inspected a subset of the data.
+  # for that UPRN. NOTE: the rows are pre-ordered by date in the 'CleanDataEPC' script
   data_epc_cleaned_covars_with_uprn <- data_epc_cleaned_covars_with_uprn[, most_recent := rowid(uprn) == 1]
   
   # Note: In the case of missing UPRNs, I keep all observations since we cannot

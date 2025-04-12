@@ -42,7 +42,8 @@ tar_option_set(
                "tidyr",
                "scales",
                "boot",
-               "rmapshaper"),
+               "rmapshaper",
+               "betareg"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
@@ -842,7 +843,6 @@ list(
                                                                               pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                               correlation_method = "spearman",
                                                                               bootstrap_method = "bca",
-                                                                              boot_func = get_corr,
                                                                               n_rep = 10000,
                                                                               conf_int = 0.95)) %>%
                
@@ -859,7 +859,6 @@ list(
                                                                                   pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                   correlation_method = "spearman",
                                                                                   bootstrap_method = "bca",
-                                                                                  boot_func = get_corr,
                                                                                   n_rep = 10000,
                                                                                   conf_int = 0.95)) %>%
                
@@ -876,7 +875,6 @@ list(
                                                                               pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                               correlation_method = "spearman",
                                                                               bootstrap_method = "bca",
-                                                                              boot_func = get_corr,
                                                                               n_rep = 10000,
                                                                               conf_int = 0.95)) %>%
                
@@ -893,7 +891,6 @@ list(
                                                                                   pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                   correlation_method = "spearman",
                                                                                   bootstrap_method = "bca",
-                                                                                  boot_func = get_corr,
                                                                                   n_rep = 10000,
                                                                                   conf_int = 0.95)) %>%
                
@@ -909,7 +906,6 @@ list(
                                                                                     pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                     correlation_method = "spearman",
                                                                                     bootstrap_method = "bca",
-                                                                                    boot_func = get_corr,
                                                                                     n_rep = 10000,
                                                                                     conf_int = 0.95)) %>%
                
@@ -925,7 +921,6 @@ list(
                                                                                     pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                     correlation_method = "spearman",
                                                                                     bootstrap_method = "bca",
-                                                                                    boot_func = get_corr,
                                                                                     n_rep = 10000,
                                                                                     conf_int = 0.95)) %>%
                
@@ -941,7 +936,6 @@ list(
                                                                                                pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                                correlation_method = "spearman",
                                                                                                bootstrap_method = "bca",
-                                                                                               boot_func = get_corr,
                                                                                                n_rep = 10000,
                                                                                                conf_int = 0.95)) %>%
                
@@ -957,7 +951,6 @@ list(
                                                                                  pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                  correlation_method = "spearman",
                                                                                  bootstrap_method = "bca",
-                                                                                 boot_func = get_corr,
                                                                                  n_rep = 10000,
                                                                                  conf_int = 0.95)) %>%
                
@@ -975,7 +968,6 @@ list(
                                                                                       pm2.5_diff_peak_var = pm2.5_diff_peak,
                                                                                       correlation_method = "spearman",
                                                                                       bootstrap_method = "bca",
-                                                                                      boot_func = get_corr,
                                                                                       n_rep = 10000,
                                                                                       conf_int = 0.95)) %>%
                
@@ -983,23 +975,23 @@ list(
              format = "file"),
   
   # Run LSOA logit models
-  tar_target(results_logit_model, glm(wood_perc_h_predicted_normalised ~ urban + 
+  tar_target(results_betareg_model, betareg(wood_perc_h_predicted_normalised ~ urban + 
                                        sca_area + 
                                        median_age_mid_2022 + 
                                        white_pct + 
                                        imd_score, 
                                      data = data_epc_lsoa_cross_section, 
-                                     family = "binomial")),
+                                     link = "logit")),
   
-  tar_target(results_logit_model_urban, glm(wood_perc_h_predicted_normalised ~ 
+  tar_target(results_betareg_model_urban, betareg(wood_perc_h_predicted_normalised ~ 
                                         sca_area + 
                                         median_age_mid_2022 + 
                                         white_pct + 
                                         imd_score, 
                                       data = data_epc_lsoa_cross_section[data_epc_lsoa_cross_section$urban == 1,], 
-                                      family = "binomial")),
+                                      link = "logit")),
   
-  tar_target(output_logit_model, tbl_regression(results_logit_model, 
+  tar_target(output_betareg_model, tbl_regression(results_betareg_model, 
                                                 estimate_fun = label_style_sigfig(digits = 4),
                                                 label = list(urban = "Urban", 
                                                              sca_area = "Smoke Control Area", 
@@ -1008,9 +1000,9 @@ list(
                                                              imd_score = "IMD score")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
-               gtsave("Output/Tables/output_logit_model.html")),
+               gtsave("Output/Tables/output_betareg_model.html")),
   
-  tar_target(output_logit_model_urban, tbl_regression(results_logit_model_urban, 
+  tar_target(output_betareg_model_urban, tbl_regression(results_betareg_model_urban, 
                                                 estimate_fun = label_style_sigfig(digits = 4),
                                                 label = list(sca_area = "Smoke Control Area", 
                                                              median_age_mid_2022 = "Median Age", 
@@ -1018,5 +1010,5 @@ list(
                                                              imd_score = "IMD score")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
-               gtsave("Output/Tables/output_logit_model_urban.html"))
+               gtsave("Output/Tables/output_betareg_model_urban.html"))
 )

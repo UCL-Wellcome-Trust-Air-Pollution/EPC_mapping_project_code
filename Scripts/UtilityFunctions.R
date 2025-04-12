@@ -96,6 +96,40 @@ get_corr <- function(data,
   
 }
 
+# Function to calculate difference in correlation coefficients 
+# for arbitrary dataframe with a filter var ------------------------------------
+
+get_corr_diff <- function(data, 
+                     x_var, 
+                     y_var,
+                     season_var,
+                     idx, 
+                     correlation_method){
+  
+  # Subset data based on idx selected
+  data_idx <- data[idx,]
+  
+  # Extract data for winter and summer separately
+  data_winter <- data_idx[data_idx[[season_var]] == "Winter",]
+  data_summer <- data_idx[data_idx[[season_var]] == "Summer",]
+  
+  # Calculate correlation of specified df cols
+  corr_winter <- cor(data_winter[[y_var]], 
+              data_winter[[x_var]],
+              method = correlation_method)
+  
+  # Calculate correlation of specified df cols
+  corr_summer <- cor(data_summer[[y_var]], 
+                     data_summer[[x_var]],
+                     method = correlation_method)
+  
+  # Get difference between two correlation coefficients
+  corr_diff = corr_winter - corr_summer
+  
+  return(corr_diff)
+  
+}
+
 # Function to load shapefile from path and filter English/Welsh LSOAs ----------
 
 get_shapefile <- function(shapefile_path,
@@ -201,7 +235,7 @@ make_data_housing_type_census <- function(path_data_housing_type_census,
                                             .default = property_type_census)) %>%
     
     # SUmmarise across property type and LSOA (multiple rows for 'other accommodation')
-    summarise(n_properties = mean(observation), .by = c("property_type_census",
+    summarise(n_properties = sum(observation), .by = c("property_type_census",
                                                         "lsoa21cd")) %>%
     
     # Create indicator variable for property type = 'house' (for prevalence metric)

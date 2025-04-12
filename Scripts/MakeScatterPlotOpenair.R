@@ -16,7 +16,6 @@ make_scatter_plot_openair <- function(data_openair,
                                  source_list,
                                  correlation_method,
                                  bootstrap_method,
-                                 boot_func,
                                  n_rep,
                                  conf_int){
   
@@ -50,37 +49,69 @@ make_scatter_plot_openair <- function(data_openair,
                "Summer")
   
   # Get upper and lower 95% confidence bands for Spearman correlation
-  conf_int <- lapply(seasons, function(p) get_bootstrap_ci(data_openair_for_plot,
+  list_conf_int <- lapply(seasons, function(p) get_bootstrap_ci(data_openair_for_plot,
                                p,
                                x_var = "x_var",
                                y_var = "y_var",
-                               boot_func = boot_func,
+                               boot_func = get_corr,
                                n_rep = n_rep,
                                conf_int = conf_int,
                                correlation_method = correlation_method,
                                bootstrap_method = bootstrap_method))
   
   # Set names for conf_int list elements
-  names(conf_int) <- seasons
+  names(list_conf_int) <- seasons
+  
+  # Get confidence interval for difference between two correlation coefs
+  corr_diff_boot <- boot(data_openair_for_plot, 
+                         statistic = get_corr_diff, 
+                         R = n_rep, 
+                         x_var = "x_var", 
+                         y_var = "y_var",
+                         season_var = "season",
+                         correlation_method = correlation_method)
+  
+  # Get 95% CI using method specified in 'method'
+  corr_diff_boot_ci <- boot.ci(corr_diff_boot, 
+                          conf = conf_int, 
+                          type = bootstrap_method)
+  
+  # Get central estimate for correlation coefficient
+  diff_correlation_coefficient <- round(corr_diff_boot_ci$t0, digits = 2)
+  
+  # Get lower confidence band ((length - 1)th element of vector)
+  diff_lower_bound <- round(corr_diff_boot_ci[[4]][length(corr_diff_boot_ci[[4]]) - 1], digits = 2)
+  
+  # Get upper confidence band ((length)th element of vector)
+  diff_upper_bound <- round(corr_diff_boot_ci[[4]][length(corr_diff_boot_ci[[4]])], digits = 2)
   
   # Get stats text to annotate plot
   plot_label_winter <- paste("Winter: R = ", 
-                      conf_int[["Winter"]][["correlation_coefficient"]], 
-                      ", 95%CI = [", conf_int[["Winter"]][["lower_bound"]],
+                      list_conf_int[["Winter"]][["correlation_coefficient"]], 
+                      ", 95%CI = [", list_conf_int[["Winter"]][["lower_bound"]],
                       ", ",
-                      conf_int[["Winter"]][["upper_bound"]], "]",
+                      list_conf_int[["Winter"]][["upper_bound"]], "]",
                       sep = "")
   
   plot_label_summer <- paste("Summer: R = ", 
-                             conf_int[["Summer"]][["correlation_coefficient"]], 
-                             ", 95%CI = [", conf_int[["Summer"]][["lower_bound"]],
+                             list_conf_int[["Summer"]][["correlation_coefficient"]], 
+                             ", 95%CI = [", list_conf_int[["Summer"]][["lower_bound"]],
                              ", ",
-                             conf_int[["Summer"]][["upper_bound"]], "]",
+                             list_conf_int[["Summer"]][["upper_bound"]], "]",
                              sep = "")
+  
+  # Make plot label for difference
+  plot_label_diff <- paste("Difference: R = ",
+                           diff_correlation_coefficient,
+                           ", 95%CI = [", diff_lower_bound,
+                           ", ",
+                           diff_upper_bound, "]",
+                           sep = "")
   
   # Combine text into single plot label
   plot_label <- paste(plot_label_winter,
                       plot_label_summer,
+                      plot_label_diff,
                       sep = "\n")
   
   # Produce scatter plot
@@ -92,9 +123,6 @@ make_scatter_plot_openair <- function(data_openair,
                colour = season)) +
     
     geom_point() +
-    
-    geom_smooth(method = lm,
-                se = F) +
     
     # Aesthetic options
     scatter_plot_opts +

@@ -21,10 +21,8 @@ get_bootstrap_ci <- function(data,
   # Set seed for reproducibility
   set.seed(123)
   
-  # Filter by season to calculate bootstrap CI separately
-  data_for_boot <- data %>%
-    
-    filter(season == {{season}})
+  # Filter by season
+  data_for_boot <- data %>% filter(season == {{season}})
   
   # Get vector of correlation coefficients from bootstrapped samples
   corr_boot <- boot(data_for_boot, 

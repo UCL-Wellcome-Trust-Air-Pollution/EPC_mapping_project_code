@@ -18,7 +18,6 @@ make_patchwork_plot_openair <- function(data_openair,
                                         source_list,
                                         correlation_method,
                                         bootstrap_method,
-                                        boot_func,
                                         n_rep,
                                         conf_int){
   
@@ -37,7 +36,6 @@ make_patchwork_plot_openair <- function(data_openair,
                                               {{source_list}},
                                               correlation_method = correlation_method,
                                               bootstrap_method = bootstrap_method,
-                                              boot_func = boot_func,
                                               n_rep = n_rep,
                                               conf_int = conf_int) +
     
@@ -59,7 +57,6 @@ make_patchwork_plot_openair <- function(data_openair,
                                                              {{source_list}},
                                                              correlation_method = correlation_method,
                                                              bootstrap_method = bootstrap_method,
-                                                             boot_func = boot_func,
                                                              n_rep = n_rep,
                                                              conf_int = conf_int) +
     
@@ -78,7 +75,6 @@ make_patchwork_plot_openair <- function(data_openair,
                                                              {{source_list}},
                                                              correlation_method = correlation_method,
                                                              bootstrap_method = bootstrap_method,
-                                                             boot_func = boot_func,
                                                              n_rep = n_rep,
                                                              conf_int = conf_int) +
     
