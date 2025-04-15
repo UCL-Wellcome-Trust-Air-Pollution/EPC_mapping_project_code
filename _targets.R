@@ -154,6 +154,10 @@ list(
                                                                      shapefile_data = ward_boundaries,
                                                                      join_var = "wd22cd")),
   
+  tar_target(data_epc_la_cross_section_to_map, prepare_data_to_map(fill_data = data_epc_la_cross_section,
+                                                                     shapefile_data = la_boundaries,
+                                                                     join_var = "lad22cd")),
+  
   # Load LAEI and NAEI shapefiles with predicted concentration of WF heat sources (does not update with pipeline)
   tar_target(data_laei, st_read(here("Data/raw/laei_data/data_laei.shp")) %>%
                
@@ -213,7 +217,7 @@ list(
                                                                                          "10 - Least deprived")),
                       .by = urban) %>%
                
-               # FIlter urban LSOAs
+               # Filter urban LSOAs
                filter(urban == 1) %>%
                
                # Summarise WF prevalence by region, year, and housing type
@@ -445,9 +449,9 @@ list(
                                                               legend_position = "bottom") +
                
                # Add annotation around highlighted boundaries
-               geom_sf(data = la_boundaries[grepl("E09000027|E09000021|E09000006", la_boundaries$lad22cd),],
+               geom_sf(data = la_boundaries[grepl("E09000027|E09000021|E090000029", la_boundaries$lad22cd),],
                        fill = NA,
-                       lwd = 1,
+                       lwd = 0.5,
                        colour = "blue")),
   
   tar_target(choropleth_map_sfa_pc_lsoa_london, make_choropleth_map(fill_data = data_epc_lsoa_cross_section_to_map[data_epc_lsoa_cross_section_to_map$rgn22nm == "London",],
@@ -979,7 +983,8 @@ list(
                                        sca_area + 
                                        median_age_mid_2022 + 
                                        white_pct + 
-                                       imd_score, 
+                                       imd_score +
+                                       factor(rgn22nm), 
                                      data = data_epc_lsoa_cross_section, 
                                      link = "logit")),
   
@@ -987,9 +992,19 @@ list(
                                         sca_area + 
                                         median_age_mid_2022 + 
                                         white_pct + 
-                                        imd_score, 
+                                        imd_score +
+                                        factor(rgn22nm), 
                                       data = data_epc_lsoa_cross_section[data_epc_lsoa_cross_section$urban == 1,], 
                                       link = "logit")),
+  
+  tar_target(results_betareg_model_rural, betareg(wood_perc_h_predicted_normalised ~ 
+                                                    sca_area + 
+                                                    median_age_mid_2022 + 
+                                                    white_pct + 
+                                                    imd_score +
+                                                    factor(rgn22nm), 
+                                                  data = data_epc_lsoa_cross_section[data_epc_lsoa_cross_section$urban == 0,], 
+                                                  link = "logit")),
   
   tar_target(output_betareg_model, tbl_regression(results_betareg_model, 
                                                 estimate_fun = label_style_sigfig(digits = 4),
@@ -997,7 +1012,8 @@ list(
                                                              sca_area = "Smoke Control Area", 
                                                              median_age_mid_2022 = "Median Age", 
                                                              white_pct = "Percentage white ethnicity", 
-                                                             imd_score = "IMD score")) %>% 
+                                                             imd_score = "IMD score",
+                                                             `factor(rgn22nm)` = "Region")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
                gtsave("Output/Tables/output_betareg_model.html")),
@@ -1007,8 +1023,20 @@ list(
                                                 label = list(sca_area = "Smoke Control Area", 
                                                              median_age_mid_2022 = "Median Age", 
                                                              white_pct = "Percentage white ethnicity", 
-                                                             imd_score = "IMD score")) %>% 
+                                                             imd_score = "IMD score",
+                                                             `factor(rgn22nm)` = "Region")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
-               gtsave("Output/Tables/output_betareg_model_urban.html"))
+               gtsave("Output/Tables/output_betareg_model_urban.html")),
+  
+  tar_target(output_betareg_model_rural, tbl_regression(results_betareg_model_rural, 
+                                                        estimate_fun = label_style_sigfig(digits = 4),
+                                                        label = list(sca_area = "Smoke Control Area", 
+                                                                     median_age_mid_2022 = "Median Age", 
+                                                                     white_pct = "Percentage white ethnicity", 
+                                                                     imd_score = "IMD score",
+                                                                     `factor(rgn22nm)` = "Region")) %>% 
+               as_gt() %>% 
+               cols_hide(p.value) %>% 
+               gtsave("Output/Tables/output_betareg_model_rural.html"))
 )
