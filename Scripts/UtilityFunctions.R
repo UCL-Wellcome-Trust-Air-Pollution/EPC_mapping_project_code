@@ -253,3 +253,54 @@ make_data_housing_type_census <- function(path_data_housing_type_census,
     left_join(data_ward, by = "lsoa21cd")
   
 }
+
+# Functions for formatting tables ----------------------------------------------
+
+# Define function to get summary table by EPC number 
+make_summary_tab_by_epc_number <- function(data,
+                                           n_epc){
+  
+  summary_tab <- data %>%
+    
+    # Filter total EPC equal to specified number
+    filter(total_epc == n_epc) %>%
+    
+    # Filter only houses
+    filter(property_type_census %in% c("Detached",
+                                       "Semi Detached",
+                                       "Terrace")) %>%
+    
+    # Summarise wood fuel prevalence by EPC number and property type
+    summarise(wood_perc_h = mean(any_wood_h, na.rm = TRUE),
+              n = n(),
+              .by = c(epc_number,   
+                      property_type_census)) %>%
+    
+    # Pivot wider
+    pivot_wider(id_cols = property_type_census,
+                         names_from = epc_number,
+                         values_from = c(wood_perc_h,
+                                         n)) %>%
+    
+    # Make new column to indicate number of EPCs (to use as group var)
+    mutate(n_epc = n_epc) %>%
+    
+    # Arrange alphabetically
+    arrange(property_type_census)
+  
+  return(summary_tab)
+  
+}
+
+# Wrapper function to make summary tables on WF prevalence for different EPC numbers
+make_summary_tabs_by_epc_number <- function(data,
+                                            max_n_epc) {
+  
+  # Make list of tables by different EPC numbers (starting at 2 and ending at 'max_n_epc')
+  tab_list <- lapply(rep(2:max_n_epc), make_summary_tab_by_epc_number, data = data)
+  
+  # Bind tables together, filling missing columns with NA
+  tab_n_epc <- bind_rows(tab_list)
+  
+  return(tab_n_epc)
+}

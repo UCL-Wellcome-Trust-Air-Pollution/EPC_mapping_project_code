@@ -1016,7 +1016,7 @@ list(
                                                              `factor(rgn22nm)` = "Region")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
-               gtsave("Output/Tables/output_betareg_model.html")),
+               gtsave("Output/Tables/output_betareg_model.tex")),
   
   tar_target(output_betareg_model_urban, tbl_regression(results_betareg_model_urban, 
                                                 estimate_fun = label_style_sigfig(digits = 4),
@@ -1027,7 +1027,7 @@ list(
                                                              `factor(rgn22nm)` = "Region")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
-               gtsave("Output/Tables/output_betareg_model_urban.html")),
+               gtsave("Output/Tables/output_betareg_model_urban.tex")),
   
   tar_target(output_betareg_model_rural, tbl_regression(results_betareg_model_rural, 
                                                         estimate_fun = label_style_sigfig(digits = 4),
@@ -1038,5 +1038,259 @@ list(
                                                                      `factor(rgn22nm)` = "Region")) %>% 
                as_gt() %>% 
                cols_hide(p.value) %>% 
-               gtsave("Output/Tables/output_betareg_model_rural.html"))
+               gtsave("Output/Tables/output_betareg_model_rural.tex")),
+  
+  # Summary tables -------------------------------------------------------------
+  tar_target(tab_housing_chars_by_any_wood, (data_epc_cleaned_covars %>% 
+               
+               # Filter only most recent EPCs
+               filter(most_recent == TRUE) %>%
+               
+               mutate(any_wood = factor(any_wood, labels = c("No", "Yes")),
+                      sca_area = factor(sca_area, labels = c("No", "Yes")),
+                      urban = factor(urban, labels = c("No", "Yes"))) %>%
+               
+               select(property_type_census,
+                      tenure,
+                      any_wood,
+                      sca_area,
+                      urban) %>% 
+               
+               tbl_summary(by = "any_wood",
+                           missing = "ifany",
+                           type = all_dichotomous() ~ "categorical",
+                           digits = all_continuous() ~ 0,
+                           missing_text = "Missing",
+                           label = list(property_type_census ~ "Property type",
+                                        tenure ~ "Tenure",
+                                        sca_area ~ "Smoke Control Area",
+                                        urban = "Urban LSOA")) %>%
+               
+               # Modify header
+               modify_header(label ~ "",
+                             all_stat_cols() ~ "**{level}** N = {n}") %>%
+               
+               # Modify spanning header
+               modify_spanning_header(all_stat_cols() ~ "**Wood fuel heat source**") %>%
+               
+               as_gt() %>%
+               
+               # Add note to table
+               tab_source_note(md("Note: We used the subset of unique properties in the EPC dataset. 
+                                  We excluded properties which had missing information on WF presence. Each column shows the count of 
+                                  properties in the EPC database with the specified characteristic and WF status, and the percentage of all 
+                                  properties of that WF status with the specified characteristic. Missing values within characteristics are reported."))) %>%
+               
+               gtsave("Output/Tables/tab_housing_chars_by_any_wood.tex"),
+             format = "file"),
+  
+  tar_target(tab_summary_wf_decile, (data_epc_lsoa_cross_section %>% 
+                                       
+                                       # Create variable to indicate decile by WF prevalence
+                                       mutate(wf_decile = ntile(wood_perc_h_predicted, n = 10)) %>% 
+                                       
+                                       # Generate summary stats of relevant variables
+                                       summarise(wood_perc_h_predicted = mean(wood_perc_h_predicted, na.rm = TRUE),
+                                                 imd_score = mean(imd_score, na.rm = TRUE), 
+                                                 white_pct = mean(white_pct, na.rm = TRUE), 
+                                                 median_age_mid_2022 = mean(median_age_mid_2022, na.rm = TRUE), 
+                                                 urban = mean(urban, na.rm = TRUE) * 100,
+                                                 .by = wf_decile) %>% 
+                                       
+                                       # Arrange
+                                       arrange(wf_decile) %>%
+                                       
+                                       # Make gt table
+                                       gt() %>%
+                                       
+                                       # Format column labels
+                                       cols_label(wf_decile = "Decile",
+                                                  wood_perc_h_predicted = "WF prevalence (%)",
+                                                  imd_score = "IMD score",
+                                                  white_pct = "White ethnic\nbackground (%)",
+                                                  median_age_mid_2022 = "Median age",
+                                                  urban = "Urban (%)") %>%
+                                       
+                                       # Format numbers
+                                       fmt_number(columns = c(wood_perc_h_predicted,
+                                                              white_pct,
+                                                              urban,
+                                                              imd_score,
+                                                              median_age_mid_2022),
+                                                  decimals = 1) %>%
+                                       
+                                       # Align columns to centre
+                                       cols_align("center") %>%
+                                       
+                                       # Add note to table
+                                       tab_source_note(md("Note: The table presents summary statistics on LSOA-level 
+                                                          socio-economic indicators grouped by deciles calculated using 
+                                                          the estimated prevalence of wood fuel heat sources by LSOA. The first 
+                                                          decile represents LSOAs with the lowest prevalence of WF heat sources, 
+                                                          and the tenth decile represents LSOAs with the highest prevalence of
+                                                          wood fuel heat sources."))) %>%
+               
+               gtsave("Output/Tables/tab_summary_wf_decile.tex"),
+             format = "file"),
+  
+  tar_target(tab_housing_type_os_epc, (gt(data_housing_type_os_epc) %>% 
+                                         
+                                         # Add spanning columns
+                                         tab_spanner("OS AddressBase", columns = c(n_os,
+                                                                                   perc_os)) %>%
+                                         
+                                         tab_spanner("EPC data", columns = c(n_epc,
+                                                                             perc_epc)) %>%
+                                         
+                                         # Format percentage/numeric columns
+                                         fmt_percent(columns = c(perc_os,
+                                                                 perc_epc), decimals = 1) %>%
+                                         
+                                         fmt_number(columns = c(n_os,
+                                                                n_epc), decimals = 0) %>%
+                                         
+                                         # Label columns
+                                         cols_label(property_type_census = "Property type",
+                                                    n_os = "N",
+                                                    perc_os = "Percentage",
+                                                    n_epc = "N",
+                                                    perc_epc = "Percentage") %>%
+                                         
+                                         # Align columns to centre
+                                         cols_align("center") %>%
+                                         
+                                         # Add note
+                                         tab_source_note(md("Note: Property types in the OS AddressBase and 
+                                                            EPC data were re-categorised to match Census 2021 categories. 
+                                                            In total, the OS AddressBase contained 28,638,819 properties.
+                                                            In this table, we used EPC data up to to October 2024"))) %>%
+               
+               gtsave("Output/Tables/tab_housing_type_os_epc.tex"),
+             format = "file"),
+  
+  tar_target(tab_wood_pc_epc_number, (
+    
+    # Make list of summary tables by EPC number
+    make_summary_tabs_by_epc_number(data = data_epc_cleaned_covars,
+                                    max_n_epc = 4) %>%
+      
+      # Make gt table
+      gt() %>%
+      
+      # Hide n_epc col
+      cols_hide(n_epc) %>%
+      
+      # Format column labels
+      cols_label(property_type_census = "Property type",
+                 n_1 = "First EPC",
+                 n_2 = "Second EPC",
+                 n_3 = "Third EPC",
+                 n_4 = "Fourth EPC") %>%
+      
+      # Change column order
+      cols_move_to_start(columns = c(property_type_census,
+                                     n_1,
+                                     n_2,
+                                     n_3,
+                                     n_4)) %>%
+      
+      # Format percentage
+      fmt_percent(columns = c(wood_perc_h_1,
+                              wood_perc_h_2,
+                              wood_perc_h_3,
+                              wood_perc_h_4), decimals = 1) %>%
+      
+      # Format numeric cols
+      fmt_number(columns = c(n_1,
+                             n_2,
+                             n_3,
+                             n_4), decimals = 0) %>%
+      
+      # Merge columns into desired pattern
+      cols_merge(columns = c(n_1,
+                             wood_perc_h_1),
+                 pattern = "<<{1}>> <<({2})>>") %>%
+      
+      cols_merge(columns = c(n_2,
+                             wood_perc_h_2),
+                 pattern = "<<{1}>> <<({2})>>") %>%
+      
+      cols_merge(columns = c(n_3,
+                             wood_perc_h_3),
+                 pattern = "<<{1}>> <<({2})>>") %>%
+      
+      cols_merge(columns = c(n_4,
+                             wood_perc_h_4),
+                 pattern = "<<{1}>> <<({2})>>") %>%
+      
+      # Add row groups
+      tab_row_group(label = "Number of EPCs: 4",
+                    rows = n_epc == 4) %>%
+      
+      tab_row_group(label = "Number of EPCs: 3",
+                    rows = n_epc == 3) %>%
+      
+      tab_row_group(label = "Number of EPCs: 2",
+                    rows = n_epc == 2) %>%
+      
+      # Align columns to centre
+      cols_align("center") %>%
+      
+      # Add note
+      tab_source_note(md("Note: This table shows the percentage of EPCs with a wood fuel
+                         heat source by property type and EPC number, among the properties in 
+                         the EPC data which had more than one EPC during the period January 2009 February 2025. 
+                         We restrict our analysis to houses (excluding flats, other accommodation, 
+                         and properties with missing house form) and restrict our analysis to properties with fewer than five EPCs, 
+                         due to small sample size for higher numbers of EPCs. The total number of properties within rows 
+                         are not equal due to changes in property classifications in the EPC dataset."))) %>%
+      
+      gtsave("Output/Tables/tab_wood_pc_epc_number.tex"),
+    format = "file"),
+  
+  tar_target(tab_housing_chars_by_any_sfa, (data_epc_cleaned_covars %>% 
+                                              
+                                              # Filter only most recent EPCs
+                                              filter(most_recent == TRUE) %>%
+                                              
+                                              mutate(any_sfa = factor(any_sfa, labels = c("No", "Yes")),
+                                                     sca_area = factor(sca_area, labels = c("No", "Yes")),
+                                                     urban = factor(urban, labels = c("No", "Yes"))) %>%
+                                              
+                                              select(property_type_census,
+                                                     tenure,
+                                                     any_sfa,
+                                                     sca_area,
+                                                     urban) %>% 
+                                              
+                                              tbl_summary(by = "any_sfa",
+                                                          missing = "ifany",
+                                                          type = all_dichotomous() ~ "categorical",
+                                                          digits = all_continuous() ~ 0,
+                                                          missing_text = "Missing",
+                                                          label = list(property_type_census ~ "Property type",
+                                                                       tenure ~ "Tenure",
+                                                                       sca_area = "Smoke Control Area",
+                                                                       urban = "Urban")) %>%
+                                              
+                                              # Modify header
+                                              modify_header(label ~ "",
+                                                            all_stat_cols() ~ "**{level}** N = {n}") %>%
+                                              
+                                              # Modify spanning header
+                                              modify_spanning_header(all_stat_cols() ~ "**Solid fuel heat source**") %>%
+                                              
+                                              # Set to gt object to use gt functions 
+                                              as_gt() %>%
+                                              
+                                              # Add note to table
+                                              tab_source_note(md("Note: We used the subset of unique properties in the EPC dataset. 
+                                                                 We excluded properties which had missing information on SF presence. 
+                                                                 Each column shows the count of properties in the EPC database with the 
+                                                                 specified characteristic and SF status, and the percentage of all properties 
+                                                                 of that SF status with the specified characteristic. Missing values within characteristics 
+                                                                 are reported."))) %>% 
+               
+               gtsave("Output/Tables/tab_housing_chars_by_any_sfa.tex"),
+             format = "file")
 )
