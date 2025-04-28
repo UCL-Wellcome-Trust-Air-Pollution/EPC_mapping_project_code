@@ -1,4 +1,4 @@
-# Name of script: MakeChoroplethMap2
+# Name of script: MakeChoroplethMap
 # Description:  Defines function to produce choropleth map of UK given arbitrary dataset
 # and geographical resolution using ggplot2 package
 # Created by: Calum Kennedy (calum.kennedy.20@ucl.ac.uk)

@@ -9,7 +9,13 @@ library(ggplot2)
 library(viridis)
 library(crew)
 
-# Set options to prefer tidylog if conflicts 
+# Set options to prefer tidylog if conflicts
+
+# controller <- crew_controller_local(
+#   name = "controller",
+#   workers = 8,
+#   seconds_idle = 20
+# )
 
 # Set target options:
 tar_option_set(
@@ -43,7 +49,8 @@ tar_option_set(
                "scales",
                "boot",
                "rmapshaper",
-               "betareg"),
+               "betareg",
+               "statmod"),
   format = "qs",
   memory = "transient",
   garbage_collection = TRUE
