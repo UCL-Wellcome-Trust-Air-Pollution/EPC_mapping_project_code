@@ -310,9 +310,35 @@ list(
   tar_target(data_openair_epc_naei, make_openair_epc_laei_data(data_openair_epc,
                                                                data_naei)),
   
+  tar_target(data_summary_imd_decile_region, data_epc_cleaned_covars %>% 
+               
+               summarise(any_wood_h = mean(any_wood_h, na.rm = TRUE) * 100,
+                         white_pct = mean(white_pct, na.rm = TRUE),
+                         num_people = sum(num_people, na.rm = TRUE),
+                         imd_score = mean(imd_score, na.rm = TRUE),
+                         .by = c(imd_decile,
+                                 rgn22nm)) %>%
+               
+               # Arrange by population to ensure smaller bubbles appear in front
+               arrange(desc(num_people))),
+  
+  tar_target(data_summary_imd_decile_region_urban, data_epc_cleaned_covars %>% 
+               
+               filter(urban == 1) %>%
+               
+               summarise(any_wood_h = mean(any_wood_h, na.rm = TRUE) * 100,
+                         white_pct = mean(white_pct, na.rm = TRUE),
+                         num_people = sum(num_people, na.rm = TRUE),
+                         imd_score = mean(imd_score, na.rm = TRUE),
+                         .by = c(imd_decile,
+                                 rgn22nm)) %>%
+               
+               # Arrange by population to ensure smaller bubbles appear in front
+               arrange(desc(num_people))),
+  
   # Make figures ---------------------------------------------------------------
   
-  tar_target(scatter_plot_pc_wood_imd, make_grouped_scatter_plot(data = data_epc_cleaned_covars,
+  tar_target(scatter_plot_pc_wood_imd, make_grouped_scatter_plot(data = data_summary_imd_decile_region,
                                                                  x_var = imd_score,
                                                                  y_var = any_wood_h,
                                                                  group_var = imd_decile,
@@ -327,7 +353,7 @@ list(
       
       ggtitle("A")),
 
-  tar_target(scatter_plot_pc_wood_white_eth, make_grouped_scatter_plot(data = data_epc_cleaned_covars,
+  tar_target(scatter_plot_pc_wood_white_eth, make_grouped_scatter_plot(data = data_summary_imd_decile_region,
                                                                  x_var = white_pct,
                                                                  y_var = any_wood_h,
                                                                  group_var = imd_decile,
@@ -342,7 +368,7 @@ list(
                
                ggtitle("B")),
   
-  tar_target(scatter_plot_pc_wood_imd_urban, make_grouped_scatter_plot(data = data_epc_cleaned_covars[data_epc_cleaned_covars$urban == 1,],
+  tar_target(scatter_plot_pc_wood_imd_urban, make_grouped_scatter_plot(data = data_summary_imd_decile_region_urban,
                                                                  x_var = imd_score,
                                                                  y_var = any_wood_h,
                                                                  group_var = imd_decile,
@@ -357,7 +383,7 @@ list(
                
                ggtitle("A")),
   
-  tar_target(scatter_plot_pc_wood_white_eth_urban, make_grouped_scatter_plot(data = data_epc_cleaned_covars[data_epc_cleaned_covars$urban == 1,],
+  tar_target(scatter_plot_pc_wood_white_eth_urban, make_grouped_scatter_plot(data = data_summary_imd_decile_region_urban,
                                                                        x_var = white_pct,
                                                                        y_var = any_wood_h,
                                                                        group_var = imd_decile,

@@ -1,5 +1,5 @@
 # Name of script: functions
-# Description:  SOurces all necessary functions to build analysis pipeline
+# Description:  Sources all necessary functions to build analysis pipeline
 # Created by: Calum Kennedy (calum.kennedy.20@ucl.ac.uk)
 # Created on: 03-09-2024
 # Latest update by: Calum Kennedy
@@ -31,3 +31,4 @@ source(here("Scripts/SetSpatialPoints.R"))
 source(here("Scripts/MakeOpenairEPCLAEIData.R"))
 source(here("Scripts/MakePatchworkPlotOpenair.R"))
 source(here("Scripts/GetBootstrapCI.R"))
+source(here("Scripts/MakeDataSummaryChangeVariable.R"))

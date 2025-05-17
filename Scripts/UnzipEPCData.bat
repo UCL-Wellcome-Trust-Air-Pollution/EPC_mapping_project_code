@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 :: Set paths
 set ZIP_FILE=C:\Users\uctpcke\OneDrive - University College London\Downloads\all-domestic-certificates.zip
-set EXTRACT_DIR=C:\Users\uctpcke\Documents\EPC_project_code\Data\raw\epc_data\epc_data_extracted
+set EXTRACT_DIR=C:\Users\uctpcke\OneDrive - University College London\EPC_project_code\Data\raw\epc_data\epc_data_extracted
 
 :: Check if 7z is installed
 where 7z >nul 2>nul

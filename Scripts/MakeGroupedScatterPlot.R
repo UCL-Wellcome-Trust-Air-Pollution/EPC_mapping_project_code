@@ -20,23 +20,14 @@ make_grouped_scatter_plot <- function(data,
   
   scatter_plot <- data %>%
     
-    summarise(perc = mean({{y_var}}, na.rm = TRUE) * 100,
-              pop = sum({{size_var}}, na.rm = TRUE),
-              x_var = mean({{x_var}}, na.rm = TRUE),
-              .by = c({{group_var}},
-                      {{colour_var}})) %>%
-    
-    # Arrange by 'size_var' to ensure smaller bubbles appear in front
-    arrange(desc(pop)) %>%
-    
     # Call ggplot
     ggplot() +
     
     # Add scatter points
-    geom_point(aes(x = x_var,
-                   y = perc,
+    geom_point(aes(x = {{x_var}},
+                   y = {{y_var}},
                    colour = {{colour_var}},
-                   size = pop),
+                   size = {{size_var}}),
                alpha = 0.7) +
     
     scale_size_continuous(labels = label_comma()) +
