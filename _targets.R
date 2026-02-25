@@ -1,4 +1,4 @@
-### Targets file to produce EPC manuscript
+ ### Targets file to produce EPC manuscript
 
 # Load packages required to define the pipeline
 library(targets)
