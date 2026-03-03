@@ -1,5 +1,7 @@
 # EPC mapping project code base
-This repository stores the code files for the project - "High resolution mapping of wood burning hotspots using Energy Performance Certificates: A case study in England and Wales". To recreate the analysis on your local device, please carry out the following steps:
+This repository stores the code files for the project - "High resolution mapping of wood burning hotspots using Energy Performance Certificates: A case study in England and Wales". Any questions or issues regarding the code should be directed to calum.kennedy.25@ucl.ac.uk.
+
+To recreate the analysis on your local device, please carry out the following steps:
 
 1. Clone the GitHub repository to your local device. For users who do not have Git installed on their local machine, a zip file of the code base is available via Zenodo ('Code.zip'). Please ensure you use the directory with the R Project in it (which is called "EPC_mapping_project_code.RProj") as your root directory.
 
